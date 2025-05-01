@@ -1,0 +1,10 @@
+﻿namespace Imaar.Blazor.Menus;
+
+public class ImaarMenus
+{
+    private const string Prefix = "Imaar";
+    public const string Home = Prefix + ".Home";
+
+    //Add your menu items here...
+
+}
