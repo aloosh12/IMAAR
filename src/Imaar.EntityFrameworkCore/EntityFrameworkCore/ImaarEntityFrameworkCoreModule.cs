@@ -12,6 +12,7 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Imaar.Categories;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
                 /* Remove "includeAllEntities: true" to create
                  * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
+            options.AddRepository<Category, Categories.EfCoreCategoryRepository>();
         });
 
         Configure<AbpDbContextOptions>(options =>

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Imaar.Localization;
 using Imaar.MultiTenancy;
+using Imaar.Permissions;
 using Volo.Abp.Identity.Blazor;
 using Volo.Abp.SettingManagement.Blazor.Menus;
 using Volo.Abp.TenantManagement.Blazor.Navigation;
@@ -46,6 +47,14 @@ public class ImaarMenuContributor : IMenuContributor
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
 
+        context.Menu.AddItem(
+    new ApplicationMenuItem(
+        ImaarMenus.Categories,
+        l["Menu:Categories"],
+        url: "/categories",
+icon: "fa fa-file-alt",
+        requiredPermissionName: ImaarPermissions.Categories.Default)
+);
         return Task.CompletedTask;
     }
 }

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Imaar.Categories;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -82,5 +84,19 @@ public class ImaarDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Category>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Categories", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(Category.Title)).IsRequired();
+                b.Property(x => x.Icon).HasColumnName(nameof(Category.Icon)).IsRequired();
+                b.Property(x => x.Order).HasColumnName(nameof(Category.Order));
+                b.Property(x => x.IsActive).HasColumnName(nameof(Category.IsActive));
+            });
+
+        }
     }
 }

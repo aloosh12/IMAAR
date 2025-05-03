@@ -44,6 +44,8 @@ using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Imaar.Blazor.Helpers;
+using System.Collections.Generic;
 
 namespace Imaar.Blazor;
 
@@ -123,7 +125,7 @@ public class ImaarBlazorModule : AbpModule
         ConfigureBundles();
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
-        ConfigureSwaggerServices(context.Services);
+        ConfigureSwaggerServices(context.Services, configuration);
         ConfigureAutoApiControllers();
         ConfigureBlazorise(context);
         ConfigureRouter(context);
@@ -189,16 +191,32 @@ public class ImaarBlazorModule : AbpModule
         }
     }
 
-    private void ConfigureSwaggerServices(IServiceCollection services)
+    private void ConfigureSwaggerServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAbpSwaggerGen(
-            options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Imaar API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
-            }
-        );
+        //services.AddAbpSwaggerGen(
+        //    options =>
+        //    {
+        //        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Imaar API", Version = "v1" });
+        //        options.DocInclusionPredicate((docName, description) => true);
+        //        options.CustomSchemaIds(type => type.FullName);
+        //    }
+        //);
+
+        services.AddAbpSwaggerGenWithOAuth(
+configuration["AuthServer:Authority"],
+new Dictionary<string, string>
+{
+                    {"EtihadRails", "EtihaRails API"}
+},
+options =>
+{
+options.DocumentFilter<CustomSwaggerFilterHelper>();
+options.OperationFilter<AddRequiredHeaderParameterHelper>();
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Imaar API", Version = "v1" });
+    options.SwaggerDoc("v2", new OpenApiInfo { Title = "Imaar API For Mobile", Version = "v1" });
+options.DocInclusionPredicate((docName, description) => true);
+options.CustomSchemaIds(type => type.FullName);
+});
     }
 
     private void ConfigureBlazorise(ServiceConfigurationContext context)
@@ -274,9 +292,19 @@ public class ImaarBlazorModule : AbpModule
         app.UseAuthorization();
 
         app.UseSwagger();
+        //app.UseAbpSwaggerUI(options =>
+        //{
+        //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Imaar API");
+        //});
+
         app.UseAbpSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Imaar API");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "Imaar API For Mobile");
+
+            var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+            options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+            // options.OAuthClientSecret(configuration["AuthServer:SwaggerClientSecret"]);
         });
 
         app.UseConfiguredEndpoints(builder =>
