@@ -8,4 +8,6 @@ public class ImaarMenus
     //Add your menu items here...
     public const string Categories = Prefix + ".Categories";
 
+    public const string UserProfiles = Prefix + ".UserProfiles";
+
 }

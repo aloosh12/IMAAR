@@ -41,6 +41,20 @@
     "Filters": "Filters",
     "Menu:Categories": "Categories",
     "Menu:Imaar": "Imaar Pro",
-    "Icon": "Icon"
+    "Icon": "Icon",
+    "Enum:BiologicalSex.0": "Male",
+    "Enum:BiologicalSex.1": "Female",
+    "Permission:UserProfiles": "User Profiles",
+    "SecurityNumber": "Security Number",
+    "BiologicalSex": "Biological Sex",
+    "DateOfBirth": "Date Of Birth",
+    "Latitude": "Latitude",
+    "Longitude": "Longitude",
+    "ProfilePhoto": "Profile Photo",
+    "UserProfiles": "User Profiles",
+    "MinDateOfBirth": "Min Date Of Birth",
+    "MaxDateOfBirth": "Max Date Of Birth",
+    "NewUserProfile": "New User Profile",
+    "Menu:UserProfiles": "User Profiles"
   }
 }

@@ -55,6 +55,15 @@ public class ImaarMenuContributor : IMenuContributor
 icon: "fa fa-file-alt",
         requiredPermissionName: ImaarPermissions.Categories.Default)
 );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.UserProfiles,
+                l["Menu:UserProfiles"],
+                url: "/user-profiles",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.UserProfiles.Default)
+        );
         return Task.CompletedTask;
     }
 }

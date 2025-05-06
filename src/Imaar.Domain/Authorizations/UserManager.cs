@@ -15,6 +15,9 @@ using Volo.Abp.Uow;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Volo.Abp.Data;
+using Volo.Abp;
+using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace Imaar.Authorizations
 {
@@ -34,6 +37,7 @@ namespace Imaar.Authorizations
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IDataFilter _dataFilter;
 
         public UserManager(
             IdentityUserManager identityUserManager,
@@ -47,7 +51,8 @@ namespace Imaar.Authorizations
             IHttpClientFactory httpClientFactory,
             IJsonSerializer jsonSerializer,
             IConfiguration configuration,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IDataFilter dataFilter
             )
         {
             _identityUserManager = identityUserManager;
@@ -62,12 +67,52 @@ namespace Imaar.Authorizations
             _jsonSerializer = jsonSerializer;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _dataFilter = dataFilter;
         }
 
         public Task<Volo.Abp.Identity.IdentityUser> FindByIdAsync(Guid id)
         {
             return _identityUserManager.FindByIdAsync(id.ToString());
         }
+        public async Task<Volo.Abp.Identity.IdentityUser> RegisterUserAsync(string firstName, string lastName, string phoneNumber, string email)
+        {
+            using (_dataFilter.Disable<ISoftDelete>())
+            {
+                var user = _identityUserManager.Users.Where(u => u.PhoneNumber == phoneNumber || u.Email == email).FirstOrDefault();
+                if (user != null)
+                {
+                    if (user.IsDeleted == true)
+                    {
+                        //var identityUser = new Volo.Abp.Identity.IdentityUser(user.Id, email.Split("@")[0], user.Email);
+                        //identityUser.Name = firstName;
+                        //identityUser.Surname = lastName;
+                        //identityUser.SetPhoneNumber(phoneNumber, false);
+                        //identityUser.IsDeleted = false;
+                        //Up
+                        //user = email;
+                        //user.Surname = userName;
+                        //var test = await _userManager.UpdateUserAsync(user);
+                    }
+                    return null;
+                }
+                else
+                {
+                    var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
+                    identityUser.Name = firstName;
+                    identityUser.Surname = lastName;
+                    identityUser.SetPhoneNumber(phoneNumber, false);
+                    var result = await _identityUserManager.CreateAsync(identityUser);
+
+                    if (result.Succeeded)
+                    {
+                        return identityUser;
+                    }
+                    else
+                        throw new Volo.Abp.BusinessException(message: result.ToString());
+                }
+            }
+        }
+
 
         public Task<Volo.Abp.Identity.IdentityUser> FindByNameAsync(string userName)
         {

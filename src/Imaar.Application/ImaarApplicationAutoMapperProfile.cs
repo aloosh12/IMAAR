@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Imaar.Categories;
+using Imaar.UserProfiles;
 
 namespace Imaar;
 
@@ -14,5 +15,8 @@ public class ImaarApplicationAutoMapperProfile : Profile
 
         CreateMap<Category, CategoryDto>();
         CreateMap<Category, CategoryExcelDto>();
+
+        CreateMap<UserProfile, UserProfileDto>();
+        CreateMap<UserProfile, UserProfileExcelDto>();
     }
 }
