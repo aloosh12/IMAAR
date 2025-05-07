@@ -10,14 +10,15 @@ namespace Imaar.MobileResponses
 {
     public  class RegisterResponse
     {
+        public string Id { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string SecurityCode { get; set; } = null!;
 
-        public BiologicalSex? biologicalSex = null;
-        public DateOnly? dateOfBirth = null;
+        public BiologicalSex? BiologicalSex = null;
+        public DateOnly? DateOfBirth = null;
         public string? Password { get; set; } = null;
         public string? Latitude { get; set; } = null;
         public string? Longitude { get; set; } = null;

@@ -18,11 +18,14 @@ namespace Imaar.UserProfiles
     {
         protected IUserProfileRepository _userProfileRepository;
         protected IdentityUserManager _identityUserManager;
+        protected IIdentityUserRepository _identityUserRepository;
+
         protected IDataFilter _dataFilter;
-        public UserProfileManagerBase(IUserProfileRepository userProfileRepository, IdentityUserManager identityUserManager, IDataFilter dataFilter)
+        public UserProfileManagerBase(IUserProfileRepository userProfileRepository, IdentityUserManager identityUserManager, IIdentityUserRepository identityUserRepository, IDataFilter  dataFilter)
         {
             _userProfileRepository = userProfileRepository;
             _identityUserManager = identityUserManager;
+            _identityUserRepository = identityUserRepository;
             _dataFilter = dataFilter;
         }
 

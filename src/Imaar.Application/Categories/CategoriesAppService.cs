@@ -21,7 +21,8 @@ using Imaar.Shared;
 namespace Imaar.Categories
 {
 
-    [Authorize(ImaarPermissions.Categories.Default)]
+    // [Authorize(ImaarPermissions.Categories.Default)]
+    [AllowAnonymous]
     public abstract class CategoriesAppServiceBase : ImaarAppService
     {
         protected IDistributedCache<CategoryDownloadTokenCacheItem, string> _downloadTokenCache;
@@ -53,13 +54,15 @@ namespace Imaar.Categories
             return ObjectMapper.Map<Category, CategoryDto>(await _categoryRepository.GetAsync(id));
         }
 
-        [Authorize(ImaarPermissions.Categories.Delete)]
+        // [Authorize(ImaarPermissions.Categories.Delete)]
+        [AllowAnonymous]
         public virtual async Task DeleteAsync(Guid id)
         {
             await _categoryRepository.DeleteAsync(id);
         }
 
-        [Authorize(ImaarPermissions.Categories.Create)]
+        //[Authorize(ImaarPermissions.Categories.Create)]
+        [AllowAnonymous]
         public virtual async Task<CategoryDto> CreateAsync(CategoryCreateDto input)
         {
 
@@ -70,7 +73,8 @@ namespace Imaar.Categories
             return ObjectMapper.Map<Category, CategoryDto>(category);
         }
 
-        [Authorize(ImaarPermissions.Categories.Edit)]
+        //[Authorize(ImaarPermissions.Categories.Edit)]
+        [AllowAnonymous]
         public virtual async Task<CategoryDto> UpdateAsync(Guid id, CategoryUpdateDto input)
         {
 
@@ -100,13 +104,15 @@ namespace Imaar.Categories
             return new RemoteStreamContent(memoryStream, "Categories.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
-        [Authorize(ImaarPermissions.Categories.Delete)]
+        // [Authorize(ImaarPermissions.Categories.Delete)]
+        [AllowAnonymous]
         public virtual async Task DeleteByIdsAsync(List<Guid> categoryIds)
         {
             await _categoryRepository.DeleteManyAsync(categoryIds);
         }
 
-        [Authorize(ImaarPermissions.Categories.Delete)]
+        // [Authorize(ImaarPermissions.Categories.Delete)]
+        [AllowAnonymous]
         public virtual async Task DeleteAllAsync(GetCategoriesInput input)
         {
             await _categoryRepository.DeleteAllAsync(input.FilterText, input.Title, input.OrderMin, input.OrderMax, input.IsActive);
