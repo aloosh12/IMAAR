@@ -25,6 +25,7 @@
   <ItemGroup>
     <PackageReference Include="Volo.Abp.AspNetCore.Components.Server.LeptonXLiteTheme" Version="3.2.0" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" Version="3.2.0" />
+    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>

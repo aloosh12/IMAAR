@@ -17,6 +17,7 @@
 @using Volo.Abp.ObjectMapping
 @using Volo.Abp.AspNetCore.Components.Messages
 @using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using Imaar.ServiceTypes 
 
 @using Imaar.Permissions
 @using Volo.Abp.AspNetCore.Components.Web
@@ -24,6 +25,7 @@
 @using Volo.Abp.Http.Client
 @inherits ImaarComponentBase
 @inject ICategoriesAppService CategoriesAppService
+@inject IServiceTypesAppService ServiceTypesAppService
 
 @inject IUiMessageService UiMessageService
 @inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
@@ -174,9 +176,9 @@
                   SelectedRows="SelectedCategories"
                   RowSelectable="@((args) => CanDeleteCategory)"
                   SelectedRowsChanged="SelectedCategoryRowsChanged"
-                  
-                  
-                  
+                  DetailRowTrigger="@((x) => { x.Single = true; return ShouldShowDetailRow(); })"
+                  DetailRowStartsVisible="false"
+                  RowClicked="@((e) => { if (e.Item.Id == SelectedCategory?.Id) { SelectedCategory = null; } else { SelectedCategory = e.Item; } })"
                   ReadData="OnDataGridReadAsync"
                   TotalItems="TotalCount"
                   ShowPager="true"
@@ -203,7 +205,23 @@
                 {
                     <DataGridMultiSelectColumn TItem="CategoryDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
                 }
-                
+                @if (ShouldShowDetailRow())
+                {
+                    <DataGridColumn TItem="CategoryDto"
+                                    Field="Id"
+                                    Width="0.5rem">
+                        <DisplayTemplate>
+                            @if (context.Id == SelectedCategory?.Id)
+                            {
+                                <i class="fas fa-chevron-up"/>
+                            }
+                            else
+                            {
+                                <i class="fas fa-chevron-down"/>
+                            }
+                        </DisplayTemplate>
+                    </DataGridColumn>
+                }
                 <DataGridEntityActionsColumn TItem="CategoryDto" @ref="@EntityActionsColumn">
                     <DisplayTemplate>
                         <EntityActions TItem="CategoryDto" EntityActionsColumn="@EntityActionsColumn">
@@ -250,7 +268,101 @@
 
             </DataGridColumns>
             
+            <DetailRowTemplate>
+    <div class="bg-light rounded p-3 pb-0 pt-1">
+        <Tabs SelectedTab="@SelectedChildTab" SelectedTabChanged="@OnSelectedChildTabChanged">
+            <Items>
+                <Tab Name="servicetype-tab">@L["ServiceTypes"]</Tab>
+            </Items>
             
+            <Content>
+                                        <TabPanel Name="servicetype-tab" Class="mt-0">
+                            @if (CanCreateServiceType)
+                            {
+                                <Row Class="mb-2">
+                                    <Column Class="d-flex justify-content-end">
+                                        <Button Color="Color.Primary" Clicked="async () => await OpenCreateServiceTypeModalAsync(context.Id)">
+                                            <i class="fas fa-plus me-1"></i>@L["NewServiceType"]
+                                        </Button>
+                                    </Column>
+                                </Row>
+                            }
+
+                            @{
+                                var serviceTypes = (context as CategoryDto).ServiceTypes;
+
+                                <DataGrid @ref="@ServiceTypeDataGrids[context.Id]"
+                                          TItem="ServiceTypeDto"
+                                          Data="serviceTypes"
+                                          ReadData="@((args) => OnServiceTypeDataGridReadAsync(args, context.Id))"
+                                          Sortable="true"
+                                          ShowCaptions="true"
+                                          ShowPager="true"
+                                          Responsive="true"
+                                          PageSize="ServiceTypePageSize">
+
+                                    <DataGridColumns>
+
+                                        <DataGridEntityActionsColumn TItem="ServiceTypeDto" @ref="@ServiceTypeEntityActionsColumns">
+                                            <DisplayTemplate Context="service_type_context">
+                                                <EntityActions TItem="ServiceTypeDto" EntityActionsColumn="@ServiceTypeEntityActionsColumns">
+                                                    <EntityAction TItem="ServiceTypeDto"
+                                                                  Visible="@CanEditServiceType"
+                                                                  Clicked="async () => await OpenEditServiceTypeModalAsync(service_type_context)"
+                                                                  Text="@L["Edit"]">
+                                                    </EntityAction>
+                                                    <EntityAction TItem="ServiceTypeDto"
+                                                                  Visible="@CanDeleteServiceType"
+                                                                  Clicked="async () => await DeleteServiceTypeAsync(service_type_context)"
+                                                                  ConfirmationMessage="@(() => L["DeleteConfirmationMessage"])"
+                                                                  Text="@L["Delete"]">
+                                                    </EntityAction>
+                                                </EntityActions>
+                                            </DisplayTemplate>
+                                        </DataGridEntityActionsColumn>
+
+                                        <DataGridCommandColumn/>
+
+                                        
+              <DataGridColumn TItem="ServiceTypeDto"
+                      Field="Title"
+                      Caption="@L["Title"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ServiceTypeDto"
+                      Field="Icon"
+                      Caption="@L["Icon"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ServiceTypeDto"
+                      Field="Order"
+                      Caption="@L["Order"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ServiceTypeDto"
+                      Field="IsActive"
+                      Caption="@L["IsActive"]">
+                    <DisplayTemplate Context="service_type_context">
+                        @if (service_type_context.IsActive)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+                                    </DataGridColumns>
+                                </DataGrid>
+                            }
+                        </TabPanel>
+            </Content>
+        </Tabs>
+    </div>
+</DetailRowTemplate>
         </DataGrid>
     </CardBody>
 </Card>
@@ -407,3 +519,140 @@
     </ModalContent>
 </Modal>
 
+@* ************************* ServiceType: CREATE MODAL ************************* *@
+<Modal @ref="CreateServiceTypeModal" Closing="@CreateServiceTypeModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreateServiceTypeForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewServiceType"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateServiceTypeModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewServiceTypeValidations"
+                             Mode="ValidationMode.Auto"
+                             Model="@NewServiceType"
+                             ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Title"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewServiceType.Title"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Icon"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewServiceType.Icon"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Order"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewServiceType.Order"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewServiceType.IsActive" >@L["IsActive"]</Check>
+                    </Field>
+
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateServiceTypeModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateServiceTypeForm" Clicked="CreateServiceTypeAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@* ************************* ServiceType: EDIT MODAL ************************* *@
+<Modal @ref="EditServiceTypeModal" Closing="@EditServiceTypeModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="EditServiceTypeForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditServiceTypeModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingServiceTypeValidations"
+                             Mode="ValidationMode.Auto"
+                             Model="@EditingServiceType"
+                             ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Title"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingServiceType.Title"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Icon"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingServiceType.Icon"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Order"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingServiceType.Order"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingServiceType.IsActive" >@L["IsActive"]</Check>
+                    </Field>
+
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditServiceTypeModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditServiceTypeForm" Clicked="UpdateServiceTypeAsync" />
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>

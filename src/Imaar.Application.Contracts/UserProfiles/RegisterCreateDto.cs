@@ -1,4 +1,5 @@
 using Imaar.UserProfiles;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
 namespace Imaar.UserProfiles
@@ -17,17 +18,19 @@ namespace Imaar.UserProfiles
         [Required]
         public string PhoneNumber { get; set; } = null!;
         [Required]
+        public string SecurityCode { get; set; } = null!;
+        [Required]
         public BiologicalSex? BiologicalSex = null!;
         [Required]
-        public DateOnly? DateOfBirth = null!;
+        public DateOnly DateOfBirth;
         [Required]
         public string? Password { get; set; } = null!;
         [Required]
         public string? Latitude { get; set; } = null!;
         [Required]
         public string? Longitude { get; set; } = null!;
-        [Required]
-        public string? ProfilePhoto { get; set; } = null!;
+
+        public IFormFile ProfilePhoto { get; set; }
         [Required]
         public string? RoleId { get; set; } = null!;
     }

@@ -9,5 +9,7 @@ public class ImaarMenus
     public const string Categories = Prefix + ".Categories";
 
     public const string UserProfiles = Prefix + ".UserProfiles";
+    public const string ImaarServices = Prefix + ".ImaarServices";
+
 
 }

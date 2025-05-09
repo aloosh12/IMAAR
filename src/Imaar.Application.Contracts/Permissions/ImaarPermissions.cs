@@ -22,4 +22,20 @@ public static class ImaarPermissions
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class ServiceTypes
+    {
+        public const string Default = GroupName + ".ServiceTypes";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
+
+    public static class ImaarServices
+    {
+        public const string Default = GroupName + ".ImaarServices";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
 }

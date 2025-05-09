@@ -22,6 +22,17 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         userProfilePermission.AddChild(ImaarPermissions.UserProfiles.Create, L("Permission:Create"));
         userProfilePermission.AddChild(ImaarPermissions.UserProfiles.Edit, L("Permission:Edit"));
         userProfilePermission.AddChild(ImaarPermissions.UserProfiles.Delete, L("Permission:Delete"));
+
+
+        var serviceTypePermission = myGroup.AddPermission(ImaarPermissions.ServiceTypes.Default, L("Permission:ServiceTypes"));
+        serviceTypePermission.AddChild(ImaarPermissions.ServiceTypes.Create, L("Permission:Create"));
+        serviceTypePermission.AddChild(ImaarPermissions.ServiceTypes.Edit, L("Permission:Edit"));
+        serviceTypePermission.AddChild(ImaarPermissions.ServiceTypes.Delete, L("Permission:Delete"));
+
+        var imaarServicePermission = myGroup.AddPermission(ImaarPermissions.ImaarServices.Default, L("Permission:ImaarServices"));
+        imaarServicePermission.AddChild(ImaarPermissions.ImaarServices.Create, L("Permission:Create"));
+        imaarServicePermission.AddChild(ImaarPermissions.ImaarServices.Edit, L("Permission:Edit"));
+        imaarServicePermission.AddChild(ImaarPermissions.ImaarServices.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

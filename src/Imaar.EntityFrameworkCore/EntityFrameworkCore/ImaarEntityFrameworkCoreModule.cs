@@ -14,6 +14,8 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Imaar.Categories;
 using Imaar.UserProfiles;
+using Imaar.ServiceTypes;
+using Imaar.ImaarServices;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -45,6 +47,9 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddDefaultRepositories(includeAllEntities: true);
             options.AddRepository<Category, Categories.EfCoreCategoryRepository>(); 
             options.AddRepository<UserProfile, UserProfiles.EfCoreUserProfileRepository>();
+            options.AddRepository<ServiceType, ServiceTypes.EfCoreServiceTypeRepository>();
+            options.AddRepository<ImaarService, ImaarServices.EfCoreImaarServiceRepository>();
+
 
         });
 

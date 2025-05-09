@@ -2,6 +2,7 @@ using Volo.Abp.AutoMapper;
 using Imaar.Categories;
 using AutoMapper;
 using Imaar.UserProfiles;
+using Imaar.ServiceTypes;
 
 namespace Imaar.Blazor;
 
@@ -13,5 +14,6 @@ public class ImaarBlazorAutoMapperProfile : Profile
 
         CreateMap<CategoryDto, CategoryUpdateDto>();
         CreateMap<UserProfileDto, UserProfileUpdateDto>();
+        CreateMap<ServiceTypeDto, ServiceTypeUpdateDto>();
     }
 }

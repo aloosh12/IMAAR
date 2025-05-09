@@ -1,3 +1,4 @@
+using Imaar.ServiceTypes;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ namespace Imaar.Categories
         public int Order { get; set; }
         public bool IsActive { get; set; }
 
+        public List<ServiceTypeDto> ServiceTypes { get; set; } = new();
         public string ConcurrencyStamp { get; set; } = null!;
 
     }

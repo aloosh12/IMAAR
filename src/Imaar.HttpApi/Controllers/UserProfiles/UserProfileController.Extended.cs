@@ -25,7 +25,7 @@ namespace Imaar.Controllers.UserProfiles
 
         [AllowAnonymous]
         [HttpPost("register-user")]
-        public virtual Task<MobileResponseDto> RegisterAsync(RegisterCreateDto input)
+        public virtual Task<MobileResponseDto> RegisterAsync([FromForm] RegisterCreateDto input)
         {
             return _userProfilesAppService.RegisterAsync(input);
         }

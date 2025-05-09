@@ -8,6 +8,7 @@ using Volo.Abp.MultiTenancy;
 using JetBrains.Annotations;
 
 using Volo.Abp;
+using Imaar.ServiceTypes;
 
 namespace Imaar.Categories
 {
@@ -22,6 +23,8 @@ namespace Imaar.Categories
         public virtual int Order { get; set; }
 
         public virtual bool IsActive { get; set; }
+        public ICollection<ServiceType> ServiceTypes { get; private set; }
+
 
         protected CategoryBase()
         {

@@ -13,7 +13,7 @@ using Imaar.WhatsApps;
 using Imaar.MobileResponses;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Imaar.Controllers.UserProfiles
+namespace Imaar.Controllers.WhatsApps
 {
     [RemoteService]
     [Area("app")]

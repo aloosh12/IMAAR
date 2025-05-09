@@ -11,6 +11,7 @@ using Volo.Abp.Data;
 using Volo.Abp.Identity;
 using Imaar.MobileResponses;
 using Microsoft.Win32;
+using Volo.Abp.BlobStoring;
 
 namespace Imaar.UserProfiles
 {
@@ -21,12 +22,14 @@ namespace Imaar.UserProfiles
         protected IIdentityUserRepository _identityUserRepository;
 
         protected IDataFilter _dataFilter;
-        public UserProfileManagerBase(IUserProfileRepository userProfileRepository, IdentityUserManager identityUserManager, IIdentityUserRepository identityUserRepository, IDataFilter  dataFilter)
+        protected IBlobContainer<UserProfileContainer> _userProfileContainer;
+        public UserProfileManagerBase(IUserProfileRepository userProfileRepository, IdentityUserManager identityUserManager, IIdentityUserRepository identityUserRepository, IDataFilter  dataFilter, IBlobContainer<UserProfileContainer> userProfileContainer)
         {
             _userProfileRepository = userProfileRepository;
             _identityUserManager = identityUserManager;
             _identityUserRepository = identityUserRepository;
             _dataFilter = dataFilter;
+            _userProfileContainer = userProfileContainer;
         }
 
         public virtual async Task<UserProfile> CreateAsync(

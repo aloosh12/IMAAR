@@ -64,6 +64,15 @@ icon: "fa fa-file-alt",
 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.UserProfiles.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.ImaarServices,
+                l["Menu:ImaarServices"],
+                url: "/imaar-services",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.ImaarServices.Default)
+        );
         return Task.CompletedTask;
     }
 }

@@ -1,6 +1,11 @@
 ﻿using AutoMapper;
 using Imaar.Categories;
 using Imaar.UserProfiles;
+using Imaar.ServiceTypes;
+using Imaar.Shared;
+using Imaar.ImaarServices;
+using System;
+using Imaar.MobileResponses;
 
 namespace Imaar;
 
@@ -18,5 +23,15 @@ public class ImaarApplicationAutoMapperProfile : Profile
 
         CreateMap<UserProfile, UserProfileDto>();
         CreateMap<UserProfile, UserProfileExcelDto>();
+        CreateMap<ServiceType, ServiceTypeDto>();
+
+
+        CreateMap<ImaarService, ImaarServiceDto>();
+        CreateMap<ImaarService, ImaarServiceExcelDto>();
+        CreateMap<ImaarServiceWithNavigationProperties, ImaarServiceWithNavigationPropertiesDto>();
+        CreateMap<ServiceType, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+        CreateMap<UserProfile, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.SecurityNumber));
+
+        CreateMap<MobileResponse, MobileResponseDto>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Imaar.Categories;
 using Imaar.UserProfiles;
+using Imaar.ServiceTypes;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Imaar.ImaarServices;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -26,6 +28,8 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<ImaarService> ImaarServices { get; set; } = null!;
+    public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
     public DbSet<UserProfile> UserProfiles { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
@@ -90,6 +94,24 @@ public class ImaarDbContext :
 
         if (builder.IsHostDatabase())
         {
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<UserProfile>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "UserProfiles", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.SecurityNumber).HasColumnName(nameof(UserProfile.SecurityNumber)).IsRequired();
+                b.Property(x => x.BiologicalSex).HasColumnName(nameof(UserProfile.BiologicalSex));
+                b.Property(x => x.DateOfBirth).HasColumnName(nameof(UserProfile.DateOfBirth));
+                b.Property(x => x.Latitude).HasColumnName(nameof(UserProfile.Latitude));
+                b.Property(x => x.Longitude).HasColumnName(nameof(UserProfile.Longitude));
+                b.Property(x => x.ProfilePhoto).HasColumnName(nameof(UserProfile.ProfilePhoto));
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
             builder.Entity<Category>(b =>
             {
                 b.ToTable(ImaarConsts.DbTablePrefix + "Categories", ImaarConsts.DbSchema);
@@ -98,6 +120,45 @@ public class ImaarDbContext :
                 b.Property(x => x.Icon).HasColumnName(nameof(Category.Icon)).IsRequired();
                 b.Property(x => x.Order).HasColumnName(nameof(Category.Order));
                 b.Property(x => x.IsActive).HasColumnName(nameof(Category.IsActive));
+                b.HasMany(x => x.ServiceTypes).WithOne().HasForeignKey(x => x.CategoryId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<ServiceType>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "ServiceTypes", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(ServiceType.Title)).IsRequired();
+                b.Property(x => x.Icon).HasColumnName(nameof(ServiceType.Icon));
+                b.Property(x => x.Order).HasColumnName(nameof(ServiceType.Order));
+                b.Property(x => x.IsActive).HasColumnName(nameof(ServiceType.IsActive));
+                b.HasOne<Category>().WithMany(x => x.ServiceTypes).HasForeignKey(x => x.CategoryId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            });
+
+        }
+
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<ImaarService>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "ImaarServices", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(ImaarService.Title)).IsRequired();
+                b.Property(x => x.Description).HasColumnName(nameof(ImaarService.Description)).IsRequired();
+                b.Property(x => x.ServiceLocation).HasColumnName(nameof(ImaarService.ServiceLocation)).IsRequired();
+                b.Property(x => x.ServiceNumber).HasColumnName(nameof(ImaarService.ServiceNumber)).IsRequired();
+                b.Property(x => x.DateOfPublish).HasColumnName(nameof(ImaarService.DateOfPublish));
+                b.Property(x => x.Price).HasColumnName(nameof(ImaarService.Price));
+                b.Property(x => x.Latitude).HasColumnName(nameof(ImaarService.Latitude));
+                b.Property(x => x.Longitude).HasColumnName(nameof(ImaarService.Longitude));
+                b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
             });
 
         }

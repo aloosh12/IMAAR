@@ -55,6 +55,24 @@
     "MinDateOfBirth": "Min Date Of Birth",
     "MaxDateOfBirth": "Max Date Of Birth",
     "NewUserProfile": "New User Profile",
-    "Menu:UserProfiles": "User Profiles"
+    "Menu:UserProfiles": "User Profiles",
+    "ServiceTypes": "Service Types",
+    "NewServiceType": "New Service Type",
+    "Permission:ServiceTypes": "Service Types",
+    "ServiceType": "Service type",
+    "UserProfile": "User profile",
+    "Permission:ImaarServices": "Imaar Services",
+    "Description": "Description",
+    "ServiceLocation": "Service Location",
+    "ServiceNumber": "Service Number",
+    "DateOfPublish": "Date Of Publish",
+    "Price": "Price",
+    "ImaarServices": "Imaar Services",
+    "MinDateOfPublish": "Min Date Of Publish",
+    "MinPrice": "Min Price",
+    "MaxDateOfPublish": "Max Date Of Publish",
+    "MaxPrice": "Max Price",
+    "NewImaarService": "New Imaar Service",
+    "Menu:ImaarServices": "Imaar Services"
   }
 }

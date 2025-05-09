@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Volo.Abp;
 using Volo.Abp.Content;
+using Imaar.ServiceTypes; 
 
 
 
@@ -56,7 +57,29 @@ namespace Imaar.Blazor.Pages
         private CategoryDto? SelectedCategory;
         
         
+                #region Child Entities
         
+                #region ServiceTypes
+
+                private bool CanListServiceType { get; set; }
+                private bool CanCreateServiceType { get; set; }
+                private bool CanEditServiceType { get; set; }
+                private bool CanDeleteServiceType { get; set; }
+                private ServiceTypeCreateDto NewServiceType { get; set; }
+                private Dictionary<Guid, DataGrid<ServiceTypeDto>> ServiceTypeDataGrids { get; set; } = new();
+                private int ServiceTypePageSize { get; } = 5;
+                private DataGridEntityActionsColumn<ServiceTypeDto> ServiceTypeEntityActionsColumns { get; set; } = new();
+                private Validations NewServiceTypeValidations { get; set; } = new();
+                private Modal CreateServiceTypeModal { get; set; } = new();
+                private Guid EditingServiceTypeId { get; set; }
+                private ServiceTypeUpdateDto EditingServiceType { get; set; }
+                private Validations EditingServiceTypeValidations { get; set; } = new();
+                private Modal EditServiceTypeModal { get; set; } = new();
+    
+            
+                #endregion
+        
+        #endregion
         
         
         private List<CategoryDto> SelectedCategories { get; set; } = new();
@@ -74,7 +97,8 @@ namespace Imaar.Blazor.Pages
             };
             CategoryList = new List<CategoryDto>();
             
-            
+            NewServiceType = new ServiceTypeCreateDto();
+EditingServiceType = new ServiceTypeUpdateDto();
         }
 
         protected override async Task OnInitializedAsync()
@@ -121,7 +145,17 @@ namespace Imaar.Blazor.Pages
             CanDeleteCategory = await AuthorizationService
                             .IsGrantedAsync(ImaarPermissions.Categories.Delete);
                             
-                            
+            
+            #region ServiceTypes
+            CanListServiceType = await AuthorizationService
+                .IsGrantedAsync(ImaarPermissions.ServiceTypes.Default);
+            CanCreateServiceType = await AuthorizationService
+                .IsGrantedAsync(ImaarPermissions.ServiceTypes.Create);
+            CanEditServiceType = await AuthorizationService
+                .IsGrantedAsync(ImaarPermissions.ServiceTypes.Edit);
+            CanDeleteServiceType = await AuthorizationService
+                .IsGrantedAsync(ImaarPermissions.ServiceTypes.Delete);
+            #endregion                
         }
 
         private async Task GetCategoriesAsync()
@@ -295,7 +329,19 @@ namespace Imaar.Blazor.Pages
         
 
 
-
+    private bool ShouldShowDetailRow()
+    {
+        return CanListServiceType;
+    }
+    
+    public string SelectedChildTab { get; set; } = "servicetype-tab";
+        
+    private Task OnSelectedChildTabChanged(string name)
+    {
+        SelectedChildTab = name;
+    
+        return Task.CompletedTask;
+    }
 
 
         private Task SelectAllItems()
@@ -348,5 +394,130 @@ namespace Imaar.Blazor.Pages
         }
 
 
+        #region ServiceTypes
+        
+        private async Task OnServiceTypeDataGridReadAsync(DataGridReadDataEventArgs<ServiceTypeDto> e, Guid categoryId)
+        {
+            var sorting = e.Columns
+                .Where(c => c.SortDirection != SortDirection.Default)
+                .Select(c => c.Field + (c.SortDirection == SortDirection.Descending ? " DESC" : ""))
+                .JoinAsString(",");
+
+            var currentPage = e.Page;
+            await SetServiceTypesAsync(categoryId, currentPage, sorting: sorting);
+            await InvokeAsync(StateHasChanged);
+        }
+        
+        private async Task SetServiceTypesAsync(Guid categoryId, int currentPage = 1, string? sorting = null)
+        {
+            var category = CategoryList.FirstOrDefault(x => x.Id == categoryId);
+            if(category == null)
+            {
+                return;
+            }
+
+            var serviceTypes = await ServiceTypesAppService.GetListByCategoryIdAsync(new GetServiceTypeListInput 
+            {
+                CategoryId = categoryId,
+                MaxResultCount = ServiceTypePageSize,
+                SkipCount = (currentPage - 1) * ServiceTypePageSize,
+                Sorting = sorting
+            });
+
+            category.ServiceTypes = serviceTypes.Items.ToList();
+
+            var serviceTypeDataGrid = ServiceTypeDataGrids[categoryId];
+            
+            serviceTypeDataGrid.CurrentPage = currentPage;
+            serviceTypeDataGrid.TotalItems = (int)serviceTypes.TotalCount;
+        }
+        
+        private async Task OpenEditServiceTypeModalAsync(ServiceTypeDto input)
+        {
+            
+            
+            var serviceType = await ServiceTypesAppService.GetAsync(input.Id);
+
+            EditingServiceTypeId = serviceType.Id;
+            EditingServiceType = ObjectMapper.Map<ServiceTypeDto, ServiceTypeUpdateDto>(serviceType);
+            
+            
+            await EditingServiceTypeValidations.ClearAll();
+            await EditServiceTypeModal.Show();
+        }
+        
+        private async Task CloseEditServiceTypeModalAsync()
+        {
+            await EditServiceTypeModal.Hide();
+        }
+        
+        private async Task UpdateServiceTypeAsync()
+        {
+            try
+            {
+                if (await EditingServiceTypeValidations.ValidateAll() == false)
+                {
+                    return;
+                }
+
+                await ServiceTypesAppService.UpdateAsync(EditingServiceTypeId, EditingServiceType);
+                await SetServiceTypesAsync(EditingServiceType.CategoryId);
+                await EditServiceTypeModal.Hide();
+            }
+            catch (Exception ex)
+            {
+                await HandleErrorAsync(ex);
+            }
+        }
+        
+        private async Task DeleteServiceTypeAsync(ServiceTypeDto input)
+        {
+            await ServiceTypesAppService.DeleteAsync(input.Id);
+            await SetServiceTypesAsync(input.CategoryId);
+        }
+        
+        private async Task OpenCreateServiceTypeModalAsync(Guid categoryId)
+        {
+            NewServiceType = new ServiceTypeCreateDto
+            {
+                CategoryId = categoryId
+            };
+            
+            
+            await NewServiceTypeValidations.ClearAll();
+            await CreateServiceTypeModal.Show();
+        }
+        
+        private async Task CloseCreateServiceTypeModalAsync()
+        {
+            NewServiceType = new ServiceTypeCreateDto();
+
+            await CreateServiceTypeModal.Hide();
+        }
+        
+        private async Task CreateServiceTypeAsync()
+        {
+            try
+            {
+                if (await NewServiceTypeValidations.ValidateAll() == false)
+                {
+                    return;
+                }
+
+                await ServiceTypesAppService.CreateAsync(NewServiceType);
+                await SetServiceTypesAsync(NewServiceType.CategoryId);
+                await CloseCreateServiceTypeModalAsync();
+            }
+            catch (Exception ex)
+            {
+                await HandleErrorAsync(ex);
+            }
+        }
+        
+        
+        
+        
+        
+        #endregion
     }
 }
