@@ -73,6 +73,15 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.ImaarServices.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.VerificationCodes,
+                l["Menu:VerificationCodes"],
+                url: "/verification-codes",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.VerificationCodes.Default)
+        );
         return Task.CompletedTask;
     }
 }

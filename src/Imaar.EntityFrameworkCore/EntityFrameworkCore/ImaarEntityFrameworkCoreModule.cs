@@ -16,6 +16,7 @@ using Imaar.Categories;
 using Imaar.UserProfiles;
 using Imaar.ServiceTypes;
 using Imaar.ImaarServices;
+using Imaar.VerificationCodes;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -49,6 +50,7 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<UserProfile, UserProfiles.EfCoreUserProfileRepository>();
             options.AddRepository<ServiceType, ServiceTypes.EfCoreServiceTypeRepository>();
             options.AddRepository<ImaarService, ImaarServices.EfCoreImaarServiceRepository>();
+            options.AddRepository<VerificationCode, VerificationCodes.EfCoreVerificationCodeRepository>();
 
 
         });

@@ -33,6 +33,11 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         imaarServicePermission.AddChild(ImaarPermissions.ImaarServices.Create, L("Permission:Create"));
         imaarServicePermission.AddChild(ImaarPermissions.ImaarServices.Edit, L("Permission:Edit"));
         imaarServicePermission.AddChild(ImaarPermissions.ImaarServices.Delete, L("Permission:Delete"));
+
+        var verificationCodePermission = myGroup.AddPermission(ImaarPermissions.VerificationCodes.Default, L("Permission:VerificationCodes"));
+        verificationCodePermission.AddChild(ImaarPermissions.VerificationCodes.Create, L("Permission:Create"));
+        verificationCodePermission.AddChild(ImaarPermissions.VerificationCodes.Edit, L("Permission:Edit"));
+        verificationCodePermission.AddChild(ImaarPermissions.VerificationCodes.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

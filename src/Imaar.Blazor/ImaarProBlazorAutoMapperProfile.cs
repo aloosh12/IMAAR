@@ -3,6 +3,7 @@ using Imaar.Categories;
 using AutoMapper;
 using Imaar.UserProfiles;
 using Imaar.ServiceTypes;
+using Imaar.VerificationCodes;
 
 namespace Imaar.Blazor;
 
@@ -15,5 +16,6 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<CategoryDto, CategoryUpdateDto>();
         CreateMap<UserProfileDto, UserProfileUpdateDto>();
         CreateMap<ServiceTypeDto, ServiceTypeUpdateDto>();
+        CreateMap<VerificationCodeDto, VerificationCodeUpdateDto>();
     }
 }

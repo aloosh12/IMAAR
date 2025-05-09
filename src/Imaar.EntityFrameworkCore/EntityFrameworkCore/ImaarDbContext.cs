@@ -17,6 +17,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Imaar.ImaarServices;
+using Imaar.VerificationCodes;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -159,6 +160,18 @@ public class ImaarDbContext :
                 b.Property(x => x.Longitude).HasColumnName(nameof(ImaarService.Longitude));
                 b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<VerificationCode>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "VerificationCodes", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.PhoneNumber).HasColumnName(nameof(VerificationCode.PhoneNumber)).IsRequired();
+                b.Property(x => x.SecurityCode).HasColumnName(nameof(VerificationCode.SecurityCode));
+                b.Property(x => x.IsFinish).HasColumnName(nameof(VerificationCode.IsFinish));
             });
 
         }

@@ -10,6 +10,8 @@ public class ImaarMenus
 
     public const string UserProfiles = Prefix + ".UserProfiles";
     public const string ImaarServices = Prefix + ".ImaarServices";
+    public const string VerificationCodes = Prefix + ".VerificationCodes";
+
 
 
 }

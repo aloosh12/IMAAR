@@ -6,6 +6,7 @@ using Imaar.Shared;
 using Imaar.ImaarServices;
 using System;
 using Imaar.MobileResponses;
+using Imaar.VerificationCodes;
 
 namespace Imaar;
 
@@ -33,5 +34,8 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<UserProfile, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.SecurityNumber));
 
         CreateMap<MobileResponse, MobileResponseDto>();
+
+        CreateMap<VerificationCode, VerificationCodeDto>();
+        CreateMap<VerificationCode, VerificationCodeExcelDto>();
     }
 }

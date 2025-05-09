@@ -73,6 +73,15 @@
     "MaxDateOfPublish": "Max Date Of Publish",
     "MaxPrice": "Max Price",
     "NewImaarService": "New Imaar Service",
-    "Menu:ImaarServices": "Imaar Services"
+    "Menu:ImaarServices": "Imaar Services",
+    "Permission:VerificationCodes": "Verification Codes",
+    "PhoneNumber": "Phone Number",
+    "SecurityCode": "Security Code",
+    "IsFinish": "Is Finish",
+    "VerificationCodes": "Verification Codes",
+    "MinSecurityCode": "Min Security Code",
+    "MaxSecurityCode": "Max Security Code",
+    "NewVerificationCode": "New Verification Code",
+    "Menu:VerificationCodes": "Verification Codes"
   }
 }
