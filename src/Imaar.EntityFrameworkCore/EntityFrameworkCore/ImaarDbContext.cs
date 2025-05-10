@@ -18,6 +18,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Imaar.ImaarServices;
 using Imaar.VerificationCodes;
+using Imaar.TicketTypes;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -172,6 +173,18 @@ public class ImaarDbContext :
                 b.Property(x => x.PhoneNumber).HasColumnName(nameof(VerificationCode.PhoneNumber)).IsRequired();
                 b.Property(x => x.SecurityCode).HasColumnName(nameof(VerificationCode.SecurityCode));
                 b.Property(x => x.IsFinish).HasColumnName(nameof(VerificationCode.IsFinish));
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<TicketType>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "TicketTypes", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(TicketType.Title)).IsRequired();
+                b.Property(x => x.Order).HasColumnName(nameof(TicketType.Order));
+                b.Property(x => x.IsActive).HasColumnName(nameof(TicketType.IsActive));
             });
 
         }

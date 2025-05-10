@@ -82,6 +82,15 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.VerificationCodes.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.TicketTypes,
+                l["Menu:TicketTypes"],
+                url: "/ticket-types",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.TicketTypes.Default)
+        );
         return Task.CompletedTask;
     }
 }

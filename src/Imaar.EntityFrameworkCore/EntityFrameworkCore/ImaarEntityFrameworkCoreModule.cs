@@ -17,6 +17,7 @@ using Imaar.UserProfiles;
 using Imaar.ServiceTypes;
 using Imaar.ImaarServices;
 using Imaar.VerificationCodes;
+using Imaar.TicketTypes;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -51,6 +52,7 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<ServiceType, ServiceTypes.EfCoreServiceTypeRepository>();
             options.AddRepository<ImaarService, ImaarServices.EfCoreImaarServiceRepository>();
             options.AddRepository<VerificationCode, VerificationCodes.EfCoreVerificationCodeRepository>();
+            options.AddRepository<TicketType, TicketTypes.EfCoreTicketTypeRepository>();
 
 
         });

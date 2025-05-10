@@ -82,6 +82,10 @@
     "MinSecurityCode": "Min Security Code",
     "MaxSecurityCode": "Max Security Code",
     "NewVerificationCode": "New Verification Code",
-    "Menu:VerificationCodes": "Verification Codes"
+    "Menu:VerificationCodes": "Verification Codes",
+    "Permission:TicketTypes": "Ticket Types",
+    "TicketTypes": "Ticket Types",
+    "NewTicketType": "New Ticket Type",
+    "Menu:TicketTypes": "Ticket Types"
   }
 }

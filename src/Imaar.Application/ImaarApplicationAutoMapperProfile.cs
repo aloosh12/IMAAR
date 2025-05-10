@@ -7,6 +7,7 @@ using Imaar.ImaarServices;
 using System;
 using Imaar.MobileResponses;
 using Imaar.VerificationCodes;
+using Imaar.TicketTypes;
 
 namespace Imaar;
 
@@ -37,5 +38,8 @@ public class ImaarApplicationAutoMapperProfile : Profile
 
         CreateMap<VerificationCode, VerificationCodeDto>();
         CreateMap<VerificationCode, VerificationCodeExcelDto>();
+
+        CreateMap<TicketType, TicketTypeDto>();
+        CreateMap<TicketType, TicketTypeExcelDto>();
     }
 }
