@@ -36,7 +36,7 @@ namespace Imaar.UserProfiles
         [AllowAnonymous]
         public virtual async Task<MobileResponseDto> RegisterAsync(RegisterCreateDto input)
         {
-            var user = await _userProfileManager.CreatWithDetialsAsync(input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.Password, input.SecurityCode, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto);
+            var user = await _userProfileManager.CreatWithDetialsAsync(input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.Password, input.SecurityCode, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto, input.RoleId);
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(user);
         }
 

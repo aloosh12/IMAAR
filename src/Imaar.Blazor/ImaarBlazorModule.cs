@@ -104,6 +104,9 @@ public class ImaarBlazorModule : AbpModule
             PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
             {
                 serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "cfce65e6-8592-4687-ba4f-38234ef51d6a");
+                serverBuilder.SetIssuer(new Uri(configuration["AuthServer:Authority"]));
+                serverBuilder.SetAccessTokenLifetime(TimeSpan.FromDays(30));
+                serverBuilder.UseAspNetCore().DisableTransportSecurityRequirement();
             });
         }
 

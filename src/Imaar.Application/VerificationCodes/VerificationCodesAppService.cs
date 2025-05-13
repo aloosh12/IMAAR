@@ -17,23 +17,24 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using Imaar.Shared;
+using System.Net.Http;
 
 namespace Imaar.VerificationCodes
 {
 
+    [RemoteService(false)]
     [Authorize(ImaarPermissions.VerificationCodes.Default)]
     public abstract class VerificationCodesAppServiceBase : ImaarAppService
     {
         protected IDistributedCache<VerificationCodeDownloadTokenCacheItem, string> _downloadTokenCache;
         protected IVerificationCodeRepository _verificationCodeRepository;
         protected VerificationCodeManager _verificationCodeManager;
-
         public VerificationCodesAppServiceBase(IVerificationCodeRepository verificationCodeRepository, VerificationCodeManager verificationCodeManager, IDistributedCache<VerificationCodeDownloadTokenCacheItem, string> downloadTokenCache)
         {
             _downloadTokenCache = downloadTokenCache;
             _verificationCodeRepository = verificationCodeRepository;
             _verificationCodeManager = verificationCodeManager;
-
+     
         }
 
         public virtual async Task<PagedResultDto<VerificationCodeDto>> GetListAsync(GetVerificationCodesInput input)

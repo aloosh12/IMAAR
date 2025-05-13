@@ -29,7 +29,7 @@ namespace Imaar.UserProfiles
 
         //Write your custom code...
 
-        public virtual async Task<MobileResponse> CreatWithDetialsAsync(string firstName, string lastName, string phoneNumber, string email, string password, string securityCode, BiologicalSex? biologicalSex , DateOnly dateOfBirth, string latitude, string longitude, IFormFile profilePhoto)
+        public virtual async Task<MobileResponse> CreatWithDetialsAsync(string firstName, string lastName, string phoneNumber, string email, string password, string securityCode, BiologicalSex? biologicalSex , DateOnly dateOfBirth, string latitude, string longitude, IFormFile profilePhoto, string roleName)
         {
             MobileResponse mobileResponse = new MobileResponse();
             Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
@@ -63,6 +63,11 @@ namespace Imaar.UserProfiles
                         identityUser.Name = firstName;
                         identityUser.Surname = lastName;
                         identityUser.SetPhoneNumber(phoneNumber, false);
+                        if (roleName.Trim() == "N")
+                            identityUser.AddRole(Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e"));
+                        if (roleName.Trim() == "SP")
+                            identityUser.AddRole(Guid.Parse("3454fc01-7d85-48cf-9d7d-3a19d0565a75"));
+
                         var result = await _identityUserManager.CreateAsync(identityUser, password, false);
 
                         if (result.Succeeded)

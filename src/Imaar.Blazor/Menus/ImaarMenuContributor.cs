@@ -91,6 +91,52 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.TicketTypes.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Tickets,
+                l["Menu:Tickets"],
+                url: "/tickets",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Tickets.Default)
+        );
+
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Stories,
+                l["Menu:Stories"],
+                url: "/stories",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Stories.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.StoryLovers,
+                l["Menu:StoryLovers"],
+                url: "/story-lovers",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.StoryLovers.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Vacancies,
+                l["Menu:Vacancies"],
+                url: "/vacancies",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Vacancies.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Medias,
+                l["Menu:Medias"],
+                url: "/medias",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Medias.Default)
+        );
         return Task.CompletedTask;
     }
 }

@@ -43,6 +43,32 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         ticketTypePermission.AddChild(ImaarPermissions.TicketTypes.Create, L("Permission:Create"));
         ticketTypePermission.AddChild(ImaarPermissions.TicketTypes.Edit, L("Permission:Edit"));
         ticketTypePermission.AddChild(ImaarPermissions.TicketTypes.Delete, L("Permission:Delete"));
+
+        var ticketPermission = myGroup.AddPermission(ImaarPermissions.Tickets.Default, L("Permission:Tickets"));
+        ticketPermission.AddChild(ImaarPermissions.Tickets.Create, L("Permission:Create"));
+        ticketPermission.AddChild(ImaarPermissions.Tickets.Edit, L("Permission:Edit"));
+        ticketPermission.AddChild(ImaarPermissions.Tickets.Delete, L("Permission:Delete"));
+
+
+        var storyPermission = myGroup.AddPermission(ImaarPermissions.Stories.Default, L("Permission:Stories"));
+        storyPermission.AddChild(ImaarPermissions.Stories.Create, L("Permission:Create"));
+        storyPermission.AddChild(ImaarPermissions.Stories.Edit, L("Permission:Edit"));
+        storyPermission.AddChild(ImaarPermissions.Stories.Delete, L("Permission:Delete"));
+
+        var storyLoverPermission = myGroup.AddPermission(ImaarPermissions.StoryLovers.Default, L("Permission:StoryLovers"));
+        storyLoverPermission.AddChild(ImaarPermissions.StoryLovers.Create, L("Permission:Create"));
+        storyLoverPermission.AddChild(ImaarPermissions.StoryLovers.Edit, L("Permission:Edit"));
+        storyLoverPermission.AddChild(ImaarPermissions.StoryLovers.Delete, L("Permission:Delete"));
+
+        var vacancyPermission = myGroup.AddPermission(ImaarPermissions.Vacancies.Default, L("Permission:Vacancies"));
+        vacancyPermission.AddChild(ImaarPermissions.Vacancies.Create, L("Permission:Create"));
+        vacancyPermission.AddChild(ImaarPermissions.Vacancies.Edit, L("Permission:Edit"));
+        vacancyPermission.AddChild(ImaarPermissions.Vacancies.Delete, L("Permission:Delete"));
+
+        var mediaPermission = myGroup.AddPermission(ImaarPermissions.Medias.Default, L("Permission:Medias"));
+        mediaPermission.AddChild(ImaarPermissions.Medias.Create, L("Permission:Create"));
+        mediaPermission.AddChild(ImaarPermissions.Medias.Edit, L("Permission:Edit"));
+        mediaPermission.AddChild(ImaarPermissions.Medias.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

@@ -8,6 +8,11 @@ using System;
 using Imaar.MobileResponses;
 using Imaar.VerificationCodes;
 using Imaar.TicketTypes;
+using Imaar.Tickets;
+using Imaar.Medias;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Vacancies;
 
 namespace Imaar;
 
@@ -41,5 +46,31 @@ public class ImaarApplicationAutoMapperProfile : Profile
 
         CreateMap<TicketType, TicketTypeDto>();
         CreateMap<TicketType, TicketTypeExcelDto>();
+
+
+        CreateMap<Ticket, TicketDto>();
+        CreateMap<Ticket, TicketExcelDto>();
+        CreateMap<TicketWithNavigationProperties, TicketWithNavigationPropertiesDto>();
+        CreateMap<TicketType, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+
+
+        CreateMap<Story, StoryDto>();
+        CreateMap<Story, StoryExcelDto>();
+        CreateMap<StoryWithNavigationProperties, StoryWithNavigationPropertiesDto>();
+
+        CreateMap<StoryLover, StoryLoverDto>();
+        CreateMap<StoryLover, StoryLoverExcelDto>();
+        CreateMap<StoryLoverWithNavigationProperties, StoryLoverWithNavigationPropertiesDto>();
+        CreateMap<Story, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+
+        CreateMap<Vacancy, VacancyDto>();
+        CreateMap<Vacancy, VacancyExcelDto>();
+        CreateMap<VacancyWithNavigationProperties, VacancyWithNavigationPropertiesDto>();
+
+        CreateMap<Media, MediaDto>();
+        CreateMap<Media, MediaExcelDto>();
+        CreateMap<MediaWithNavigationProperties, MediaWithNavigationPropertiesDto>();
+        CreateMap<ImaarService, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+        CreateMap<Vacancy, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
     }
 }

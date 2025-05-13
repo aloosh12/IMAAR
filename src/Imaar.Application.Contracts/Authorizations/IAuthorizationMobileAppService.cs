@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imaar.MobileResponses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,6 @@ namespace Imaar.Authorizations
 {
     public interface IAuthorizationMobileAppService : IApplicationService
     {
-        Task<object> GetAbpLogInAsync(TokenRequest request);
+        Task<MobileResponseDto> GetAbpLogInAsync(TokenRequest request);
     }
 }

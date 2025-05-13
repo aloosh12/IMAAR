@@ -19,6 +19,11 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Imaar.ImaarServices;
 using Imaar.VerificationCodes;
 using Imaar.TicketTypes;
+using Imaar.Tickets;
+using Imaar.Medias;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Vacancies;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -30,6 +35,13 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<Media> Medias { get; set; } = null!;
+    public DbSet<Vacancy> Vacancies { get; set; } = null!;
+    public DbSet<StoryLover> StoryLovers { get; set; } = null!;
+    public DbSet<Story> Stories { get; set; } = null!;
+    public DbSet<Ticket> Tickets { get; set; } = null!;
+    public DbSet<TicketType> TicketTypes { get; set; } = null!;
+    public DbSet<VerificationCode> VerificationCodes { get; set; } = null!;
     public DbSet<ImaarService> ImaarServices { get; set; } = null!;
     public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
     public DbSet<UserProfile> UserProfiles { get; set; } = null!;
@@ -185,6 +197,93 @@ public class ImaarDbContext :
                 b.Property(x => x.Title).HasColumnName(nameof(TicketType.Title)).IsRequired();
                 b.Property(x => x.Order).HasColumnName(nameof(TicketType.Order));
                 b.Property(x => x.IsActive).HasColumnName(nameof(TicketType.IsActive));
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Ticket>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Tickets", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Description).HasColumnName(nameof(Ticket.Description)).IsRequired();
+                b.HasOne<TicketType>().WithMany().IsRequired().HasForeignKey(x => x.TicketTypeId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.TicketCreatorId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.TicketAgainstId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Story>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Stories", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(Story.Title));
+                b.Property(x => x.FromTime).HasColumnName(nameof(Story.FromTime));
+                b.Property(x => x.ExpiryTime).HasColumnName(nameof(Story.ExpiryTime));
+                b.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.StoryPublisherId).OnDelete(DeleteBehavior.SetNull);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<StoryLover>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "StoryLovers", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<Story>().WithMany().IsRequired().HasForeignKey(x => x.StoryId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Vacancy>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Vacancies", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(Vacancy.Title)).IsRequired();
+                b.Property(x => x.Description).HasColumnName(nameof(Vacancy.Description)).IsRequired();
+                b.Property(x => x.Location).HasColumnName(nameof(Vacancy.Location)).IsRequired();
+                b.Property(x => x.Number).HasColumnName(nameof(Vacancy.Number)).IsRequired();
+                b.Property(x => x.Latitude).HasColumnName(nameof(Vacancy.Latitude));
+                b.Property(x => x.Longitude).HasColumnName(nameof(Vacancy.Longitude));
+                b.Property(x => x.DateOfPublish).HasColumnName(nameof(Vacancy.DateOfPublish));
+                b.Property(x => x.ExpectedExperience).HasColumnName(nameof(Vacancy.ExpectedExperience));
+                b.Property(x => x.EducationLevel).HasColumnName(nameof(Vacancy.EducationLevel));
+                b.Property(x => x.WorkSchedule).HasColumnName(nameof(Vacancy.WorkSchedule));
+                b.Property(x => x.EmploymentType).HasColumnName(nameof(Vacancy.EmploymentType));
+                b.Property(x => x.BiologicalSex).HasColumnName(nameof(Vacancy.BiologicalSex));
+                b.Property(x => x.Languages).HasColumnName(nameof(Vacancy.Languages));
+                b.Property(x => x.DriveLicense).HasColumnName(nameof(Vacancy.DriveLicense));
+                b.Property(x => x.Salary).HasColumnName(nameof(Vacancy.Salary));
+                b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Media>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Medias", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(Media.Title));
+                b.Property(x => x.File).HasColumnName(nameof(Media.File)).IsRequired();
+                b.Property(x => x.Order).HasColumnName(nameof(Media.Order));
+                b.Property(x => x.IsActive).HasColumnName(nameof(Media.IsActive));
+                b.HasOne<ImaarService>().WithMany().HasForeignKey(x => x.ImaarServiceId).OnDelete(DeleteBehavior.SetNull);
+                b.HasOne<Vacancy>().WithMany().HasForeignKey(x => x.VacancyId).OnDelete(DeleteBehavior.SetNull);
+                b.HasOne<Story>().WithMany().HasForeignKey(x => x.StoryId).OnDelete(DeleteBehavior.SetNull);
             });
 
         }

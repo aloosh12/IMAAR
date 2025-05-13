@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Asp.Versioning;
 using Imaar.Authorizations;
+using Imaar.MobileResponses;
 
 namespace Imaar.Controllers.Authorizations
 {
@@ -49,7 +50,7 @@ namespace Imaar.Controllers.Authorizations
 
         [HttpPost]
         [Route("abp-login-url")]
-        public Task<object> GetAbpLogInAsync(TokenRequest request)
+        public Task<MobileResponseDto> GetAbpLogInAsync(TokenRequest request)
         {
             return _authorizeMobileAppService.GetAbpLogInAsync(request);
 

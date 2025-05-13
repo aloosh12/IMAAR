@@ -18,6 +18,11 @@ using Imaar.ServiceTypes;
 using Imaar.ImaarServices;
 using Imaar.VerificationCodes;
 using Imaar.TicketTypes;
+using Imaar.Tickets;
+using Imaar.Medias;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Vacancies;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -52,7 +57,13 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<ServiceType, ServiceTypes.EfCoreServiceTypeRepository>();
             options.AddRepository<ImaarService, ImaarServices.EfCoreImaarServiceRepository>();
             options.AddRepository<VerificationCode, VerificationCodes.EfCoreVerificationCodeRepository>();
-            options.AddRepository<TicketType, TicketTypes.EfCoreTicketTypeRepository>();
+            options.AddRepository<TicketType, TicketTypes.EfCoreTicketTypeRepository>(); 
+            options.AddRepository<Ticket, Tickets.EfCoreTicketRepository>();
+            options.AddRepository<Story, Stories.EfCoreStoryRepository>();
+            options.AddRepository<StoryLover, StoryLovers.EfCoreStoryLoverRepository>();
+            options.AddRepository<Vacancy, Vacancies.EfCoreVacancyRepository>();
+            options.AddRepository<Media, Medias.EfCoreMediaRepository>();
+
 
 
         });

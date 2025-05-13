@@ -8,14 +8,17 @@ namespace Imaar.Authorizations
 {
     public class TokenResponse
     {
-        public string token_type { get; set; }
-        public string expires_in { get; set; }
-        public string ext_expires_in { get; set; }
-        public string expires_on { get; set; }
-        public string not_before { get; set; }
-        public string resource { get; set; }
-        public string access_token { get; set; }
-        public string first_name { get; set; }
-        public string last_name { get; set; }
+        public string TokenType { get; set; }
+        public string ExpiresIn { get; set; }
+        public string ExtExpiresIn { get; set; }
+        public string ExpiresOn { get; set; }
+        public string NotBefore { get; set; }
+        public string Resource { get; set; }
+        public string AccessToken { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string UserId { get; set; }
     }
 }

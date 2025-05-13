@@ -1,0 +1,910 @@
+
+
+@page "/vacancies"
+
+@attribute [Authorize(ImaarPermissions.Vacancies.Default)]
+@using Imaar.Vacancies
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IVacanciesAppService VacanciesAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+@using Imaar.Vacancies
+
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Vacancies"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="VacancySearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="VacancySearchForm" Clicked="GetVacanciesAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Title"]</FieldLabel>
+                        <TextEdit Text="@Filter.Title" TextChanged="@OnTitleChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Description"]</FieldLabel>
+                        <TextEdit Text="@Filter.Description" TextChanged="@OnDescriptionChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Location"]</FieldLabel>
+                        <TextEdit Text="@Filter.Location" TextChanged="@OnLocationChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Number"]</FieldLabel>
+                        <TextEdit Text="@Filter.Number" TextChanged="@OnNumberChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Latitude"]</FieldLabel>
+                        <TextEdit Text="@Filter.Latitude" TextChanged="@OnLatitudeChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Longitude"]</FieldLabel>
+                        <TextEdit Text="@Filter.Longitude" TextChanged="@OnLongitudeChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinDateOfPublish"]</FieldLabel>
+                        <DateEdit TValue="DateOnly?"
+          Date="@Filter.DateOfPublishMin"
+          DateChanged="@OnDateOfPublishMinChangedAsync"
+          Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxDateOfPublish"]</FieldLabel>
+                        <DateEdit TValue="DateOnly?"
+          Date="@Filter.DateOfPublishMax"
+          DateChanged="@OnDateOfPublishMaxChangedAsync"
+          Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["ExpectedExperience"]</FieldLabel>
+                        <TextEdit Text="@Filter.ExpectedExperience" TextChanged="@OnExpectedExperienceChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["EducationLevel"]</FieldLabel>
+                        <TextEdit Text="@Filter.EducationLevel" TextChanged="@OnEducationLevelChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["WorkSchedule"]</FieldLabel>
+                        <TextEdit Text="@Filter.WorkSchedule" TextChanged="@OnWorkScheduleChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["EmploymentType"]</FieldLabel>
+                        <TextEdit Text="@Filter.EmploymentType" TextChanged="@OnEmploymentTypeChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["BiologicalSex"]</FieldLabel>
+                        <Select TValue="BiologicalSex?"
+		SelectedValue="@Filter.BiologicalSex"
+		SelectedValueChanged="@OnBiologicalSexChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(BiologicalSex value in Enum.GetValues(typeof(BiologicalSex)))
+{
+	<SelectItem Value="value">
+		@value
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Languages"]</FieldLabel>
+                        <TextEdit Text="@Filter.Languages" TextChanged="@OnLanguagesChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["DriveLicense"]</FieldLabel>
+                        <TextEdit Text="@Filter.DriveLicense" TextChanged="@OnDriveLicenseChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Salary"]</FieldLabel>
+                        <TextEdit Text="@Filter.Salary" TextChanged="@OnSalaryChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["ServiceType"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.ServiceTypeId"
+		SelectedValueChanged="@OnServiceTypeIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in ServiceTypesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.UserProfileId"
+		SelectedValueChanged="@OnUserProfileIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedVacancies.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllVacanciesSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedVacancies.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedVacancies.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedVacancies.Count == PageSize || SelectedVacancies.Count == VacancyList.Count) && TotalCount > SelectedVacancies.Count)
+                    {
+                        if (!AllVacanciesSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedVacanciesAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="VacancyWithNavigationPropertiesDto"
+                  Data="VacancyList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedVacancies"
+                  RowSelectable="@((args) => CanDeleteVacancy)"
+                  SelectedRowsChanged="SelectedVacancyRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteVacancy && VacancyList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="VacancyWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="VacancyWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="VacancyWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="VacancyWithNavigationPropertiesDto"
+                                          Visible="@CanEditVacancy"
+                                          Clicked="async () => await OpenEditVacancyModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="VacancyWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteVacancy"
+                                          Clicked="() => DeleteVacancyAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.Title"
+                      Caption="@L["Title"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.Location"
+                      Caption="@L["Location"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.Number"
+                      Caption="@L["Number"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.DateOfPublish"
+                      Caption="@L["DateOfPublish"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.ExpectedExperience"
+                      Caption="@L["ExpectedExperience"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.EducationLevel"
+                      Caption="@L["EducationLevel"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.WorkSchedule"
+                      Caption="@L["WorkSchedule"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.EmploymentType"
+                      Caption="@L["EmploymentType"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.BiologicalSex"
+                      Caption="@L["BiologicalSex"]">
+                    <DisplayTemplate>
+                        @L[$"Enum:BiologicalSex.{(int)context.Vacancy.BiologicalSex}"]
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.Languages"
+                      Caption="@L["Languages"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.DriveLicense"
+                      Caption="@L["DriveLicense"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.Salary"
+                      Caption="@L["Salary"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="ServiceType.Title"
+                      Caption="@L["ServiceType"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="UserProfile.SecurityNumber"
+                      Caption="@L["UserProfile"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateVacancyModal" Closing="@CreateVacancyModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateVacancyForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewVacancy"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateVacancyModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewVacancyValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewVacancy"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Title"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Title"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description"] *</FieldLabel>
+                            <MemoEdit @bind-Text="@NewVacancy.Description"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Location"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Location"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Number"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Number"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Latitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Latitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Longitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["DateOfPublish"]</FieldLabel>
+                            <DateEdit TValue="DateOnly" InputMode="DateInputMode.Date" @bind-Date="@NewVacancy.DateOfPublish" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ExpectedExperience"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.ExpectedExperience"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["EducationLevel"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.EducationLevel"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["WorkSchedule"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.WorkSchedule"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["EmploymentType"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.EmploymentType"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["BiologicalSex"]</FieldLabel>
+                        <Select TValue="BiologicalSex" @bind-SelectedValue="@NewVacancy.BiologicalSex" >
+                            @foreach (var itemValue in Enum.GetValues(typeof(BiologicalSex)))
+                            {
+                                <SelectItem TValue="BiologicalSex" Value="@((BiologicalSex) itemValue)">
+                                    @L[$"Enum:BiologicalSex.{((BiologicalSex) itemValue).ToString("d")}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Languages"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Languages"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["DriveLicense"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.DriveLicense"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Salary"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.Salary"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["ServiceType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewVacancy.ServiceTypeId">
+                            @foreach (var serviceType in ServiceTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(serviceType.Id)">
+                                    @(serviceType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewVacancy.UserProfileId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateVacancyModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateVacancyForm" Clicked="CreateVacancyAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditVacancyModal" Closing="@EditVacancyModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditVacancyForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditVacancyModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingVacancyValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingVacancy"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Title"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Title"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description"] *</FieldLabel>
+                            <MemoEdit @bind-Text="@EditingVacancy.Description"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Location"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Location"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Number"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Number"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Latitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Latitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Longitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["DateOfPublish"]</FieldLabel>
+                            <DateEdit TValue="DateOnly" InputMode="DateInputMode.Date" @bind-Date="@EditingVacancy.DateOfPublish" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ExpectedExperience"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.ExpectedExperience"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["EducationLevel"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.EducationLevel"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["WorkSchedule"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.WorkSchedule"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["EmploymentType"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.EmploymentType"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["BiologicalSex"]</FieldLabel>
+                        <Select TValue="BiologicalSex" @bind-SelectedValue="@EditingVacancy.BiologicalSex" >
+                            @foreach (var itemValue in Enum.GetValues(typeof(BiologicalSex)))
+                            {
+                                <SelectItem TValue="BiologicalSex" Value="@((BiologicalSex) itemValue)">
+                                    @L[$"Enum:BiologicalSex.{((BiologicalSex) itemValue).ToString("d")}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Languages"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Languages"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["DriveLicense"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.DriveLicense"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Salary"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.Salary"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["ServiceType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingVacancy.ServiceTypeId">
+                            @foreach (var serviceType in ServiceTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(serviceType.Id)">
+                                    @(serviceType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingVacancy.UserProfileId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditVacancyModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditVacancyForm" Clicked="UpdateVacancyAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+
