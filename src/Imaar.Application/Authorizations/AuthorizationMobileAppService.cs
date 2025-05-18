@@ -140,6 +140,22 @@ namespace Imaar.Authorizations
             tokenResponse.FirstName = user.Name; ;
             tokenResponse.LastName = user.Surname;
             tokenResponse.UserId = user.Id.ToString();
+            Guid serviceProvided = Guid.Parse("");
+            Guid normalUser = Guid.Parse("");
+            Guid admin = Guid.Parse("");
+            if (user.Roles.Any(r => r.RoleId == normalUser))
+                tokenResponse.RoleId = 1;
+            else
+            {
+                if (user.Roles.Any(r => r.RoleId == serviceProvided))
+                    tokenResponse.RoleId = 2;
+                else
+                {
+                    if (user.Roles.Any(r => r.RoleId == admin))
+                        tokenResponse.RoleId = 3;
+
+                }
+            }
             // tokenResponse.refresh_token = data.RefreshToken;
 
             mobileResponseDto.Code = 200;

@@ -37,60 +37,63 @@ namespace Imaar.UserProfiles
             Check.NotNullOrWhiteSpace(phoneNumber, nameof(phoneNumber));
             Check.NotNullOrWhiteSpace(email, nameof(email));
 
-            using (_dataFilter.Disable<ISoftDelete>())
-            {
+            //using (_dataFilter.Disable<ISoftDelete>())
+            //{
                 try
                 {
                     string imageName = "";
                     var users = await _identityUserRepository.GetListAsync();
+                
                     var user = users.FirstOrDefault(u => u.PhoneNumber == phoneNumber || u.Email == email);
                     if (user != null)
                     {
-                        var identityUser = new Volo.Abp.Identity.IdentityUser(user.Id, email.Split("@")[0], user.Email);
-                        identityUser.Name = firstName;
-                        identityUser.Surname = lastName;
-                        identityUser.SetPhoneNumber(phoneNumber, false);
-                        if (user.IsDeleted == true)
-                            identityUser.IsDeleted = false;
-                        var test = await _identityUserRepository.UpdateAsync(identityUser, true);
-                        imageName =  await uploadImage(profilePhoto);
+                        var userToDelete = await _identityUserRepository.GetAsync(user.Id);
+                        await _identityUserManager.DeleteAsync(userToDelete);
+                    }
+                   
+                        //user.Name = firstName;
+                        //user.Surname = lastName;
+                        //user.SetPhoneNumber(phoneNumber, false);
+                        //user.Email = email;
+                        //if (user.IsDeleted == true)
+                        //    identityUser.IsDeleted = false;
+                        //var test = await _identityUserRepository.UpdateAsync(identityUser, true);
+                        //imageName =  await uploadImage(profilePhoto);
+                        //var userProfile = new UserProfile(identityUser.Id, securityCode, biologicalSex, dateOfBirth, latitude, longitude, imageName);
+                        //var userProf = await _userProfileRepository.UpdateAsync(userProfile);
+
+                    var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
+                    identityUser.Name = firstName;
+                    identityUser.Surname = lastName;
+                    identityUser.SetPhoneNumber(phoneNumber, false);
+                    if (roleName.Trim() == "1")
+                        identityUser.AddRole(Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e"));
+                    if (roleName.Trim() == "2")
+                        identityUser.AddRole(Guid.Parse("3454fc01-7d85-48cf-9d7d-3a19d0565a75"));
+
+                    var result = await _identityUserManager.CreateAsync(identityUser, password, false);
+
+                    if (result.Succeeded)
+                    {
+                        //Random random = new Random();
+                        //int securityNum = random.Next(1000, 10000);
+                        imageName = await uploadImage(profilePhoto);
                         var userProfile = new UserProfile(identityUser.Id, securityCode, biologicalSex, dateOfBirth, latitude, longitude, imageName);
-                        var userProf = await _userProfileRepository.UpdateAsync(userProfile);
+
+                        var userProf = await _userProfileRepository.InsertAsync(userProfile);
                     }
                     else
                     {
-                        var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
-                        identityUser.Name = firstName;
-                        identityUser.Surname = lastName;
-                        identityUser.SetPhoneNumber(phoneNumber, false);
-                        if (roleName.Trim() == "N")
-                            identityUser.AddRole(Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e"));
-                        if (roleName.Trim() == "SP")
-                            identityUser.AddRole(Guid.Parse("3454fc01-7d85-48cf-9d7d-3a19d0565a75"));
+                        mobileResponse.Code = 501;
+                        mobileResponse.Message = result.ToString();
+                        mobileResponse.Data = null;
 
-                        var result = await _identityUserManager.CreateAsync(identityUser, password, false);
-
-                        if (result.Succeeded)
-                        {
-                            //Random random = new Random();
-                            //int securityNum = random.Next(1000, 10000);
-                            imageName = await uploadImage(profilePhoto);
-                            var userProfile = new UserProfile(identityUser.Id, securityCode, biologicalSex, dateOfBirth, latitude, longitude, imageName);
-
-                            var userProf = await _userProfileRepository.InsertAsync(userProfile);
-                        }
-                        else
-                        {
-                            mobileResponse.Code = 501;
-                            mobileResponse.Message = result.ToString();
-                            mobileResponse.Data = null;
-
-                            return mobileResponse;
-                            //throw new Volo.Abp.BusinessException(message: result.ToString());
-                        }
+                        return mobileResponse;
+                        //throw new Volo.Abp.BusinessException(message: result.ToString());
                     }
                     var register = new RegisterResponse()
                     {
+                        Id = identityUser.Id.ToString(),
                         FirstName = firstName,
                         LastName = lastName,
                         PhoneNumber = phoneNumber,
@@ -115,7 +118,7 @@ namespace Imaar.UserProfiles
                     mobileResponse.Data = null;
                     return mobileResponse;
                 }
-            }
+            //}
         }
         private async Task<string> uploadImage(IFormFile formFile)
         {

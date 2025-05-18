@@ -20,7 +20,7 @@ namespace Imaar.Controllers.WhatsApps
     [ControllerName("WhatsApp")]
     [Route("api/mobile/whats-app")]
 
-    public abstract class WhatsAppController : AbpController, IWhatsAppService
+    public class WhatsAppController : AbpController, IWhatsAppService
     {
         protected IWhatsAppService _whatsAppService;
 

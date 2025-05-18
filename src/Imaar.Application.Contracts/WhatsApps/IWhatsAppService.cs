@@ -9,7 +9,7 @@ using Volo.Abp.Application.Services;
 
 namespace Imaar.WhatsApps
 {
-    public partial interface IWhatsAppService : IApplicationService
+    public interface IWhatsAppService : IApplicationService
     {
         Task<MobileResponseDto> SendSecurityCodeAsync(string input);
         Task<MobileResponseDto> SendMessageAsync(WhatsAppMessageDto input);

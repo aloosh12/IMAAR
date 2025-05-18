@@ -11,7 +11,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Imaar.WhatsApps
 {
-    public abstract class WhatsAppService : IWhatsAppService
+    public class WhatsAppService : ImaarAppService, IWhatsAppService
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;

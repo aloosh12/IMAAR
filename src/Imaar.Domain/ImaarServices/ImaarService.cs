@@ -10,6 +10,7 @@ using Volo.Abp.MultiTenancy;
 using JetBrains.Annotations;
 
 using Volo.Abp;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Imaar.ImaarServices
 {
@@ -33,6 +34,9 @@ namespace Imaar.ImaarServices
 
         [CanBeNull]
         public virtual string? Latitude { get; set; }
+       
+        [NotMapped]
+        public virtual string? DefaultMedia { get; set; }
 
         [CanBeNull]
         public virtual string? Longitude { get; set; }

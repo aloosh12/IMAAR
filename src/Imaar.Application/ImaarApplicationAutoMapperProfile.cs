@@ -13,6 +13,7 @@ using Imaar.Medias;
 using Imaar.Stories;
 using Imaar.StoryLovers;
 using Imaar.Vacancies;
+using Imaar.MimeTypes;
 
 namespace Imaar;
 
@@ -25,12 +26,15 @@ public class ImaarApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
 
 
-        CreateMap<Category, CategoryDto>();
+        CreateMap<Category, CategoryDto>()
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/CategoryImages/{src.Icon}"));
         CreateMap<Category, CategoryExcelDto>();
 
-        CreateMap<UserProfile, UserProfileDto>();
+        CreateMap<UserProfile, UserProfileDto>()
+             .ForMember(dest => dest.ProfilePhoto, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/UserProfileImages/{src.ProfilePhoto}"));
         CreateMap<UserProfile, UserProfileExcelDto>();
-        CreateMap<ServiceType, ServiceTypeDto>();
+        CreateMap<ServiceType, ServiceTypeDto>()
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/ServiceTypeImages/{src.Icon}"));
 
 
         CreateMap<ImaarService, ImaarServiceDto>();
@@ -57,7 +61,11 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<Story, StoryDto>();
         CreateMap<Story, StoryExcelDto>();
         CreateMap<StoryWithNavigationProperties, StoryWithNavigationPropertiesDto>();
-
+        //CreateMap<StoryWithNavigationProperties, StoryMobileDto>()
+        //   .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Story.Title))
+        //   .ForMember(dest => dest.FromTime, opt => opt.MapFrom(src => src.Story.FromTime))
+        //   .ForMember(dest => dest.ExpiryTime, opt => opt.MapFrom(src => src.Story.ExpiryTime))
+        //   .ForMember(dest => dest.StoryPublisher, opt => opt.MapFrom(src => src.StoryPublisher.))
         CreateMap<StoryLover, StoryLoverDto>();
         CreateMap<StoryLover, StoryLoverExcelDto>();
         CreateMap<StoryLoverWithNavigationProperties, StoryLoverWithNavigationPropertiesDto>();

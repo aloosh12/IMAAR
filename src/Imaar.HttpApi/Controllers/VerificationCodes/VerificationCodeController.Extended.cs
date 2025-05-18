@@ -13,7 +13,7 @@ namespace Imaar.Controllers.VerificationCodes
     [RemoteService]
     [Area("app")]
     [ControllerName("VerificationCode")]
-    [Route("api/app/verification-codes")]
+    [Route("api/mobile/verification-codes")]
 
     public class VerificationCodeController : VerificationCodeControllerBase
     {

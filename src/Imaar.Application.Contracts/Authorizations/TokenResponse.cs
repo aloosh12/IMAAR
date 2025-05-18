@@ -20,5 +20,6 @@ namespace Imaar.Authorizations
         public string Phone { get; set; }
         public string Email { get; set; }
         public string UserId { get; set; }
+        public int RoleId { get; set; }
     }
 }

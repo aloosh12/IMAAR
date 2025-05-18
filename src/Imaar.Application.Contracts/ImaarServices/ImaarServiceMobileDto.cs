@@ -6,7 +6,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace Imaar.ImaarServices
 {
-    public abstract class ImaarServiceDtoBase : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
+    public abstract class ImaarServiceMobileDto : FullAuditedEntityDto<Guid>, IHasConcurrencyStamp
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;

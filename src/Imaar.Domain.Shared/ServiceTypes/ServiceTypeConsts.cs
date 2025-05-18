@@ -2,7 +2,7 @@ namespace Imaar.ServiceTypes
 {
     public static class ServiceTypeConsts
     {
-        private const string DefaultSorting = "{0}Title asc";
+        private const string DefaultSorting = "{0}Order asc";
 
         public static string GetDefaultSorting(bool withEntityName)
         {

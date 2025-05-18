@@ -19,5 +19,10 @@ namespace Imaar.Controllers.Stories
         public StoryController(IStoriesAppService storiesAppService) : base(storiesAppService)
         {
         }
+        [HttpGet("mobile-list")]
+        public Task<PagedResultDto<StoryMobileDto>> GetMobileListAsync(GetStoriesInput input)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

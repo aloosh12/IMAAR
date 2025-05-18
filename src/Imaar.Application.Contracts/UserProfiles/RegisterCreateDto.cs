@@ -20,9 +20,9 @@ namespace Imaar.UserProfiles
         [Required]
         public string SecurityCode { get; set; } = null!;
         [Required]
-        public BiologicalSex? BiologicalSex = null!;
+        public BiologicalSex? BiologicalSex { get; set; } = null!;
         [Required]
-        public DateOnly DateOfBirth;
+        public DateOnly DateOfBirth { get; set; }
         [Required]
         public string? Password { get; set; } = null!;
         [Required]
