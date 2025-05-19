@@ -93,6 +93,88 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppCategories", (string)null);
             });
+            modelBuilder.Entity("Imaar.Evalauations.Evalauation", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<int>("Cleanliness")
+                    .HasColumnType("int")
+                    .HasColumnName("Cleanliness");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<int>("Dealing")
+                    .HasColumnType("int")
+                    .HasColumnName("Dealing");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<Guid>("EvaluatedPersonId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("Evaluatord")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<int>("Perfection")
+                    .HasColumnType("int")
+                    .HasColumnName("Perfection");
+
+                b.Property<int>("Price")
+                    .HasColumnType("int")
+                    .HasColumnName("Price");
+
+                b.Property<int>("SpeedOfCompletion")
+                    .HasColumnType("int")
+                    .HasColumnName("SpeedOfCompletion");
+
+                b.HasKey("Id");
+
+                b.HasIndex("EvaluatedPersonId");
+
+                b.HasIndex("Evaluatord");
+
+                b.ToTable("AppEvalauations", (string)null);
+            });
+
             modelBuilder.Entity("Imaar.ImaarServices.ImaarService", b =>
             {
                 b.Property<Guid>("Id")
@@ -2619,6 +2701,21 @@ namespace Imaar.Migrations
 
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
+
+            modelBuilder.Entity("Imaar.Evalauations.Evalauation", b =>
+            {
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("EvaluatedPersonId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("Evaluatord")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Imaar.ImaarServices.ImaarService", b =>
             {

@@ -20,6 +20,7 @@ public class ImaarMenus
     public const string Vacancies = Prefix + ".Vacancies";
 
     public const string Medias = Prefix + ".Medias";
+    public const string Evalauations = Prefix + ".Evalauations";
 
 
 

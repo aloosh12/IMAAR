@@ -48,6 +48,7 @@ using Imaar.Blazor.Helpers;
 using System.Collections.Generic;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.Emailing;
 
 namespace Imaar.Blazor;
 
@@ -145,6 +146,7 @@ public class ImaarBlazorModule : AbpModule
                 });
             });
         });
+
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

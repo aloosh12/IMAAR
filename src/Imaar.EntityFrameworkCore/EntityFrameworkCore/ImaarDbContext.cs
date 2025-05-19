@@ -24,6 +24,7 @@ using Imaar.Medias;
 using Imaar.Stories;
 using Imaar.StoryLovers;
 using Imaar.Vacancies;
+using Imaar.Evalauations;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -35,6 +36,7 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<Evalauation> Evalauations { get; set; } = null!;
     public DbSet<Media> Medias { get; set; } = null!;
     public DbSet<Vacancy> Vacancies { get; set; } = null!;
     public DbSet<StoryLover> StoryLovers { get; set; } = null!;
@@ -284,6 +286,22 @@ public class ImaarDbContext :
                 b.HasOne<ImaarService>().WithMany().HasForeignKey(x => x.ImaarServiceId).OnDelete(DeleteBehavior.SetNull);
                 b.HasOne<Vacancy>().WithMany().HasForeignKey(x => x.VacancyId).OnDelete(DeleteBehavior.SetNull);
                 b.HasOne<Story>().WithMany().HasForeignKey(x => x.StoryId).OnDelete(DeleteBehavior.SetNull);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Evalauation>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Evalauations", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.SpeedOfCompletion).HasColumnName(nameof(Evalauation.SpeedOfCompletion));
+                b.Property(x => x.Dealing).HasColumnName(nameof(Evalauation.Dealing));
+                b.Property(x => x.Cleanliness).HasColumnName(nameof(Evalauation.Cleanliness));
+                b.Property(x => x.Perfection).HasColumnName(nameof(Evalauation.Perfection));
+                b.Property(x => x.Price).HasColumnName(nameof(Evalauation.Price));
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.Evaluatord).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.EvaluatedPersonId).OnDelete(DeleteBehavior.NoAction);
             });
 
         }

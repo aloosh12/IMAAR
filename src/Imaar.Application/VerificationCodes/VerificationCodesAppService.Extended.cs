@@ -10,6 +10,7 @@ using Volo.Abp.Emailing;
 using System.Net.Mail;
 using System.Net;
 using static Volo.Abp.Ui.LayoutHooks.LayoutHooks;
+using static Volo.Abp.Emailing.EmailSettingNames;
 
 namespace Imaar.VerificationCodes
 {
@@ -70,7 +71,30 @@ namespace Imaar.VerificationCodes
             //client.Send(mailMessage);
 
             //  client.Send("adaioob@gmail.com", "AliThirdOne@gmail.com", "Hello world", "testbody");
-            //  await _emailSender.SendAsync(input, "Security Code", securityNum.ToString(), false);
+
+            var smtpSection = _configuration.GetSection("Email:Smtp");
+            var emailSection = _configuration.GetSection("Email");
+            using (var client = new SmtpClient(smtpSection["Host"], smtpSection["Port"] != null ? int.Parse(smtpSection["Port"]) : 587))
+            {
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(smtpSection["UserName"], smtpSection["Password"]);
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(emailSection["DefaultFromAddress"], emailSection["DefaultFromDisplayName"]),
+                    Subject = "Security Code",
+                    Body = $"<h1>{securityNum.ToString()}</h1>",
+                    IsBodyHtml = true
+                };
+
+                mailMessage.To.Add(input);
+
+                await client.SendMailAsync(mailMessage);
+            }
+
+
+              //  await _emailSender.SendAsync(input, "Security Code", securityNum.ToString(), false);
             var apiKey = _configuration["CallMeBot:ApiKey"];
             var url = $"https://api.callmebot.com/whatsapp.php?phone={input}&text={Uri.EscapeDataString(securityNum.ToString())}&apikey={apiKey}";
 

@@ -14,6 +14,7 @@ using Imaar.Stories;
 using Imaar.StoryLovers;
 using Imaar.Vacancies;
 using Imaar.MimeTypes;
+using Imaar.Evalauations;
 
 namespace Imaar;
 
@@ -80,5 +81,10 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<MediaWithNavigationProperties, MediaWithNavigationPropertiesDto>();
         CreateMap<ImaarService, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
         CreateMap<Vacancy, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+
+
+        CreateMap<Evalauation, EvalauationDto>();
+        CreateMap<Evalauation, EvalauationExcelDto>();
+        CreateMap<EvalauationWithNavigationProperties, EvalauationWithNavigationPropertiesDto>();
     }
 }

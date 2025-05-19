@@ -137,6 +137,15 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.Medias.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Evalauations,
+                l["Menu:Evalauations"],
+                url: "/evalauations",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Evalauations.Default)
+        );
         return Task.CompletedTask;
     }
 }

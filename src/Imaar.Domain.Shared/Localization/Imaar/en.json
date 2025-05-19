@@ -131,6 +131,24 @@
     "File": "File",
     "Medias": "Medias",
     "NewMedia": "New Media",
-    "Menu:Medias": "Medias"
+    "Menu:Medias": "Medias",
+    "Evaluatord": "Evaluatord",
+    "EvaluatedPerson": "Evaluated person",
+    "Permission:Evalauations": "Evalauations",
+    "SpeedOfCompletion": "Speed Of Completion",
+    "Dealing": "Dealing",
+    "Cleanliness": "Cleanliness",
+    "Perfection": "Perfection",
+    "Evalauations": "Evalauations",
+    "MinSpeedOfCompletion": "Min Speed Of Completion",
+    "MinDealing": "Min Dealing",
+    "MinCleanliness": "Min Cleanliness",
+    "MinPerfection": "Min Perfection",
+    "MaxSpeedOfCompletion": "Max Speed Of Completion",
+    "MaxDealing": "Max Dealing",
+    "MaxCleanliness": "Max Cleanliness",
+    "MaxPerfection": "Max Perfection",
+    "NewEvalauation": "New Evalauation",
+    "Menu:Evalauations": "Evalauations"
   }
 }
