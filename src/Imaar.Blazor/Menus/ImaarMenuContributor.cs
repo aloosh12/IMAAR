@@ -140,11 +140,11 @@ icon: "fa fa-file-alt",
 
         context.Menu.AddItem(
             new ApplicationMenuItem(
-                ImaarMenus.Evalauations,
-                l["Menu:Evalauations"],
-                url: "/evalauations",
+                ImaarMenus.UserEvalauations,
+                l["Menu:UserEvalauations"],
+                url: "/userEvalauations",
                 icon: "fa fa-file-alt",
-                requiredPermissionName: ImaarPermissions.Evalauations.Default)
+                requiredPermissionName: ImaarPermissions.UserEvalauations.Default)
         );
         return Task.CompletedTask;
     }

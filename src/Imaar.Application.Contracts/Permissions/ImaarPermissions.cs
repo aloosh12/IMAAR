@@ -95,9 +95,9 @@ public static class ImaarPermissions
     }
 
 
-    public static class Evalauations
+    public static class UserEvalauations
     {
-        public const string Default = GroupName + ".Evalauations";
+        public const string Default = GroupName + ".UserEvalauations";
         public const string Edit = Default + ".Edit";
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";

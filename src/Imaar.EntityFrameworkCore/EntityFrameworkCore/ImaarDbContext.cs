@@ -24,7 +24,7 @@ using Imaar.Medias;
 using Imaar.Stories;
 using Imaar.StoryLovers;
 using Imaar.Vacancies;
-using Imaar.Evalauations;
+using Imaar.UserEvalauations;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -36,7 +36,7 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
-    public DbSet<Evalauation> Evalauations { get; set; } = null!;
+    public DbSet<UserEvalauation> UserEvalauations { get; set; } = null!;
     public DbSet<Media> Medias { get; set; } = null!;
     public DbSet<Vacancy> Vacancies { get; set; } = null!;
     public DbSet<StoryLover> StoryLovers { get; set; } = null!;
@@ -291,15 +291,15 @@ public class ImaarDbContext :
         }
         if (builder.IsHostDatabase())
         {
-            builder.Entity<Evalauation>(b =>
+            builder.Entity<UserEvalauation>(b =>
             {
-                b.ToTable(ImaarConsts.DbTablePrefix + "Evalauations", ImaarConsts.DbSchema);
+                b.ToTable(ImaarConsts.DbTablePrefix + "UserEvalauations", ImaarConsts.DbSchema);
                 b.ConfigureByConvention();
-                b.Property(x => x.SpeedOfCompletion).HasColumnName(nameof(Evalauation.SpeedOfCompletion));
-                b.Property(x => x.Dealing).HasColumnName(nameof(Evalauation.Dealing));
-                b.Property(x => x.Cleanliness).HasColumnName(nameof(Evalauation.Cleanliness));
-                b.Property(x => x.Perfection).HasColumnName(nameof(Evalauation.Perfection));
-                b.Property(x => x.Price).HasColumnName(nameof(Evalauation.Price));
+                b.Property(x => x.SpeedOfCompletion).HasColumnName(nameof(UserEvalauation.SpeedOfCompletion));
+                b.Property(x => x.Dealing).HasColumnName(nameof(UserEvalauation.Dealing));
+                b.Property(x => x.Cleanliness).HasColumnName(nameof(UserEvalauation.Cleanliness));
+                b.Property(x => x.Perfection).HasColumnName(nameof(UserEvalauation.Perfection));
+                b.Property(x => x.Price).HasColumnName(nameof(UserEvalauation.Price));
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.Evaluatord).OnDelete(DeleteBehavior.NoAction);
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.EvaluatedPersonId).OnDelete(DeleteBehavior.NoAction);
             });

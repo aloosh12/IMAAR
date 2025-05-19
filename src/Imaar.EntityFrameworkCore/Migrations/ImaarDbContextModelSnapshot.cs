@@ -93,7 +93,7 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppCategories", (string)null);
             });
-            modelBuilder.Entity("Imaar.Evalauations.Evalauation", b =>
+            modelBuilder.Entity("Imaar.UserEvalauations.UserEvalauation", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -172,7 +172,7 @@ namespace Imaar.Migrations
 
                 b.HasIndex("Evaluatord");
 
-                b.ToTable("AppEvalauations", (string)null);
+                b.ToTable("AppUserEvalauations", (string)null);
             });
 
             modelBuilder.Entity("Imaar.ImaarServices.ImaarService", b =>
@@ -2702,7 +2702,7 @@ namespace Imaar.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("Imaar.Evalauations.Evalauation", b =>
+            modelBuilder.Entity("Imaar.UserEvalauations.UserEvalauation", b =>
             {
                 b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
