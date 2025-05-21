@@ -149,6 +149,14 @@
     "MaxCleanliness": "Max Cleanliness",
     "MaxPerfection": "Max Perfection",
     "NewUserEvalauation": "New UserEvalauation",
-    "Menu:UserEvalauations": "UserEvalauations"
+    "Menu:UserEvalauations": "UserEvalauations",
+    "Evaluator": "Evaluator",
+    "Permission:ServiceEvaluations": "Service Evaluations",
+    "Rate": "Rate",
+    "ServiceEvaluations": "Service Evaluations",
+    "MinRate": "Min Rate",
+    "MaxRate": "Max Rate",
+    "NewServiceEvaluation": "New Service Evaluation",
+    "Menu:ServiceEvaluations": "Service Evaluations"
   }
 }

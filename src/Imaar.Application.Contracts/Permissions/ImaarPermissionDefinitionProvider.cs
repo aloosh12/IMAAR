@@ -75,6 +75,12 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         userEvalauationPermission.AddChild(ImaarPermissions.UserEvalauations.Create, L("Permission:Create"));
         userEvalauationPermission.AddChild(ImaarPermissions.UserEvalauations.Edit, L("Permission:Edit"));
         userEvalauationPermission.AddChild(ImaarPermissions.UserEvalauations.Delete, L("Permission:Delete"));
+
+
+        var serviceEvaluationPermission = myGroup.AddPermission(ImaarPermissions.ServiceEvaluations.Default, L("Permission:ServiceEvaluations"));
+        serviceEvaluationPermission.AddChild(ImaarPermissions.ServiceEvaluations.Create, L("Permission:Create"));
+        serviceEvaluationPermission.AddChild(ImaarPermissions.ServiceEvaluations.Edit, L("Permission:Edit"));
+        serviceEvaluationPermission.AddChild(ImaarPermissions.ServiceEvaluations.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

@@ -22,15 +22,15 @@ namespace Imaar.Controllers.VerificationCodes
         }
 
         [HttpPost("send-secret-key")]
-        public virtual Task<MobileResponseDto> SendSecretKey(string phone)
+        public virtual Task<MobileResponseDto> SendSecretKey(string email)
         {
-            return _verificationCodesAppService.CreateMobileAsync(phone);
+            return _verificationCodesAppService.CreateMobileAsync(email);
         }
 
         [HttpPost("verrify-code")]
-        public virtual Task<bool> VerfiyCodeAsync(VerificationCodeDto verificationCodeDto)
+        public virtual Task<bool> VerfiyCodeAsync(VerificationCodeMobileDto verificationCodeMobileDto)
         {
-            return _verificationCodesAppService.VerifyMobileAsync(verificationCodeDto);
+            return _verificationCodesAppService.VerifyMobileAsync(verificationCodeMobileDto);
         }
     }
 }

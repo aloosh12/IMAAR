@@ -15,6 +15,7 @@ using Imaar.StoryLovers;
 using Imaar.Vacancies;
 using Imaar.MimeTypes;
 using Imaar.UserEvalauations;
+using Imaar.ServiceEvaluations;
 
 namespace Imaar;
 
@@ -86,5 +87,10 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<UserEvalauation, UserEvalauationDto>();
         CreateMap<UserEvalauation, UserEvalauationExcelDto>();
         CreateMap<UserEvalauationWithNavigationProperties, UserEvalauationWithNavigationPropertiesDto>();
+
+
+        CreateMap<ServiceEvaluation, ServiceEvaluationDto>();
+        CreateMap<ServiceEvaluation, ServiceEvaluationExcelDto>();
+        CreateMap<ServiceEvaluationWithNavigationProperties, ServiceEvaluationWithNavigationPropertiesDto>();
     }
 }

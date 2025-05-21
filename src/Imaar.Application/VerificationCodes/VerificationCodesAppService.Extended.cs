@@ -125,9 +125,9 @@ namespace Imaar.VerificationCodes
         }
 
         [AllowAnonymous]
-        public async Task<bool> VerifyMobileAsync(VerificationCodeDto input)
+        public async Task<bool> VerifyMobileAsync(VerificationCodeMobileDto input)
         {
-            var items = await _verificationCodeRepository.GetListAsync(phoneNumber: input.PhoneNumber, securityCodeMin: input.SecurityCode, securityCodeMax: input.SecurityCode, isFinish: false);
+            var items = await _verificationCodeRepository.GetListAsync(phoneNumber: input.Email, securityCodeMin: input.SecurityCode, securityCodeMax: input.SecurityCode, isFinish: false);
             if (items != null && items.Count > 0)
                 return true;
             return false;

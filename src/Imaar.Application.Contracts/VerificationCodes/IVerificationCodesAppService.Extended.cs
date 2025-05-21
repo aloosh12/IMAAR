@@ -7,6 +7,6 @@ namespace Imaar.VerificationCodes
     {
         //Write your custom code here...
         Task<MobileResponseDto> CreateMobileAsync(string input);
-        Task<bool> VerifyMobileAsync(VerificationCodeDto input);
+        Task<bool> VerifyMobileAsync(VerificationCodeMobileDto input);
     }
 }

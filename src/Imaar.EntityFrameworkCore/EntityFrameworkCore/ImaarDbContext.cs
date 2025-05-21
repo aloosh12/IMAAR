@@ -25,6 +25,7 @@ using Imaar.Stories;
 using Imaar.StoryLovers;
 using Imaar.Vacancies;
 using Imaar.UserEvalauations;
+using Imaar.ServiceEvaluations;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -36,6 +37,7 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<ServiceEvaluation> ServiceEvaluations { get; set; } = null!;
     public DbSet<UserEvalauation> UserEvalauations { get; set; } = null!;
     public DbSet<Media> Medias { get; set; } = null!;
     public DbSet<Vacancy> Vacancies { get; set; } = null!;
@@ -302,6 +304,34 @@ public class ImaarDbContext :
                 b.Property(x => x.Price).HasColumnName(nameof(UserEvalauation.Price));
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.Evaluatord).OnDelete(DeleteBehavior.NoAction);
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.EvaluatedPersonId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<ServiceEvaluation>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "ServiceEvaluations", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Rate).HasColumnName(nameof(ServiceEvaluation.Rate));
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.EvaluatorId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<ImaarService>().WithMany().IsRequired().HasForeignKey(x => x.ImaarServiceId).OnDelete(DeleteBehavior.NoAction);
             });
 
         }

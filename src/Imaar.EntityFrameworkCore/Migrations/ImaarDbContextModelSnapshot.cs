@@ -355,6 +355,71 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppMedias", (string)null);
             });
+            modelBuilder.Entity("Imaar.ServiceEvaluations.ServiceEvaluation", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<Guid>("EvaluatorId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<Guid>("ImaarServiceId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<int>("Rate")
+                    .HasColumnType("int")
+                    .HasColumnName("Rate");
+
+                b.HasKey("Id");
+
+                b.HasIndex("EvaluatorId");
+
+                b.HasIndex("ImaarServiceId");
+
+                b.ToTable("AppServiceEvaluations", (string)null);
+            });
 
             modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {
@@ -761,6 +826,22 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppUserProfiles", (string)null);
             });
+
+            modelBuilder.Entity("Imaar.ServiceEvaluations.ServiceEvaluation", b =>
+            {
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("EvaluatorId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.HasOne("Imaar.ImaarServices.ImaarService", null)
+                    .WithMany()
+                    .HasForeignKey("ImaarServiceId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
+
             modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {
                 b.HasOne("Imaar.Categories.Category", null)

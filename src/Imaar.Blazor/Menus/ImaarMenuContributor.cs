@@ -146,6 +146,15 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.UserEvalauations.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.ServiceEvaluations,
+                l["Menu:ServiceEvaluations"],
+                url: "/service-evaluations",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.ServiceEvaluations.Default)
+        );
         return Task.CompletedTask;
     }
 }
