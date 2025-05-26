@@ -51,7 +51,12 @@ public class ImaarApplicationAutoMapperProfile : Profile
              .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.UserProfile.DateOfBirth))
              .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.UserProfile.Latitude))
              .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.UserProfile.Longitude))
-             .ForMember(dest => dest.UserWorksExhibitionDtos, opt => opt.MapFrom(src => src.UserWorksExhibitionList));
+             .ForMember(dest => dest.UserWorksExhibitionDtos, opt => opt.MapFrom(src => src.UserWorksExhibitionList))
+             .ForMember(dest => dest.SpeedOfCompletion, opt => opt.MapFrom(src => src.SpeedOfCompletion))
+             .ForMember(dest => dest.Dealing, opt => opt.MapFrom(src => src.Dealing))
+             .ForMember(dest => dest.Cleanliness, opt => opt.MapFrom(src => src.Cleanliness))
+             .ForMember(dest => dest.Perfection, opt => opt.MapFrom(src => src.Perfection))
+             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
 
         CreateMap<ServiceType, ServiceTypeDto>()
             .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/ServiceTypeImages/{src.Icon}"));
