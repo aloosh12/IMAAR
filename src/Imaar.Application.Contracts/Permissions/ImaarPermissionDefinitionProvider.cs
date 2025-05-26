@@ -76,11 +76,15 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         userEvalauationPermission.AddChild(ImaarPermissions.UserEvalauations.Edit, L("Permission:Edit"));
         userEvalauationPermission.AddChild(ImaarPermissions.UserEvalauations.Delete, L("Permission:Delete"));
 
-
         var serviceEvaluationPermission = myGroup.AddPermission(ImaarPermissions.ServiceEvaluations.Default, L("Permission:ServiceEvaluations"));
         serviceEvaluationPermission.AddChild(ImaarPermissions.ServiceEvaluations.Create, L("Permission:Create"));
         serviceEvaluationPermission.AddChild(ImaarPermissions.ServiceEvaluations.Edit, L("Permission:Edit"));
         serviceEvaluationPermission.AddChild(ImaarPermissions.ServiceEvaluations.Delete, L("Permission:Delete"));
+
+        var userWorksExhibitionPermission = myGroup.AddPermission(ImaarPermissions.UserWorksExhibitions.Default, L("Permission:UserWorksExhibitions"));
+        userWorksExhibitionPermission.AddChild(ImaarPermissions.UserWorksExhibitions.Create, L("Permission:Create"));
+        userWorksExhibitionPermission.AddChild(ImaarPermissions.UserWorksExhibitions.Edit, L("Permission:Edit"));
+        userWorksExhibitionPermission.AddChild(ImaarPermissions.UserWorksExhibitions.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

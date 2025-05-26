@@ -22,6 +22,7 @@ public class ImaarMenus
     public const string Medias = Prefix + ".Medias";
     public const string UserEvalauations = Prefix + ".UserEvalauations";
     public const string ServiceEvaluations = Prefix + ".ServiceEvaluations";
+    public const string UserWorksExhibitions = Prefix + ".UserWorksExhibitions";
 
 
 

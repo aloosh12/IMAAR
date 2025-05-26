@@ -25,6 +25,7 @@ using Imaar.StoryLovers;
 using Imaar.Vacancies;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
+using Imaar.UserWorksExhibitions;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -67,6 +68,7 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<Media, Medias.EfCoreMediaRepository>(); 
             options.AddRepository<UserEvalauation, UserEvalauations.EfCoreUserEvalauationRepository>();
             options.AddRepository<ServiceEvaluation, ServiceEvaluations.EfCoreServiceEvaluationRepository>();
+            options.AddRepository<UserWorksExhibition, UserWorksExhibitions.EfCoreUserWorksExhibitionRepository>();
 
 
 

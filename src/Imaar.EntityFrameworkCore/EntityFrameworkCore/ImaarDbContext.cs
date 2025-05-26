@@ -26,6 +26,7 @@ using Imaar.StoryLovers;
 using Imaar.Vacancies;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
+using Imaar.UserWorksExhibitions;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -37,6 +38,7 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<UserWorksExhibition> UserWorksExhibitions { get; set; } = null!;
     public DbSet<ServiceEvaluation> ServiceEvaluations { get; set; } = null!;
     public DbSet<UserEvalauation> UserEvalauations { get; set; } = null!;
     public DbSet<Media> Medias { get; set; } = null!;
@@ -332,6 +334,19 @@ public class ImaarDbContext :
                 b.Property(x => x.Rate).HasColumnName(nameof(ServiceEvaluation.Rate));
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.EvaluatorId).OnDelete(DeleteBehavior.NoAction);
                 b.HasOne<ImaarService>().WithMany().IsRequired().HasForeignKey(x => x.ImaarServiceId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<UserWorksExhibition>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "UserWorksExhibitions", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(UserWorksExhibition.Title));
+                b.Property(x => x.File).HasColumnName(nameof(UserWorksExhibition.File)).IsRequired();
+                b.Property(x => x.Order).HasColumnName(nameof(UserWorksExhibition.Order));
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
             });
 
         }

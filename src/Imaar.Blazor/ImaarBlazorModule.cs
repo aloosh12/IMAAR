@@ -49,6 +49,7 @@ using System.Collections.Generic;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.Emailing;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 
 namespace Imaar.Blazor;
 
@@ -136,6 +137,11 @@ public class ImaarBlazorModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
+
+        Configure<AbpAntiForgeryOptions>(options =>
+        {
+            options.AutoValidate = false;
+        });
         Configure<AbpBlobStoringOptions>(options =>
         {
             options.Containers.ConfigureDefault(container =>

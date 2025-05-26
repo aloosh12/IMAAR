@@ -39,7 +39,12 @@ namespace Imaar.Controllers.UserProfiles
         }
 
 
-
+        [HttpGet]
+        [Route("user-profile-details/{id}")]
+        public virtual Task<UserProfileWithDetailsDto> GetWithDetailsAsync(Guid id)
+        {
+            return _userProfilesAppService.GetWithDetailsAsync(id);
+        }
 
         //[AllowAnonymous]
         //[HttpPost("complete-registration")]

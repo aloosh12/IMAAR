@@ -16,6 +16,9 @@ using Imaar.Vacancies;
 using Imaar.MimeTypes;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
+using Imaar.UserWorksExhibitions;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Imaar;
 
@@ -35,6 +38,21 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<UserProfile, UserProfileDto>()
              .ForMember(dest => dest.ProfilePhoto, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/UserProfileImages/{src.ProfilePhoto}"));
         CreateMap<UserProfile, UserProfileExcelDto>();
+        CreateMap<UserProfileWithDetails, UserProfileWithDetailsDto>()
+             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserProfile.Id))
+             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.IdentityUser.Name))
+             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.IdentityUser.Surname))
+             .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.IdentityUser.PhoneNumber))
+             .ForMember(dest => dest.ProfilePhoto, opt => opt.MapFrom(src =>  $"{MimeTypeMap.GetAttachmentPath()}/UserProfileImages/{src.UserProfile.ProfilePhoto}"))
+             .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Role))
+             .ForMember(dest => dest.SecurityCode, opt => opt.MapFrom(src => src.UserProfile.SecurityNumber))
+             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.IdentityUser.Email))
+             .ForMember(dest => dest.BiologicalSex, opt => opt.MapFrom(src => src.UserProfile.BiologicalSex))
+             .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.UserProfile.DateOfBirth))
+             .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.UserProfile.Latitude))
+             .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.UserProfile.Longitude))
+             .ForMember(dest => dest.UserWorksExhibitionDtos, opt => opt.MapFrom(src => src.UserWorksExhibitionList));
+
         CreateMap<ServiceType, ServiceTypeDto>()
             .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/ServiceTypeImages/{src.Icon}"));
 
@@ -92,5 +110,11 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<ServiceEvaluation, ServiceEvaluationDto>();
         CreateMap<ServiceEvaluation, ServiceEvaluationExcelDto>();
         CreateMap<ServiceEvaluationWithNavigationProperties, ServiceEvaluationWithNavigationPropertiesDto>();
+
+        CreateMap<UserWorksExhibition, UserWorksExhibitionDto>()
+            .ForMember(dest => dest.File, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/UserWorksExhibitionImages/{src.File}"));
+      //  CreateMap<List<UserWorksExhibition>, List<UserWorksExhibitionDto>>();
+        CreateMap<UserWorksExhibition, UserWorksExhibitionExcelDto>();
+        CreateMap<UserWorksExhibitionWithNavigationProperties, UserWorksExhibitionWithNavigationPropertiesDto>();
     }
 }

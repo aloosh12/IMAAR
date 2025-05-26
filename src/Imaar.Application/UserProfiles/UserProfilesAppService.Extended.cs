@@ -54,7 +54,10 @@ namespace Imaar.UserProfiles
             //var registeredUser = await _userManager.RegisterUserAsync(input.FirstName, input.LastName, input.PhoneNumber, input.Email);
             //return ObjectMapper.Map<IdentityUser, RegisterDto>(registeredUser);
         }
-
-
+        [Authorize(ImaarPermissions.UserProfiles.Default)]
+        public virtual async Task<UserProfileWithDetailsDto> GetWithDetailsAsync(Guid id)
+        {
+            return ObjectMapper.Map<UserProfileWithDetails, UserProfileWithDetailsDto>(await _userProfileRepository.GetWithDetailsAsync(id));
+        }
     }
 }

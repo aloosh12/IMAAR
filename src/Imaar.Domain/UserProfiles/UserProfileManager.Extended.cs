@@ -105,6 +105,7 @@ namespace Imaar.UserProfiles
                         Latitude = latitude,
                         Longitude = longitude,
                         ProfilePhoto = $"{MimeTypes.MimeTypeMap.GetAttachmentPath()}/UserProfileImages/{imageName}",
+                        RoleId = roleName
                     };
                     mobileResponse.Code = 200;
                     mobileResponse.Message = "SUCCESS";

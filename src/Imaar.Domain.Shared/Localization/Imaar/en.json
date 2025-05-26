@@ -157,6 +157,10 @@
     "MinRate": "Min Rate",
     "MaxRate": "Max Rate",
     "NewServiceEvaluation": "New Service Evaluation",
-    "Menu:ServiceEvaluations": "Service Evaluations"
+    "Menu:ServiceEvaluations": "Service Evaluations",
+    "Permission:UserWorksExhibitions": "User Works Exhibitions",
+    "UserWorksExhibitions": "User Works Exhibitions",
+    "NewUserWorksExhibition": "New User Works Exhibition",
+    "Menu:UserWorksExhibitions": "User Works Exhibitions"
   }
 }

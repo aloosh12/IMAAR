@@ -105,12 +105,12 @@ namespace Imaar.Authorizations
             //}
 
             var users = await _identityUserRepository.GetListAsync();
-            var user = users.FirstOrDefault(u => u.PhoneNumber == request.PhoneNumber);
+            var user = users.FirstOrDefault(u => u.Email == request.Email);
             MobileResponseDto mobileResponseDto = new MobileResponseDto();
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 mobileResponseDto.Code = 401;
-                mobileResponseDto.Message = "Wrong phone or password";
+                mobileResponseDto.Message = "Wrong Email or password";
                 mobileResponseDto.Data = null;
                 return mobileResponseDto;
                 // return Unauthorized();
@@ -140,18 +140,19 @@ namespace Imaar.Authorizations
             tokenResponse.FirstName = user.Name; ;
             tokenResponse.LastName = user.Surname;
             tokenResponse.UserId = user.Id.ToString();
-            Guid serviceProvided = Guid.Parse("");
-            Guid normalUser = Guid.Parse("");
-            Guid admin = Guid.Parse("");
-            if (user.Roles.Any(r => r.RoleId == normalUser))
+            Guid normalUser = Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e");
+            Guid serviceProvided = Guid.Parse("3454fc01-7d85-48cf-9d7d-3a19d0565a75");
+            Guid admin = Guid.Parse("54b2817b-9b7a-937a-4b57-3a19a086c89b");
+            var roles = await _identityUserRepository.GetRolesAsync(user.Id);
+            if (roles.Any(r => r.Id == normalUser))
                 tokenResponse.RoleId = 1;
             else
             {
-                if (user.Roles.Any(r => r.RoleId == serviceProvided))
+                if (roles.Any(r => r.Id == serviceProvided))
                     tokenResponse.RoleId = 2;
                 else
                 {
-                    if (user.Roles.Any(r => r.RoleId == admin))
+                    if (roles.Any(r => r.Id == admin))
                         tokenResponse.RoleId = 3;
 
                 }

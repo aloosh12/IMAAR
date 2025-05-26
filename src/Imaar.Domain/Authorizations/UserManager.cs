@@ -331,6 +331,7 @@ namespace Imaar.Authorizations
             allUserPermissions.AddRange(userPermissions);
 
             var userRoles = await _identityUserManager.GetRolesAsync(user);
+            
             foreach (var role in userRoles)
             {
                 allUserPermissions.AddRange(await _permissionManager.GetAllForRoleAsync(role));

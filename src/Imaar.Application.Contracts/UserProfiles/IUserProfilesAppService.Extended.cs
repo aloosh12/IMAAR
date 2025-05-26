@@ -1,4 +1,5 @@
 using Imaar.MobileResponses;
+using System;
 using System.Threading.Tasks;
 
 namespace Imaar.UserProfiles
@@ -7,6 +8,7 @@ namespace Imaar.UserProfiles
     {
         //Write your custom code here...
         Task<MobileResponseDto> RegisterAsync(RegisterCreateDto input);
+        Task<UserProfileWithDetailsDto> GetWithDetailsAsync(Guid id);
       //  Task<MobileResponseDto> RegisterFinalAsync(RegisterCreateDt input);
     }
 }

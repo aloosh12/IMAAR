@@ -12,6 +12,7 @@ using Imaar.StoryLovers;
 using Imaar.Vacancies;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
+using Imaar.UserWorksExhibitions;
 
 namespace Imaar.Blazor;
 
@@ -38,5 +39,7 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<MediaDto, MediaUpdateDto>();
         CreateMap<UserEvalauationDto, UserEvalauationUpdateDto>();
         CreateMap<ServiceEvaluationDto, ServiceEvaluationUpdateDto>();
+
+        CreateMap<UserWorksExhibitionDto, UserWorksExhibitionUpdateDto>();
     }
 }
