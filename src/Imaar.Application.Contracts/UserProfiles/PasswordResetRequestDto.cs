@@ -12,7 +12,6 @@ namespace Imaar.UserProfiles
         public string SecurityCode { get; set; } = null!;
 
         [Required]
-        [MinLength(6)]
         public string NewPassword { get; set; } = null!;
 
 

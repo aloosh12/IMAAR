@@ -22,22 +22,25 @@ namespace Imaar.Blazor.Helpers
 
         public override Task ExecuteAsync(ActionContext context, ObjectResult result)
         {
-            
+
             if (context.HttpContext.Request.Path.Value.Contains("/api/mobile/"))
             {
                 var success = Success(context.HttpContext.Response.StatusCode);
 
-               // context.HttpContext.Response.StatusCode = 200;
+                // context.HttpContext.Response.StatusCode = 200;
 
-                var response = new ResponseEnvelope<object>();
-                response.Data = result.Value;
-             //   response.Success = success;
+
+                //   response.Success = success;
                 if (!success)
                 {
+                    var response = new ResponseEnvelope<object>();
+                    response.Data = result.Value;
                     var res = result.Value as RemoteServiceErrorResponse;
                     response.Message = res.Error.Message;
                     response.Data = null;
                     response.Code = context.HttpContext.Response.StatusCode;
+                    result.Value = response;
+
                 }
 
                 //if (result.Value != null)
@@ -47,7 +50,6 @@ namespace Imaar.Blazor.Helpers
                 //        result.Value = response;
                 //}
 
-                result.Value = response;
             }
 
             return base.ExecuteAsync(context, result);
