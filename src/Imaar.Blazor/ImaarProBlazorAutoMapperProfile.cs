@@ -13,6 +13,14 @@ using Imaar.Vacancies;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
 using Imaar.UserWorksExhibitions;
+using Imaar.UserFollows;
+using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Cities;
+using Imaar.FurnishingLevels;
+using Imaar.MainAmenities;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
 
 namespace Imaar.Blazor;
 
@@ -41,5 +49,20 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<ServiceEvaluationDto, ServiceEvaluationUpdateDto>();
 
         CreateMap<UserWorksExhibitionDto, UserWorksExhibitionUpdateDto>();
+        CreateMap<UserFollowDto, UserFollowUpdateDto>();
+
+        CreateMap<CityDto, CityUpdateDto>();
+
+        CreateMap<RegionDto, RegionUpdateDto>();
+
+        CreateMap<FurnishingLevelDto, FurnishingLevelUpdateDto>();
+
+        CreateMap<BuildingFacadeDto, BuildingFacadeUpdateDto>();
+
+        CreateMap<MainAmenityDto, MainAmenityUpdateDto>();
+
+        CreateMap<SecondaryAmenityDto, SecondaryAmenityUpdateDto>();
+
+        CreateMap<BuildingDto, BuildingUpdateDto>().Ignore(x => x.MainAmenityIds).Ignore(x => x.SecondaryAmenityIds);
     }
 }

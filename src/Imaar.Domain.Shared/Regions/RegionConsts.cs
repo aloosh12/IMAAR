@@ -1,0 +1,13 @@
+namespace Imaar.Regions
+{
+    public static class RegionConsts
+    {
+        private const string DefaultSorting = "{0}Name asc";
+
+        public static string GetDefaultSorting(bool withEntityName)
+        {
+            return string.Format(DefaultSorting, withEntityName ? "Region." : string.Empty);
+        }
+
+    }
+}

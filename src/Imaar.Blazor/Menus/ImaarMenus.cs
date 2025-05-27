@@ -23,6 +23,21 @@ public class ImaarMenus
     public const string UserEvalauations = Prefix + ".UserEvalauations";
     public const string ServiceEvaluations = Prefix + ".ServiceEvaluations";
     public const string UserWorksExhibitions = Prefix + ".UserWorksExhibitions";
+    public const string UserFollows = Prefix + ".UserFollows";
+    public const string Cities = Prefix + ".Cities";
+
+    public const string Regions = Prefix + ".Regions";
+
+    public const string FurnishingLevels = Prefix + ".FurnishingLevels";
+
+    public const string BuildingFacades = Prefix + ".BuildingFacades";
+
+    public const string MainAmenities = Prefix + ".MainAmenities";
+
+    public const string SecondaryAmenities = Prefix + ".SecondaryAmenities";
+
+    public const string Buildings = Prefix + ".Buildings";
+
 
 
 

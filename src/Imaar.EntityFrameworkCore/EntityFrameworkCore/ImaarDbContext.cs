@@ -27,6 +27,14 @@ using Imaar.Vacancies;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
 using Imaar.UserWorksExhibitions;
+using Imaar.UserFollows;
+using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Cities;
+using Imaar.FurnishingLevels;
+using Imaar.MainAmenities;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -38,6 +46,14 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<Building> Buildings { get; set; } = null!;
+    public DbSet<SecondaryAmenity> SecondaryAmenities { get; set; } = null!;
+    public DbSet<MainAmenity> MainAmenities { get; set; } = null!;
+    public DbSet<BuildingFacade> BuildingFacades { get; set; } = null!;
+    public DbSet<FurnishingLevel> FurnishingLevels { get; set; } = null!;
+    public DbSet<Region> Regions { get; set; } = null!;
+    public DbSet<City> Cities { get; set; } = null!;
+    public DbSet<UserFollow> UserFollows { get; set; } = null!;
     public DbSet<UserWorksExhibition> UserWorksExhibitions { get; set; } = null!;
     public DbSet<ServiceEvaluation> ServiceEvaluations { get; set; } = null!;
     public DbSet<UserEvalauation> UserEvalauations { get; set; } = null!;
@@ -350,5 +366,191 @@ public class ImaarDbContext :
             });
 
         }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<UserFollow>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "UserFollows", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.FollowerUserId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.FollowingUserId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<MainAmenity>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "MainAmenities", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Name).HasColumnName(nameof(MainAmenity.Name)).IsRequired();
+    b.Property(x => x.Order).HasColumnName(nameof(MainAmenity.Order));
+    b.Property(x => x.IsActive).HasColumnName(nameof(MainAmenity.IsActive));
+});
+
+        }
+        if (builder.IsHostDatabase())
+{
+    builder.Entity<SecondaryAmenity>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "SecondaryAmenities", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+        b.Property(x => x.Name).HasColumnName(nameof(SecondaryAmenity.Name)).IsRequired();
+        b.Property(x => x.Order).HasColumnName(nameof(SecondaryAmenity.Order));
+        b.Property(x => x.IsActive).HasColumnName(nameof(SecondaryAmenity.IsActive));
+    });
+
+}
+if (builder.IsHostDatabase())
+{
+    builder.Entity<City>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "Cities", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+        b.Property(x => x.Name).HasColumnName(nameof(City.Name)).IsRequired();
+        b.Property(x => x.Order).HasColumnName(nameof(City.Order));
+        b.Property(x => x.IsActive).HasColumnName(nameof(City.IsActive));
+    });
+
+}
+if (builder.IsHostDatabase())
+{
+    builder.Entity<Region>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "Regions", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+        b.Property(x => x.Name).HasColumnName(nameof(Region.Name)).IsRequired();
+        b.Property(x => x.Order).HasColumnName(nameof(Region.Order));
+        b.Property(x => x.IsActive).HasColumnName(nameof(Region.IsActive));
+        b.HasOne<City>().WithMany().IsRequired().HasForeignKey(x => x.CityId).OnDelete(DeleteBehavior.NoAction);
+    });
+
+}
+if (builder.IsHostDatabase())
+{
+    builder.Entity<FurnishingLevel>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "FurnishingLevels", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+        b.Property(x => x.Name).HasColumnName(nameof(FurnishingLevel.Name)).IsRequired();
+        b.Property(x => x.Order).HasColumnName(nameof(FurnishingLevel.Order));
+        b.Property(x => x.IsActive).HasColumnName(nameof(FurnishingLevel.IsActive));
+    });
+
+}
+if (builder.IsHostDatabase())
+{
+    builder.Entity<BuildingFacade>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "BuildingFacades", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+        b.Property(x => x.Name).HasColumnName(nameof(BuildingFacade.Name)).IsRequired();
+        b.Property(x => x.Order).HasColumnName(nameof(BuildingFacade.Order));
+        b.Property(x => x.IsActive).HasColumnName(nameof(BuildingFacade.IsActive));
+    });
+
+}
+if (builder.IsHostDatabase())
+{
+
+}
+if (builder.IsHostDatabase())
+{
+
+}
+if (builder.IsHostDatabase())
+{
+
+}
+if (builder.IsHostDatabase())
+{
+
+}
+if (builder.IsHostDatabase())
+{
+    builder.Entity<Building>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "Buildings", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+        b.Property(x => x.MainTitle).HasColumnName(nameof(Building.MainTitle)).IsRequired();
+        b.Property(x => x.Description).HasColumnName(nameof(Building.Description)).IsRequired();
+        b.Property(x => x.Price).HasColumnName(nameof(Building.Price)).IsRequired();
+        b.Property(x => x.BuildingArea).HasColumnName(nameof(Building.BuildingArea)).IsRequired();
+        b.Property(x => x.NumberOfRooms).HasColumnName(nameof(Building.NumberOfRooms)).IsRequired();
+        b.Property(x => x.NumberOfBaths).HasColumnName(nameof(Building.NumberOfBaths)).IsRequired();
+        b.Property(x => x.FloorNo).HasColumnName(nameof(Building.FloorNo)).IsRequired();
+        b.HasOne<Region>().WithMany().IsRequired().HasForeignKey(x => x.RegionId).OnDelete(DeleteBehavior.NoAction);
+        b.HasOne<FurnishingLevel>().WithMany().IsRequired().HasForeignKey(x => x.FurnishingLevelId).OnDelete(DeleteBehavior.NoAction);
+        b.HasOne<BuildingFacade>().WithMany().IsRequired().HasForeignKey(x => x.BuildingFacadeId).OnDelete(DeleteBehavior.NoAction);
+        b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
+        b.HasMany(x => x.MainAmenities).WithOne().HasForeignKey(x => x.BuildingId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+        b.HasMany(x => x.SecondaryAmenities).WithOne().HasForeignKey(x => x.BuildingId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+    });
+
+    builder.Entity<BuildingMainAmenity>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "BuildingMainAmenity", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+
+        b.HasKey(
+            x => new { x.BuildingId, x.MainAmenityId }
+        );
+
+        b.HasOne<Building>().WithMany(x => x.MainAmenities).HasForeignKey(x => x.BuildingId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+        b.HasOne<MainAmenity>().WithMany().HasForeignKey(x => x.MainAmenityId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+        b.HasIndex(
+                x => new { x.BuildingId, x.MainAmenityId }
+        );
+    });
+    builder.Entity<BuildingSecondaryAmenity>(b =>
+    {
+        b.ToTable(ImaarConsts.DbTablePrefix + "BuildingSecondaryAmenity", ImaarConsts.DbSchema);
+        b.ConfigureByConvention();
+
+        b.HasKey(
+            x => new { x.BuildingId, x.SecondaryAmenityId }
+        );
+
+        b.HasOne<Building>().WithMany(x => x.SecondaryAmenities).HasForeignKey(x => x.BuildingId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+        b.HasOne<SecondaryAmenity>().WithMany().HasForeignKey(x => x.SecondaryAmenityId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+        b.HasIndex(
+                x => new { x.BuildingId, x.SecondaryAmenityId }
+        );
+    });
+}
     }
 }

@@ -164,6 +164,78 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.UserWorksExhibitions.Default)
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.UserFollows,
+                l["Menu:UserFollows"],
+                url: "/user-follows",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.UserFollows.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Cities,
+                l["Menu:Cities"],
+                url: "/cities",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Cities.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Regions,
+                l["Menu:Regions"],
+                url: "/regions",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Regions.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.FurnishingLevels,
+                l["Menu:FurnishingLevels"],
+                url: "/furnishing-levels",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.FurnishingLevels.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.BuildingFacades,
+                l["Menu:BuildingFacades"],
+                url: "/building-facades",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.BuildingFacades.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.MainAmenities,
+                l["Menu:MainAmenities"],
+                url: "/main-amenities",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.MainAmenities.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.SecondaryAmenities,
+                l["Menu:SecondaryAmenities"],
+                url: "/secondary-amenities",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.SecondaryAmenities.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Buildings,
+                l["Menu:Buildings"],
+                url: "/buildings",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Buildings.Default)
+        );
         return Task.CompletedTask;
     }
 }

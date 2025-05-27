@@ -1,0 +1,961 @@
+
+
+@page "/buildings"
+
+@attribute [Authorize(ImaarPermissions.Buildings.Default)]
+@using Imaar.Buildings
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IBuildingsAppService BuildingsAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Buildings"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="BuildingSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="BuildingSearchForm" Clicked="GetBuildingsAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MainTitle"]</FieldLabel>
+                        <TextEdit Text="@Filter.MainTitle" TextChanged="@OnMainTitleChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Description"]</FieldLabel>
+                        <TextEdit Text="@Filter.Description" TextChanged="@OnDescriptionChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Price"]</FieldLabel>
+                        <TextEdit Text="@Filter.Price" TextChanged="@OnPriceChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["BuildingArea"]</FieldLabel>
+                        <TextEdit Text="@Filter.BuildingArea" TextChanged="@OnBuildingAreaChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["NumberOfRooms"]</FieldLabel>
+                        <TextEdit Text="@Filter.NumberOfRooms" TextChanged="@OnNumberOfRoomsChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["NumberOfBaths"]</FieldLabel>
+                        <TextEdit Text="@Filter.NumberOfBaths" TextChanged="@OnNumberOfBathsChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["FloorNo"]</FieldLabel>
+                        <TextEdit Text="@Filter.FloorNo" TextChanged="@OnFloorNoChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Region"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.RegionId"
+		SelectedValueChanged="@OnRegionIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in RegionsCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["FurnishingLevel"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.FurnishingLevelId"
+		SelectedValueChanged="@OnFurnishingLevelIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in FurnishingLevelsCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["BuildingFacade"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.BuildingFacadeId"
+		SelectedValueChanged="@OnBuildingFacadeIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in BuildingFacadesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["ServiceType"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.ServiceTypeId"
+		SelectedValueChanged="@OnServiceTypeIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in ServiceTypesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MainAmenity"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.MainAmenityId"
+		SelectedValueChanged="@OnMainAmenityIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in MainAmenities)
+{
+	<SelectItem TValue="Guid?" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["SecondaryAmenity"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.SecondaryAmenityId"
+		SelectedValueChanged="@OnSecondaryAmenityIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in SecondaryAmenities)
+{
+	<SelectItem TValue="Guid?" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedBuildings.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllBuildingsSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedBuildings.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedBuildings.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedBuildings.Count == PageSize || SelectedBuildings.Count == BuildingList.Count) && TotalCount > SelectedBuildings.Count)
+                    {
+                        if (!AllBuildingsSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedBuildingsAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="BuildingWithNavigationPropertiesDto"
+                  Data="BuildingList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedBuildings"
+                  RowSelectable="@((args) => CanDeleteBuilding)"
+                  SelectedRowsChanged="SelectedBuildingRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteBuilding && BuildingList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="BuildingWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="BuildingWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="BuildingWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="BuildingWithNavigationPropertiesDto"
+                                          Visible="@CanEditBuilding"
+                                          Clicked="async () => await OpenEditBuildingModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="BuildingWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteBuilding"
+                                          Clicked="() => DeleteBuildingAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.MainTitle"
+                      Caption="@L["MainTitle"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.Description"
+                      Caption="@L["Description"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.Price"
+                      Caption="@L["Price"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.BuildingArea"
+                      Caption="@L["BuildingArea"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.NumberOfRooms"
+                      Caption="@L["NumberOfRooms"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.NumberOfBaths"
+                      Caption="@L["NumberOfBaths"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.FloorNo"
+                      Caption="@L["FloorNo"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Region.Name"
+                      Caption="@L["Region"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="FurnishingLevel.Name"
+                      Caption="@L["FurnishingLevel"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="BuildingFacade.Name"
+                      Caption="@L["BuildingFacade"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="ServiceType.Title"
+                      Caption="@L["ServiceType"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateBuildingModal" Closing="@CreateBuildingModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateBuildingForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewBuilding"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateBuildingModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Tabs SelectedTab="@SelectedCreateTab" SelectedTabChanged="@OnSelectedCreateTabChanged">
+                    <Items>
+                        <Tab Name="building-create-tab">@L["Building"].Value</Tab> 
+                        <Tab Name="mainAmenities-create-tab">@L["MainAmenities"].Value</Tab>
+                        <Tab Name="secondaryAmenities-create-tab">@L["SecondaryAmenities"].Value</Tab>
+                    </Items>
+                    <Content>
+                <Validations @ref="@NewBuildingValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewBuilding"
+                            ValidateOnLoad="false">
+                    <TabPanel Name="building-create-tab">
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["MainTitle"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.MainTitle"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.Description"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Price"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.Price"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["BuildingArea"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.BuildingArea"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["NumberOfRooms"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.NumberOfRooms"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["NumberOfBaths"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.NumberOfBaths"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["FloorNo"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.FloorNo"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["Region"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuilding.RegionId">
+                            @foreach (var region in RegionsCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(region.Id)">
+                                    @(region.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["FurnishingLevel"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuilding.FurnishingLevelId">
+                            @foreach (var furnishingLevel in FurnishingLevelsCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(furnishingLevel.Id)">
+                                    @(furnishingLevel.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["BuildingFacade"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuilding.BuildingFacadeId">
+                            @foreach (var buildingFacade in BuildingFacadesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(buildingFacade.Id)">
+                                    @(buildingFacade.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["ServiceType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuilding.ServiceTypeId">
+                            @foreach (var serviceType in ServiceTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(serviceType.Id)">
+                                    @(serviceType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    </TabPanel>
+                    <TabPanel Name="mainAmenities-create-tab">
+
+                                <Row>
+                                    <Column ColumnSize="ColumnSize.Is9">
+                                        <Field>
+
+                                            <Autocomplete @ref="SelectedMainAmenityAutoCompleteRef"
+                                                          Data="@MainAmenities"
+                                                          TItem="LookupDto<Guid>"
+                                                          TValue="string"
+                                                          TextField="@((item) => item.DisplayName)"
+                                                          ValueField="@((item) => item.Id.ToString())"
+                                                          SearchChanged="@GetMainAmenityLookupAsync"
+                                                          @bind-SelectedValue="@SelectedMainAmenityId"
+                                                          @bind-SelectedText="@SelectedMainAmenityText"
+                                                          Placeholder="&#8212;"/>
+                                        </Field>
+                                    </Column>
+
+                                    <Column ColumnSize="ColumnSize.Is3">
+                                        <Button Color="Color.Info" TextColor="TextColor.White" Size="Size.Medium" Clicked="AddMainAmenity">
+                                            <Icon class="fa fa-plus"></Icon> @L["Add"]
+                                        </Button>
+                                    </Column>
+                                </Row>
+                                @if (SelectedMainAmenities.Any())
+                                {
+                                    <Table striped-rows="true" responsive-sm="true" class="mt-2">
+                                        <TableHeader>
+                                            <TableHeaderCell><Span class="float-start">@L["Name"]</Span></TableHeaderCell>
+                                        </TableHeader>
+                                        <TableBody>
+                                            @foreach (var mainAmenity in SelectedMainAmenities)
+                                            {
+                                                <TableRow>
+                                                    <TableRowCell><Span class="float-start">@mainAmenity.DisplayName</Span></TableRowCell>
+                                                    <TableRowCell>
+                                                        <span class="btn btn-danger btn-sm float-end"
+                                                              @onclick="() => SelectedMainAmenities.RemoveAll(s => s.Id == mainAmenity.Id)">
+                                                            <Icon Class="fa fa-trash"></Icon>
+                                                        </span>
+                                                    </TableRowCell>
+                                                </TableRow>
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                }
+</TabPanel>
+<TabPanel Name="secondaryAmenities-create-tab">
+
+                                <Row>
+                                    <Column ColumnSize="ColumnSize.Is9">
+                                        <Field>
+
+                                            <Autocomplete @ref="SelectedSecondaryAmenityAutoCompleteRef"
+                                                          Data="@SecondaryAmenities"
+                                                          TItem="LookupDto<Guid>"
+                                                          TValue="string"
+                                                          TextField="@((item) => item.DisplayName)"
+                                                          ValueField="@((item) => item.Id.ToString())"
+                                                          SearchChanged="@GetSecondaryAmenityLookupAsync"
+                                                          @bind-SelectedValue="@SelectedSecondaryAmenityId"
+                                                          @bind-SelectedText="@SelectedSecondaryAmenityText"
+                                                          Placeholder="&#8212;"/>
+                                        </Field>
+                                    </Column>
+
+                                    <Column ColumnSize="ColumnSize.Is3">
+                                        <Button Color="Color.Info" TextColor="TextColor.White" Size="Size.Medium" Clicked="AddSecondaryAmenity">
+                                            <Icon class="fa fa-plus"></Icon> @L["Add"]
+                                        </Button>
+                                    </Column>
+                                </Row>
+                                @if (SelectedSecondaryAmenities.Any())
+                                {
+                                    <Table striped-rows="true" responsive-sm="true" class="mt-2">
+                                        <TableHeader>
+                                            <TableHeaderCell><Span class="float-start">@L["Name"]</Span></TableHeaderCell>
+                                        </TableHeader>
+                                        <TableBody>
+                                            @foreach (var secondaryAmenity in SelectedSecondaryAmenities)
+                                            {
+                                                <TableRow>
+                                                    <TableRowCell><Span class="float-start">@secondaryAmenity.DisplayName</Span></TableRowCell>
+                                                    <TableRowCell>
+                                                        <span class="btn btn-danger btn-sm float-end"
+                                                              @onclick="() => SelectedSecondaryAmenities.RemoveAll(s => s.Id == secondaryAmenity.Id)">
+                                                            <Icon Class="fa fa-trash"></Icon>
+                                                        </span>
+                                                    </TableRowCell>
+                                                </TableRow>
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                }
+</TabPanel>
+
+                </Validations>
+                    </Content>
+                </Tabs>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateBuildingModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateBuildingForm" Clicked="CreateBuildingAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditBuildingModal" Closing="@EditBuildingModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditBuildingForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditBuildingModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Tabs SelectedTab="@SelectedEditTab" SelectedTabChanged="@OnSelectedEditTabChanged">
+                    <Items>
+                        <Tab Name="building-edit-tab">@L["Building"].Value</Tab>
+                        
+                        <Tab Name="mainAmenities-edit-tab">@L["MainAmenities"].Value</Tab>
+                        <Tab Name="secondaryAmenities-edit-tab">@L["SecondaryAmenities"].Value</Tab>
+                    </Items>
+                    <Content>
+                <Validations @ref="@EditingBuildingValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingBuilding"
+                            ValidateOnLoad="false">
+                    <TabPanel Name="building-edit-tab">
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["MainTitle"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.MainTitle"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.Description"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Price"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.Price"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["BuildingArea"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.BuildingArea"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["NumberOfRooms"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.NumberOfRooms"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["NumberOfBaths"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.NumberOfBaths"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["FloorNo"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.FloorNo"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["Region"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuilding.RegionId">
+                            @foreach (var region in RegionsCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(region.Id)">
+                                    @(region.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["FurnishingLevel"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuilding.FurnishingLevelId">
+                            @foreach (var furnishingLevel in FurnishingLevelsCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(furnishingLevel.Id)">
+                                    @(furnishingLevel.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["BuildingFacade"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuilding.BuildingFacadeId">
+                            @foreach (var buildingFacade in BuildingFacadesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(buildingFacade.Id)">
+                                    @(buildingFacade.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["ServiceType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuilding.ServiceTypeId">
+                            @foreach (var serviceType in ServiceTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(serviceType.Id)">
+                                    @(serviceType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    </TabPanel>
+                    <TabPanel Name="mainAmenities-edit-tab">
+
+                                <Row>
+                                    <Column ColumnSize="ColumnSize.Is9">
+                                        <Field>
+
+                                            <Autocomplete 
+                                                          Data="@MainAmenities"
+                                                          TItem="LookupDto<Guid>"
+                                                          TValue="string"
+                                                          TextField="@((item) => item.DisplayName)"
+                                                          ValueField="@((item) => item.Id.ToString())"
+                                                          SearchChanged="@GetMainAmenityLookupAsync"
+                                                          @bind-SelectedValue="@SelectedMainAmenityId"
+                                                          @bind-SelectedText="@SelectedMainAmenityText"
+                                                          Placeholder="&#8212;"/>
+                                        </Field>
+                                    </Column>
+
+                                    <Column ColumnSize="ColumnSize.Is3">
+                                        <Button Color="Color.Info" TextColor="TextColor.White" Size="Size.Medium" Clicked="AddMainAmenity">
+                                            <Icon class="fa fa-plus"></Icon> @L["Add"]
+                                        </Button>
+                                    </Column>
+                                </Row>
+                                @if (SelectedMainAmenities.Any())
+                                {
+                                    <Table striped-rows="true" responsive-sm="true" class="mt-2">
+                                        <TableHeader>
+                                            <TableHeaderCell><Span class="float-start">@L["Name"]</Span></TableHeaderCell>
+                                        </TableHeader>
+                                        <TableBody>
+                                            @foreach (var mainAmenity in SelectedMainAmenities)
+                                            {
+                                                <TableRow>
+                                                    <TableRowCell><Span class="float-start">@mainAmenity.DisplayName</Span></TableRowCell>
+                                                    <TableRowCell>
+                                                        <span class="btn btn-danger btn-sm float-end"
+                                                              @onclick="() => SelectedMainAmenities.RemoveAll(s => s.Id == mainAmenity.Id)">
+                                                            <Icon Class="fa fa-trash"></Icon>
+                                                        </span>
+                                                    </TableRowCell>
+                                                </TableRow>
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                }
+</TabPanel>
+<TabPanel Name="secondaryAmenities-edit-tab">
+
+                                <Row>
+                                    <Column ColumnSize="ColumnSize.Is9">
+                                        <Field>
+
+                                            <Autocomplete 
+                                                          Data="@SecondaryAmenities"
+                                                          TItem="LookupDto<Guid>"
+                                                          TValue="string"
+                                                          TextField="@((item) => item.DisplayName)"
+                                                          ValueField="@((item) => item.Id.ToString())"
+                                                          SearchChanged="@GetSecondaryAmenityLookupAsync"
+                                                          @bind-SelectedValue="@SelectedSecondaryAmenityId"
+                                                          @bind-SelectedText="@SelectedSecondaryAmenityText"
+                                                          Placeholder="&#8212;"/>
+                                        </Field>
+                                    </Column>
+
+                                    <Column ColumnSize="ColumnSize.Is3">
+                                        <Button Color="Color.Info" TextColor="TextColor.White" Size="Size.Medium" Clicked="AddSecondaryAmenity">
+                                            <Icon class="fa fa-plus"></Icon> @L["Add"]
+                                        </Button>
+                                    </Column>
+                                </Row>
+                                @if (SelectedSecondaryAmenities.Any())
+                                {
+                                    <Table striped-rows="true" responsive-sm="true" class="mt-2">
+                                        <TableHeader>
+                                            <TableHeaderCell><Span class="float-start">@L["Name"]</Span></TableHeaderCell>
+                                        </TableHeader>
+                                        <TableBody>
+                                            @foreach (var secondaryAmenity in SelectedSecondaryAmenities)
+                                            {
+                                                <TableRow>
+                                                    <TableRowCell><Span class="float-start">@secondaryAmenity.DisplayName</Span></TableRowCell>
+                                                    <TableRowCell>
+                                                        <span class="btn btn-danger btn-sm float-end"
+                                                              @onclick="() => SelectedSecondaryAmenities.RemoveAll(s => s.Id == secondaryAmenity.Id)">
+                                                            <Icon Class="fa fa-trash"></Icon>
+                                                        </span>
+                                                    </TableRowCell>
+                                                </TableRow>
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                }
+</TabPanel>
+
+                </Validations>
+                    </Content>
+                </Tabs>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditBuildingModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditBuildingForm" Clicked="UpdateBuildingAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+

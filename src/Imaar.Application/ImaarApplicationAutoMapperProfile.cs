@@ -19,6 +19,14 @@ using Imaar.ServiceEvaluations;
 using Imaar.UserWorksExhibitions;
 using System.Linq;
 using System.Collections.Generic;
+using Imaar.UserFollows;
+using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Cities;
+using Imaar.FurnishingLevels;
+using Imaar.MainAmenities;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
 
 namespace Imaar;
 
@@ -121,5 +129,40 @@ public class ImaarApplicationAutoMapperProfile : Profile
       //  CreateMap<List<UserWorksExhibition>, List<UserWorksExhibitionDto>>();
         CreateMap<UserWorksExhibition, UserWorksExhibitionExcelDto>();
         CreateMap<UserWorksExhibitionWithNavigationProperties, UserWorksExhibitionWithNavigationPropertiesDto>();
+
+
+        CreateMap<UserFollow, UserFollowDto>();
+        CreateMap<UserFollow, UserFollowExcelDto>();
+        CreateMap<UserFollowWithNavigationProperties, UserFollowWithNavigationPropertiesDto>();
+
+
+        CreateMap<City, CityDto>();
+        CreateMap<City, CityExcelDto>();
+
+        CreateMap<Region, RegionDto>();
+        CreateMap<Region, RegionExcelDto>();
+        CreateMap<RegionWithNavigationProperties, RegionWithNavigationPropertiesDto>();
+        CreateMap<City, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
+
+        CreateMap<FurnishingLevel, FurnishingLevelDto>();
+        CreateMap<FurnishingLevel, FurnishingLevelExcelDto>();
+
+        CreateMap<BuildingFacade, BuildingFacadeDto>();
+        CreateMap<BuildingFacade, BuildingFacadeExcelDto>();
+
+        CreateMap<MainAmenity, MainAmenityDto>();
+        CreateMap<MainAmenity, MainAmenityExcelDto>();
+
+        CreateMap<SecondaryAmenity, SecondaryAmenityDto>();
+        CreateMap<SecondaryAmenity, SecondaryAmenityExcelDto>();
+
+        CreateMap<Building, BuildingDto>();
+        CreateMap<Building, BuildingExcelDto>();
+        CreateMap<BuildingWithNavigationProperties, BuildingWithNavigationPropertiesDto>();
+        CreateMap<Region, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
+        CreateMap<FurnishingLevel, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
+        CreateMap<BuildingFacade, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
+        CreateMap<MainAmenity, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
+        CreateMap<SecondaryAmenity, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
     }
 }

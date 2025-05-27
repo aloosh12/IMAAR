@@ -26,6 +26,14 @@ using Imaar.Vacancies;
 using Imaar.UserEvalauations;
 using Imaar.ServiceEvaluations;
 using Imaar.UserWorksExhibitions;
+using Imaar.UserFollows;
+using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Cities;
+using Imaar.FurnishingLevels;
+using Imaar.MainAmenities;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -69,7 +77,20 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<UserEvalauation, UserEvalauations.EfCoreUserEvalauationRepository>();
             options.AddRepository<ServiceEvaluation, ServiceEvaluations.EfCoreServiceEvaluationRepository>();
             options.AddRepository<UserWorksExhibition, UserWorksExhibitions.EfCoreUserWorksExhibitionRepository>();
+            options.AddRepository<UserFollow, UserFollows.EfCoreUserFollowRepository>();
 
+            options.AddRepository<City, Cities.EfCoreCityRepository>();
+            options.AddRepository<Region, Regions.EfCoreRegionRepository>();
+
+            options.AddRepository<FurnishingLevel, FurnishingLevels.EfCoreFurnishingLevelRepository>();
+
+            options.AddRepository<BuildingFacade, BuildingFacades.EfCoreBuildingFacadeRepository>();
+
+            options.AddRepository<MainAmenity, MainAmenities.EfCoreMainAmenityRepository>();
+
+            options.AddRepository<SecondaryAmenity, SecondaryAmenities.EfCoreSecondaryAmenityRepository>();
+
+            options.AddRepository<Building, Buildings.EfCoreBuildingRepository>();
 
 
 
