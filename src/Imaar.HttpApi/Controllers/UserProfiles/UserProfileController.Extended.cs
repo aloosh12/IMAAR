@@ -38,6 +38,33 @@ namespace Imaar.Controllers.UserProfiles
             //return _userProfilesAppService.VerifySecrityCodeAsync(input);
         }
 
+        //[AllowAnonymous]
+        //[HttpPost("request-password-reset")]
+        //public virtual Task<MobileResponseDto> RequestPasswordResetAsync(PasswordResetRequestDto input)
+        //{
+        //    return _userProfilesAppService.RequestPasswordResetAsync(input);
+        //}
+
+        //[AllowAnonymous]
+        //[HttpPost("confirm-password-reset")]
+        //public virtual Task<MobileResponseDto> ConfirmPasswordResetAsync(PasswordResetConfirmDto input)
+        //{
+        //    return _userProfilesAppService.ConfirmPasswordResetAsync(input);
+        //}
+
+        [AllowAnonymous]
+        [HttpPost("password-reset")]
+        public virtual Task<MobileResponseDto> ResetPasswordWithoutTokenAsync(PasswordResetRequestDto input)
+        {
+            return _userProfilesAppService.ResetPasswordWithoutTokenAsync(input);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("password-change")]
+        public virtual Task<MobileResponseDto> ChangePasswordAsync(PasswordChangeRequestDto input)
+        {
+            return _userProfilesAppService.ChangePasswordAsync(input);
+        }
 
         [HttpGet]
         [Route("user-profile-details/{id}")]

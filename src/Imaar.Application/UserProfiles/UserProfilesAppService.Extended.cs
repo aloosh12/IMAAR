@@ -46,14 +46,126 @@ namespace Imaar.UserProfiles
             return null;
         }
 
+        //[AllowAnonymous]
+        //public virtual async Task<MobileResponseDto> RequestPasswordResetAsync(PasswordResetRequestDto input)
+        //{
+        //    var user = await _userManager.FindByEmailAsync(input.Email);
+        //    if (user == null)
+        //    {
+        //        throw new UserFriendlyException("User not found with this email address.");
+        //    }
+
+        //    // Generate a random security code
+        //    Random random = new Random();
+        //    string securityCode = random.Next(1000, 10000).ToString();
+
+        //    // Store the security code in cache with expiration
+        //    var cacheKey = $"password_reset_{user.Id}";
+        //    await _downloadTokenCache.SetAsync(
+        //        cacheKey,
+        //        new UserProfileDownloadTokenCacheItem { SecurityCode = securityCode },
+        //        new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) }
+        //    );
+
+        //    // TODO: Send security code via email or SMS
+        //    // For now, we'll just return it in the response
+        //    var response = new MobileResponse
+        //    {
+        //        Code = 200,
+        //        Message = "Security code sent successfully",
+        //        Data = new { SecurityCode = securityCode }
+        //    };
+
+        //    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(response);
+        //}
+
+        //[AllowAnonymous]
+        //public virtual async Task<MobileResponseDto> ConfirmPasswordResetAsync(PasswordResetConfirmDto input)
+        //{
+        //    var user = await _userManager.FindByEmailAsync(input.Email);
+        //    if (user == null)
+        //    {
+        //        throw new UserFriendlyException("User not found with this email address.");
+        //    }
+
+        //    // Verify security code from cache
+        //    var cacheKey = $"password_reset_{user.Id}";
+        //    var cacheItem = await _downloadTokenCache.GetAsync(cacheKey);
+            
+        //    if (cacheItem == null || cacheItem.SecurityCode != input.SecurityCode)
+        //    {
+        //        throw new UserFriendlyException("Invalid or expired security code.");
+        //    }
+
+        //    // Generate reset token and reset password
+        //    var token = await _userManager.GeneratePasswordResetTokenForEmailAsync(input.Email);
+        //    await _userManager.ResetPasswordForEmailAsync(input.Email, token, input.NewPassword);
+
+        //    // Remove the security code from cache
+        //    await _downloadTokenCache.RemoveAsync(cacheKey);
+
+        //    var response = new MobileResponse
+        //    {
+        //        Code = 200,
+        //        Message = "Password reset successfully",
+        //        Data = null
+        //    };
+
+        //    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(response);
+        //}
+
+
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> ResetPasswordWithoutTokenAsync(PasswordResetRequestDto input)
+        {
+            var user = await _userManager.FindByEmailAsync(input.Email);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found with this email address.");
+            }
+
+
+            // Generate reset token and reset password
+            await _userManager.ResetPasswordWithoutTokenAsync(input.Email, input.NewPassword);
+
+            var response = new MobileResponse
+            {
+                Code = 200,
+                Message = "Password reset successfully",
+                Data = null
+            };
+
+            return ObjectMapper.Map<MobileResponse, MobileResponseDto>(response);
+        }
+
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> ChangePasswordAsync(PasswordChangeRequestDto input)
+        {
+            var user = await _userManager.FindByEmailAsync(input.Email);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found with this email address.");
+            }
+
+            // Generate reset token and reset password
+            await _userManager.ChangePasswordAsync(input.Email,input.OldPassword, input.NewPassword);
+
+            var response = new MobileResponse
+            {
+                Code = 200,
+                Message = "Password reset successfully",
+                Data = null
+            };
+
+            return ObjectMapper.Map<MobileResponse, MobileResponseDto>(response);
+        }
 
         [AllowAnonymous]
         public virtual async Task<MobileResponseDto> ResendSecurityCodeAsync(SecurityNumberCreateDto input)
         {
             return null;
-            //var registeredUser = await _userManager.RegisterUserAsync(input.FirstName, input.LastName, input.PhoneNumber, input.Email);
-            //return ObjectMapper.Map<IdentityUser, RegisterDto>(registeredUser);
         }
+
         [Authorize(ImaarPermissions.UserProfiles.Default)]
         public virtual async Task<UserProfileWithDetailsDto> GetWithDetailsAsync(Guid id)
         {

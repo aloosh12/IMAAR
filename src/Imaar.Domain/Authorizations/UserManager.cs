@@ -385,5 +385,75 @@ namespace Imaar.Authorizations
             }
             return res.Count();
         }
+
+        public async Task<IdentityResult> ResetPasswordForEmailAsync(string email, string token, string newPassword)
+        {
+            var user = await _identityUserManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found with this email address.");
+            }
+
+            var result = await _identityUserManager.ResetPasswordAsync(user, token, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new UserFriendlyException("Failed to reset password: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            return result;
+        }
+
+        public async Task<string> GeneratePasswordResetTokenForEmailAsync(string email)
+        {
+            var user = await _identityUserManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found with this email address.");
+            }
+
+            return await _identityUserManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ResetPasswordWithoutTokenAsync(string email, string newPassword)
+        {
+            var user = await _identityUserManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found with this email address.");
+            }
+
+            // Remove existing password
+            await RemovePasswordAsync(user);
+
+            // Add new password
+            var result = await _identityUserManager.AddPasswordAsync(user, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new UserFriendlyException("Failed to reset password: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            return result;
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(string email, string oldPassword, string newPassword)
+        {
+            var user = await _identityUserManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found with this email address.");
+            }
+
+            // Remove existing password
+            await RemovePasswordAsync(user);
+
+            // Add new password
+            var result = await _identityUserManager.AddPasswordAsync(user, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new UserFriendlyException("Failed to reset password: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            return result;
+        }
     }
 }

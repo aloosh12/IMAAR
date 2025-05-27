@@ -9,6 +9,9 @@ namespace Imaar.UserProfiles
         //Write your custom code here...
         Task<MobileResponseDto> RegisterAsync(RegisterCreateDto input);
         Task<UserProfileWithDetailsDto> GetWithDetailsAsync(Guid id);
-      //  Task<MobileResponseDto> RegisterFinalAsync(RegisterCreateDt input);
+        //Task<MobileResponseDto> RequestPasswordResetAsync(PasswordResetRequestDto input);
+        //Task<MobileResponseDto> ConfirmPasswordResetAsync(PasswordResetConfirmDto input);
+        Task<MobileResponseDto> ResetPasswordWithoutTokenAsync(PasswordResetRequestDto input);
+        Task<MobileResponseDto> ChangePasswordAsync(PasswordChangeRequestDto input);
     }
 }
