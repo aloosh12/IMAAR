@@ -42,7 +42,7 @@ namespace Imaar.UserProfiles
 
         public virtual async Task<MobileResponseDto> UpdateUserDetailsAsync(UserUpdateDto input)
         {
-            var user = await _userProfileManager.UpdateWithDetailsAsync(input.UserId, input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.Password, input.SecurityCode, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto, input.RoleId);
+            var user = await _userProfileManager.UpdateWithDetailsAsync(input.UserId, input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.BiologicalSex, input.ProfilePhoto);
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(user);
         }
 

@@ -30,7 +30,7 @@ namespace Imaar.UserProfiles
         [Required]
         public string? Longitude { get; set; } = null!;
 
-        public IFormFile ProfilePhoto { get; set; }
+        public IFormFile? ProfilePhoto { get; set; }
         [Required]
         public string? RoleId { get; set; } = null!;
     }

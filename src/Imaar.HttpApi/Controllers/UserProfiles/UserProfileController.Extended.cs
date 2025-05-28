@@ -31,7 +31,7 @@ namespace Imaar.Controllers.UserProfiles
         }
 
         [HttpPost("update-user")]
-        public virtual Task<MobileResponseDto> UpdateUserAsync([FromForm] UserUpdateDto input)
+        public virtual Task<MobileResponseDto> UpdateUserDetailsAsync([FromForm] UserUpdateDto input)
         {
             return _userProfilesAppService.UpdateUserDetailsAsync(input);
         }

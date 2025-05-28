@@ -105,7 +105,7 @@ namespace Imaar.UserProfiles
             }
         }
 
-        public virtual async Task<MobileResponse> UpdateWithDetailsAsync(string userId, string firstName, string lastName, string phoneNumber, string email, string password,  BiologicalSex? biologicalSex, DateOnly dateOfBirth, string latitude, string longitude, IFormFile profilePhoto, string roleName)
+        public virtual async Task<MobileResponse> UpdateWithDetailsAsync(string userId, string firstName, string lastName, string phoneNumber, string email, BiologicalSex? biologicalSex, IFormFile? profilePhoto)
         {
             MobileResponse mobileResponse = new MobileResponse();
             Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
@@ -129,46 +129,32 @@ namespace Imaar.UserProfiles
                 user.Name = firstName;
                 user.Surname = lastName;
                 user.SetPhoneNumber(phoneNumber, false);
-                user.Email = email;
+                await _identityUserManager.SetEmailAsync(user, email);
 
                 // Update roles if needed
-                var currentRoles = await _identityUserManager.GetRolesAsync(user);
-                if (roleName.Trim() == "1" && !currentRoles.Contains("1"))
-                {
-                    await _identityUserManager.RemoveFromRolesAsync(user, currentRoles);
-                    await _identityUserManager.AddToRoleAsync(user, "1");
-                }
-                else if (roleName.Trim() == "2" && !currentRoles.Contains("2"))
-                {
-                    await _identityUserManager.RemoveFromRolesAsync(user, currentRoles);
-                    await _identityUserManager.AddToRoleAsync(user, "2");
-                }
+                //var currentRoles = await _identityUserManager.GetRolesAsync(user);
+                //if (roleName.Trim() == "1" && !currentRoles.Contains("1"))
+                //{
+                //    await _identityUserManager.RemoveFromRolesAsync(user, currentRoles);
+                //    await _identityUserManager.AddToRoleAsync(user, "1");
+                //}
+                //else if (roleName.Trim() == "2" && !currentRoles.Contains("2"))
+                //{
+                //    await _identityUserManager.RemoveFromRolesAsync(user, currentRoles);
+                //    await _identityUserManager.AddToRoleAsync(user, "2");
+                //}
 
                 var result = await _identityUserManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {
-                    // Update password if provided
-                    if (!string.IsNullOrEmpty(password))
-                    {
-                        var token = await _identityUserManager.GeneratePasswordResetTokenAsync(user);
-                        await _identityUserManager.ResetPasswordAsync(user, token, password);
-                    }
-
                     // Update profile photo if provided
-                    if (profilePhoto != null)
-                    {
-                        imageName = await uploadImage(profilePhoto);
-                    }
-
+                    imageName = await uploadImage(profilePhoto);
                     // Update user profile
                     var userProfile = await _userProfileRepository.GetAsync(user.Id);
                     if (userProfile != null)
                     {
                         userProfile.BiologicalSex = biologicalSex;
-                        userProfile.DateOfBirth = dateOfBirth;
-                        userProfile.Latitude = latitude;
-                        userProfile.Longitude = longitude;
                         if (!string.IsNullOrEmpty(imageName))
                         {
                             userProfile.ProfilePhoto = imageName;
@@ -197,8 +183,10 @@ namespace Imaar.UserProfiles
             return mobileResponse;
         }
 
-        private async Task<string> uploadImage(IFormFile formFile)
+        private async Task<string> uploadImage(IFormFile? formFile)
         {
+            if(formFile == null)
+                return "default-user-profile-img.png";
             using (var stream = new MemoryStream())
             {
                 formFile.CopyTo(stream);
