@@ -41,6 +41,35 @@ namespace Imaar.UserProfiles
         }
 
         [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> VerifyEmailExistsAsync(VerifyEmailExistsDto input)
+        {
+            var mobileResponse = new MobileResponse();
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(input.Email);
+                if (user == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Email not found";
+                    mobileResponse.Data = null;
+                }
+                else
+                {
+                    mobileResponse.Code = 200;
+                    mobileResponse.Message = "Email exists";
+                    mobileResponse.Data = new { Email = input.Email };
+                }
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+            }
+            return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+        }
+
+        [AllowAnonymous]
         public virtual async Task<MobileResponseDto> VerifySecurityCodeAsync(SecurityNumberCreateDto input)
         {
             return null;

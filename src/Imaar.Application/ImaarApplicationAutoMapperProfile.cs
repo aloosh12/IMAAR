@@ -27,6 +27,10 @@ using Imaar.FurnishingLevels;
 using Imaar.MainAmenities;
 using Imaar.Regions;
 using Imaar.SecondaryAmenities;
+using Imaar.Notifications;
+using Imaar.NotificationTypes;
+using Imaar.ServiceTickets;
+using Imaar.ServiceTicketTypes;
 
 namespace Imaar;
 
@@ -164,5 +168,22 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<BuildingFacade, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
         CreateMap<MainAmenity, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
         CreateMap<SecondaryAmenity, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Name));
+
+
+        CreateMap<ServiceTicketType, ServiceTicketTypeDto>();
+        CreateMap<ServiceTicketType, ServiceTicketTypeExcelDto>();
+
+        CreateMap<NotificationType, NotificationTypeDto>();
+        CreateMap<NotificationType, NotificationTypeExcelDto>();
+
+        CreateMap<Notification, NotificationDto>();
+        CreateMap<Notification, NotificationExcelDto>();
+        CreateMap<NotificationWithNavigationProperties, NotificationWithNavigationPropertiesDto>();
+        CreateMap<NotificationType, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+
+        CreateMap<ServiceTicket, ServiceTicketDto>();
+        CreateMap<ServiceTicket, ServiceTicketExcelDto>();
+        CreateMap<ServiceTicketWithNavigationProperties, ServiceTicketWithNavigationPropertiesDto>();
+        CreateMap<ServiceTicketType, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
     }
 }

@@ -754,6 +754,161 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppMedias", (string)null);
             });
+
+            modelBuilder.Entity("Imaar.NotificationTypes.NotificationType", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Title");
+
+                b.HasKey("Id");
+
+                b.ToTable("AppNotificationTypes", (string)null);
+            });
+
+            modelBuilder.Entity("Imaar.Notifications.Notification", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<bool>("IsRead")
+                    .HasColumnType("bit")
+                    .HasColumnName("IsRead");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<string>("Message")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Message");
+
+                b.Property<Guid>("NotificationTypeId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<int?>("Priority")
+                    .HasColumnType("int")
+                    .HasColumnName("Priority");
+
+                b.Property<DateTime?>("ReadDate")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("ReadDate");
+
+                b.Property<string>("SenderUserId")
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("SenderUserId");
+
+                b.Property<string>("SourceEntityId")
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("SourceEntityId");
+
+                b.Property<byte>("SourceEntityType")
+                    .HasColumnType("tinyint")
+                    .HasColumnName("SourceEntityType");
+
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Title");
+
+                b.Property<Guid>("UserProfileId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.HasKey("Id");
+
+                b.HasIndex("NotificationTypeId");
+
+                b.HasIndex("UserProfileId");
+
+                b.ToTable("AppNotifications", (string)null);
+            });
+
+
             modelBuilder.Entity("Imaar.Regions.Region", b =>
             {
                 b.Property<Guid>("Id")
@@ -954,6 +1109,72 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppServiceEvaluations", (string)null);
             });
+
+            modelBuilder.Entity("Imaar.ServiceTicketTypes.ServiceTicketType", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsActive")
+                    .HasColumnType("bit")
+                    .HasColumnName("IsActive");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<int?>("Order")
+                    .HasColumnType("int")
+                    .HasColumnName("Order");
+
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Title");
+
+                b.HasKey("Id");
+
+                b.ToTable("AppServiceTicketTypes", (string)null);
+            });
+
 
             modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {
@@ -1477,6 +1698,7 @@ namespace Imaar.Migrations
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
+
             modelBuilder.Entity("Imaar.Regions.Region", b =>
             {
                 b.HasOne("Imaar.Cities.City", null)
@@ -1485,6 +1707,22 @@ namespace Imaar.Migrations
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
+
+            modelBuilder.Entity("Imaar.Notifications.Notification", b =>
+            {
+                b.HasOne("Imaar.NotificationTypes.NotificationType", null)
+                    .WithMany()
+                    .HasForeignKey("NotificationTypeId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("UserProfileId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
+
 
             modelBuilder.Entity("Imaar.ServiceEvaluations.ServiceEvaluation", b =>
             {

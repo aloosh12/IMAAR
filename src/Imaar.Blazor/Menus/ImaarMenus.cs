@@ -38,7 +38,13 @@ public class ImaarMenus
 
     public const string Buildings = Prefix + ".Buildings";
 
+    public const string ServiceTicketTypes = Prefix + ".ServiceTicketTypes";
 
+    public const string NotificationTypes = Prefix + ".NotificationTypes";
+
+    public const string Notifications = Prefix + ".Notifications";
+
+    public const string ServiceTickets = Prefix + ".ServiceTickets";
 
 
 }

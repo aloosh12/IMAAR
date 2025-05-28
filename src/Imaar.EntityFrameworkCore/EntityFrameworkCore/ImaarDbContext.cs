@@ -35,6 +35,10 @@ using Imaar.FurnishingLevels;
 using Imaar.MainAmenities;
 using Imaar.Regions;
 using Imaar.SecondaryAmenities;
+using Imaar.Notifications;
+using Imaar.NotificationTypes;
+using Imaar.ServiceTickets;
+using Imaar.ServiceTicketTypes;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -46,6 +50,10 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<ServiceTicket> ServiceTickets { get; set; } = null!;
+    public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<NotificationType> NotificationTypes { get; set; } = null!;
+    public DbSet<ServiceTicketType> ServiceTicketTypes { get; set; } = null!;
     public DbSet<Building> Buildings { get; set; } = null!;
     public DbSet<SecondaryAmenity> SecondaryAmenities { get; set; } = null!;
     public DbSet<MainAmenity> MainAmenities { get; set; } = null!;
@@ -551,6 +559,74 @@ if (builder.IsHostDatabase())
                 x => new { x.BuildingId, x.SecondaryAmenityId }
         );
     });
-}
-    }
+
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<ServiceTicketType>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "ServiceTicketTypes", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Title).HasColumnName(nameof(ServiceTicketType.Title)).IsRequired();
+                    b.Property(x => x.Order).HasColumnName(nameof(ServiceTicketType.Order));
+                    b.Property(x => x.IsActive).HasColumnName(nameof(ServiceTicketType.IsActive));
+                });
+
+            }
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<NotificationType>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "NotificationTypes", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Title).HasColumnName(nameof(NotificationType.Title)).IsRequired();
+                });
+
+            }
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<Notification>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "Notifications", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Title).HasColumnName(nameof(Notification.Title)).IsRequired();
+                    b.Property(x => x.Message).HasColumnName(nameof(Notification.Message)).IsRequired();
+                    b.Property(x => x.IsRead).HasColumnName(nameof(Notification.IsRead));
+                    b.Property(x => x.ReadDate).HasColumnName(nameof(Notification.ReadDate));
+                    b.Property(x => x.Priority).HasColumnName(nameof(Notification.Priority));
+                    b.Property(x => x.SourceEntityType).HasColumnName(nameof(Notification.SourceEntityType));
+                    b.Property(x => x.SourceEntityId).HasColumnName(nameof(Notification.SourceEntityId));
+                    b.Property(x => x.SenderUserId).HasColumnName(nameof(Notification.SenderUserId));
+                    b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+                    b.HasOne<NotificationType>().WithMany().IsRequired().HasForeignKey(x => x.NotificationTypeId).OnDelete(DeleteBehavior.NoAction);
+                });
+
+            }
+            if (builder.IsHostDatabase())
+            {
+
+            }
+            if (builder.IsHostDatabase())
+            {
+
+            }
+            if (builder.IsHostDatabase())
+            {
+
+            }
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<ServiceTicket>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "ServiceTickets", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Description).HasColumnName(nameof(ServiceTicket.Description)).IsRequired();
+                    b.Property(x => x.TicketEntityType).HasColumnName(nameof(ServiceTicket.TicketEntityType));
+                    b.Property(x => x.TicketEntityId).HasColumnName(nameof(ServiceTicket.TicketEntityId)).IsRequired();
+                    b.HasOne<ServiceTicketType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTicketTypeId).OnDelete(DeleteBehavior.NoAction);
+                    b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.TicketCreatorId).OnDelete(DeleteBehavior.NoAction);
+                });
+            }
+
+            }
+        }
 }

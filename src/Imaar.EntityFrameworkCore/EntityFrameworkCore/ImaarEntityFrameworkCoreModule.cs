@@ -34,6 +34,10 @@ using Imaar.FurnishingLevels;
 using Imaar.MainAmenities;
 using Imaar.Regions;
 using Imaar.SecondaryAmenities;
+using Imaar.Notifications;
+using Imaar.NotificationTypes;
+using Imaar.ServiceTickets;
+using Imaar.ServiceTicketTypes;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -91,7 +95,13 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<SecondaryAmenity, SecondaryAmenities.EfCoreSecondaryAmenityRepository>();
 
             options.AddRepository<Building, Buildings.EfCoreBuildingRepository>();
+            options.AddRepository<ServiceTicketType, ServiceTicketTypes.EfCoreServiceTicketTypeRepository>();
 
+            options.AddRepository<NotificationType, NotificationTypes.EfCoreNotificationTypeRepository>();
+
+            options.AddRepository<Notification, Notifications.EfCoreNotificationRepository>();
+
+            options.AddRepository<ServiceTicket, ServiceTickets.EfCoreServiceTicketRepository>();
 
 
         });

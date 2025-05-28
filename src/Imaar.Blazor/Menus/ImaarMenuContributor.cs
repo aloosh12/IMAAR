@@ -236,6 +236,43 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.Buildings.Default)
         );
+
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.ServiceTicketTypes,
+                l["Menu:ServiceTicketTypes"],
+                url: "/service-ticket-types",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.ServiceTicketTypes.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.NotificationTypes,
+                l["Menu:NotificationTypes"],
+                url: "/notification-types",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.NotificationTypes.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Notifications,
+                l["Menu:Notifications"],
+                url: "/notifications",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Notifications.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.ServiceTickets,
+                l["Menu:ServiceTickets"],
+                url: "/service-tickets",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.ServiceTickets.Default)
+        );
         return Task.CompletedTask;
     }
 }

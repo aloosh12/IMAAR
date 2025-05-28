@@ -1,0 +1,493 @@
+
+
+@page "/service-tickets"
+
+@attribute [Authorize(ImaarPermissions.ServiceTickets.Default)]
+@using Imaar.ServiceTickets
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IServiceTicketsAppService ServiceTicketsAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+@using Imaar.ServiceTickets
+
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["ServiceTickets"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="ServiceTicketSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="ServiceTicketSearchForm" Clicked="GetServiceTicketsAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+           @*          <Field>
+                        <FieldLabel>@L["Description "]</FieldLabel>
+                        <TextEdit Text="@Filter.Description " TextChanged="@OnDescription ChangedAsync" />                       
+                    </Field> *@
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["TicketEntityType"]</FieldLabel>
+                        <Select TValue="TicketEntityType?"
+		SelectedValue="@Filter.TicketEntityType"
+		SelectedValueChanged="@OnTicketEntityTypeChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(TicketEntityType value in Enum.GetValues(typeof(TicketEntityType)))
+{
+	<SelectItem Value="value">
+		@value
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["TicketEntityId"]</FieldLabel>
+                        <TextEdit Text="@Filter.TicketEntityId" TextChanged="@OnTicketEntityIdChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["ServiceTicketType"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.ServiceTicketTypeId"
+		SelectedValueChanged="@OnServiceTicketTypeIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in ServiceTicketTypesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.TicketCreatorId"
+		SelectedValueChanged="@OnTicketCreatorIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedServiceTickets.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllServiceTicketsSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedServiceTickets.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedServiceTickets.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedServiceTickets.Count == PageSize || SelectedServiceTickets.Count == ServiceTicketList.Count) && TotalCount > SelectedServiceTickets.Count)
+                    {
+                        if (!AllServiceTicketsSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedServiceTicketsAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="ServiceTicketWithNavigationPropertiesDto"
+                  Data="ServiceTicketList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedServiceTickets"
+                  RowSelectable="@((args) => CanDeleteServiceTicket)"
+                  SelectedRowsChanged="SelectedServiceTicketRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteServiceTicket && ServiceTicketList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="ServiceTicketWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="ServiceTicketWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="ServiceTicketWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="ServiceTicketWithNavigationPropertiesDto"
+                                          Visible="@CanEditServiceTicket"
+                                          Clicked="async () => await OpenEditServiceTicketModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="ServiceTicketWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteServiceTicket"
+                                          Clicked="() => DeleteServiceTicketAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="ServiceTicketWithNavigationPropertiesDto"
+                      Field="ServiceTicket.Description "
+                      Caption="@L["Description "]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ServiceTicketWithNavigationPropertiesDto"
+                      Field="ServiceTicket.TicketEntityType"
+                      Caption="@L["TicketEntityType"]">
+                    <DisplayTemplate>
+                        @L[$"Enum:TicketEntityType.{(int)context.ServiceTicket.TicketEntityType}"]
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+              <DataGridColumn TItem="ServiceTicketWithNavigationPropertiesDto"
+                      Field="ServiceTicket.TicketEntityId"
+                      Caption="@L["TicketEntityId"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ServiceTicketWithNavigationPropertiesDto"
+                      Field="ServiceTicketType.Title"
+                      Caption="@L["ServiceTicketType"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ServiceTicketWithNavigationPropertiesDto"
+                      Field="TicketCreator.SecurityNumber"
+                      Caption="@L["TicketCreator"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateServiceTicketModal" Closing="@CreateServiceTicketModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateServiceTicketForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewServiceTicket"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateServiceTicketModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewServiceTicketValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewServiceTicket"
+                            ValidateOnLoad="false">
+                    
+                    
+@*                     <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description "] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewServiceTicket.Description "  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation> *@
+
+
+                    <Field>
+                        <FieldLabel>@L["TicketEntityType"]</FieldLabel>
+                        <Select TValue="TicketEntityType" @bind-SelectedValue="@NewServiceTicket.TicketEntityType" >
+                            @foreach (var itemValue in Enum.GetValues(typeof(TicketEntityType)))
+                            {
+                                <SelectItem TValue="TicketEntityType" Value="@((TicketEntityType) itemValue)">
+                                    @L[$"Enum:TicketEntityType.{((TicketEntityType) itemValue).ToString("d")}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["TicketEntityId"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewServiceTicket.TicketEntityId"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["ServiceTicketType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewServiceTicket.ServiceTicketTypeId">
+                            @foreach (var serviceTicketType in ServiceTicketTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(serviceTicketType.Id)">
+                                    @(serviceTicketType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewServiceTicket.TicketCreatorId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateServiceTicketModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateServiceTicketForm" Clicked="CreateServiceTicketAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditServiceTicketModal" Closing="@EditServiceTicketModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditServiceTicketForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditServiceTicketModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingServiceTicketValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingServiceTicket"
+                            ValidateOnLoad="false">
+                    
+   @*                  
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description "] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingServiceTicket.Description "  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation> *@
+
+
+                    <Field>
+                        <FieldLabel>@L["TicketEntityType"]</FieldLabel>
+                        <Select TValue="TicketEntityType" @bind-SelectedValue="@EditingServiceTicket.TicketEntityType" >
+                            @foreach (var itemValue in Enum.GetValues(typeof(TicketEntityType)))
+                            {
+                                <SelectItem TValue="TicketEntityType" Value="@((TicketEntityType) itemValue)">
+                                    @L[$"Enum:TicketEntityType.{((TicketEntityType) itemValue).ToString("d")}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["TicketEntityId"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingServiceTicket.TicketEntityId"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["ServiceTicketType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingServiceTicket.ServiceTicketTypeId">
+                            @foreach (var serviceTicketType in ServiceTicketTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(serviceTicketType.Id)">
+                                    @(serviceTicketType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingServiceTicket.TicketCreatorId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditServiceTicketModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditServiceTicketForm" Clicked="UpdateServiceTicketAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+

@@ -44,7 +44,10 @@ namespace Imaar.UserProfiles
                 var existingUser = users.FirstOrDefault(u => u.Email == email);
                 if (existingUser != null)
                 {
-                    throw new BusinessException("Email already exists.");
+                    mobileResponse.Code = 501;
+                    mobileResponse.Message = "Email already exists.";
+                    mobileResponse.Data = null;
+                    return mobileResponse;
                 }
 
                 var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);

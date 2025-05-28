@@ -127,6 +127,27 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         buildingPermission.AddChild(ImaarPermissions.Buildings.Create, L("Permission:Create"));
         buildingPermission.AddChild(ImaarPermissions.Buildings.Edit, L("Permission:Edit"));
         buildingPermission.AddChild(ImaarPermissions.Buildings.Delete, L("Permission:Delete"));
+
+
+        var serviceTicketTypePermission = myGroup.AddPermission(ImaarPermissions.ServiceTicketTypes.Default, L("Permission:ServiceTicketTypes"));
+        serviceTicketTypePermission.AddChild(ImaarPermissions.ServiceTicketTypes.Create, L("Permission:Create"));
+        serviceTicketTypePermission.AddChild(ImaarPermissions.ServiceTicketTypes.Edit, L("Permission:Edit"));
+        serviceTicketTypePermission.AddChild(ImaarPermissions.ServiceTicketTypes.Delete, L("Permission:Delete"));
+
+        var notificationTypePermission = myGroup.AddPermission(ImaarPermissions.NotificationTypes.Default, L("Permission:NotificationTypes"));
+        notificationTypePermission.AddChild(ImaarPermissions.NotificationTypes.Create, L("Permission:Create"));
+        notificationTypePermission.AddChild(ImaarPermissions.NotificationTypes.Edit, L("Permission:Edit"));
+        notificationTypePermission.AddChild(ImaarPermissions.NotificationTypes.Delete, L("Permission:Delete"));
+
+        var notificationPermission = myGroup.AddPermission(ImaarPermissions.Notifications.Default, L("Permission:Notifications"));
+        notificationPermission.AddChild(ImaarPermissions.Notifications.Create, L("Permission:Create"));
+        notificationPermission.AddChild(ImaarPermissions.Notifications.Edit, L("Permission:Edit"));
+        notificationPermission.AddChild(ImaarPermissions.Notifications.Delete, L("Permission:Delete"));
+
+        var serviceTicketPermission = myGroup.AddPermission(ImaarPermissions.ServiceTickets.Default, L("Permission:ServiceTickets"));
+        serviceTicketPermission.AddChild(ImaarPermissions.ServiceTickets.Create, L("Permission:Create"));
+        serviceTicketPermission.AddChild(ImaarPermissions.ServiceTickets.Edit, L("Permission:Edit"));
+        serviceTicketPermission.AddChild(ImaarPermissions.ServiceTickets.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

@@ -11,6 +11,7 @@ namespace Imaar.UserProfiles
         Task<UserProfileWithDetailsDto> GetWithDetailsAsync(Guid id);
         //Task<MobileResponseDto> RequestPasswordResetAsync(PasswordResetRequestDto input);
         //Task<MobileResponseDto> ConfirmPasswordResetAsync(PasswordResetConfirmDto input);
+        Task<MobileResponseDto> VerifyEmailExistsAsync(VerifyEmailExistsDto input);
         Task<MobileResponseDto> ResetPasswordWithoutTokenAsync(PasswordResetRequestDto input);
         Task<MobileResponseDto> ChangePasswordAsync(PasswordChangeRequestDto input);
     }

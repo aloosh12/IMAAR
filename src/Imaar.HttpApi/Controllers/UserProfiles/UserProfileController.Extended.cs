@@ -30,6 +30,19 @@ namespace Imaar.Controllers.UserProfiles
             return _userProfilesAppService.RegisterAsync(input);
         }
 
+        [HttpPost("update-user")]
+        public virtual Task<MobileResponseDto> UpdateUserAsync([FromForm] RegisterCreateDto input)
+        {
+            return _userProfilesAppService.RegisterAsync(input);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("verify-email-exists")]
+        public virtual Task<MobileResponseDto> VerifyEmailExistsAsync([FromBody] VerifyEmailExistsDto input)
+        {
+            return _userProfilesAppService.VerifyEmailExistsAsync(input);
+        }
+
         [AllowAnonymous]
         [HttpPost("verify-secret-key")]
         public virtual Task<MobileResponseDto> VerifySecurityCodeAsync(SecurityNumberCreateDto input)

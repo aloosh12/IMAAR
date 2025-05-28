@@ -21,6 +21,10 @@ using Imaar.FurnishingLevels;
 using Imaar.MainAmenities;
 using Imaar.Regions;
 using Imaar.SecondaryAmenities;
+using Imaar.Notifications;
+using Imaar.NotificationTypes;
+using Imaar.ServiceTickets;
+using Imaar.ServiceTicketTypes;
 
 namespace Imaar.Blazor;
 
@@ -64,5 +68,13 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<SecondaryAmenityDto, SecondaryAmenityUpdateDto>();
 
         CreateMap<BuildingDto, BuildingUpdateDto>().Ignore(x => x.MainAmenityIds).Ignore(x => x.SecondaryAmenityIds);
+
+        CreateMap<ServiceTicketTypeDto, ServiceTicketTypeUpdateDto>();
+
+        CreateMap<NotificationTypeDto, NotificationTypeUpdateDto>();
+
+        CreateMap<NotificationDto, NotificationUpdateDto>();
+
+        CreateMap<ServiceTicketDto, ServiceTicketUpdateDto>();
     }
 }
