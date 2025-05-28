@@ -40,6 +40,12 @@ namespace Imaar.UserProfiles
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(user);
         }
 
+        public virtual async Task<MobileResponseDto> UpdateUserDetailsAsync(UserUpdateDto input)
+        {
+            var user = await _userProfileManager.UpdateWithDetailsAsync(input.UserId, input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.Password, input.SecurityCode, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto, input.RoleId);
+            return ObjectMapper.Map<MobileResponse, MobileResponseDto>(user);
+        }
+
         [AllowAnonymous]
         public virtual async Task<MobileResponseDto> VerifyEmailExistsAsync(VerifyEmailExistsDto input)
         {
