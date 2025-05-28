@@ -12,7 +12,7 @@ namespace Imaar.Controllers.ServiceTickets
     [RemoteService]
     [Area("app")]
     [ControllerName("ServiceTicket")]
-    [Route("api/app/service-tickets")]
+    [Route("api/mobile/service-tickets")]
 
     public class ServiceTicketController : ServiceTicketControllerBase, IServiceTicketsAppService
     {

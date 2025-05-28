@@ -12,7 +12,7 @@ namespace Imaar.Controllers.NotificationTypes
     [RemoteService]
     [Area("app")]
     [ControllerName("NotificationType")]
-    [Route("api/app/notification-types")]
+    [Route("api/mobile/notification-types")]
 
     public class NotificationTypeController : NotificationTypeControllerBase, INotificationTypesAppService
     {
