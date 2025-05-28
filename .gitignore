@@ -263,3 +263,4 @@ src/Imaar.Blazor.Tiered/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+/src/Imaar.Blazor/appsettings.Development.json
