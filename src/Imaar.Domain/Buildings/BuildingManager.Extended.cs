@@ -95,7 +95,7 @@ namespace Imaar.Buildings
                         true,
                         MediaEntityType.Building,
                         building.Id.ToString(),
-                        file.FileName
+                        mainTitle
                     );
                 }
                 

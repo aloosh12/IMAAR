@@ -6,6 +6,8 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
 using Imaar.ImaarServices;
+using Microsoft.AspNetCore.Authorization;
+using Imaar.MobileResponses;
 
 namespace Imaar.Controllers.ImaarServices
 {
@@ -18,6 +20,13 @@ namespace Imaar.Controllers.ImaarServices
     {
         public ImaarServiceController(IImaarServicesAppService imaarServicesAppService) : base(imaarServicesAppService)
         {
+        }
+        
+        [HttpPost("create-with-files")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> CreateWithFilesAsync([FromForm] ImaarServiceCreateWithFilesDto input)
+        {
+            return _imaarServicesAppService.CreateWithFilesAsync(input);
         }
     }
 }
