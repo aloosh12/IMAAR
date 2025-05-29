@@ -8,7 +8,7 @@ namespace Imaar.Medias
     {
         Story = 0,
         Service = 1,
-        Vacancies = 2,
+        Vacancy = 2,
         Building = 3
     }
 }

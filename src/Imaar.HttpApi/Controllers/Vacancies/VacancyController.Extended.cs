@@ -6,6 +6,8 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
 using Imaar.Vacancies;
+using Microsoft.AspNetCore.Authorization;
+using Imaar.MobileResponses;
 
 namespace Imaar.Controllers.Vacancies
 {
@@ -18,6 +20,13 @@ namespace Imaar.Controllers.Vacancies
     {
         public VacancyController(IVacanciesAppService vacanciesAppService) : base(vacanciesAppService)
         {
+        }
+        
+        [HttpPost("create-with-files")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> CreateWithFilesAsync([FromForm] VacancyCreateWithFilesDto input)
+        {
+            return _vacanciesAppService.CreateWithFilesAsync(input);
         }
     }
 }
