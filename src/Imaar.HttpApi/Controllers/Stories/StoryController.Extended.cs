@@ -6,6 +6,8 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
 using Imaar.Stories;
+using Imaar.MobileResponses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Imaar.Controllers.Stories
 {
@@ -19,10 +21,17 @@ namespace Imaar.Controllers.Stories
         public StoryController(IStoriesAppService storiesAppService) : base(storiesAppService)
         {
         }
+        
         [HttpGet("mobile-list")]
         public Task<PagedResultDto<StoryMobileDto>> GetMobileListAsync(GetStoriesInput input)
         {
-            throw new NotImplementedException();
+            return _storiesAppService.GetMobileListAsync(input);
+        }
+        
+        [HttpPost("create-with-files")]
+        public virtual Task<MobileResponseDto> CreateWithFilesAsync([FromForm] StoryCreateWithFilesDto input)
+        {
+            return _storiesAppService.CreateWithFilesAsync(input);
         }
     }
 }

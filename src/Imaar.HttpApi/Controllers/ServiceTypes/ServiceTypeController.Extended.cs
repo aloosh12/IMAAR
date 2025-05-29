@@ -6,6 +6,8 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Application.Dtos;
 using Imaar.ServiceTypes;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Imaar.Controllers.ServiceTypes
 {
@@ -18,6 +20,27 @@ namespace Imaar.Controllers.ServiceTypes
     {
         public ServiceTypeController(IServiceTypesAppService serviceTypesAppService) : base(serviceTypesAppService)
         {
+        }
+        
+        [HttpGet("building-service-type")]
+        [AllowAnonymous]
+        public Task<List<ServiceTypeDto>> GetBuildingServiceTypesByCategoryAsync()
+        {
+            return _serviceTypesAppService.GetBuildingServiceTypesByCategoryAsync();
+        }
+        
+        [HttpGet("vacancies-service-type")]
+        [AllowAnonymous]
+        public Task<List<ServiceTypeDto>> GetVacancyServiceTypesAsync()
+        {
+            return _serviceTypesAppService.GetVacancyServiceTypesAsync();
+        }
+        
+        [HttpGet("imaar-services-service-type")]
+        [AllowAnonymous]
+        public Task<List<ServiceTypeDto>> GetImaarServiceTypesAsync()
+        {
+            return _serviceTypesAppService.GetImaarServiceTypesAsync();
         }
     }
 }
