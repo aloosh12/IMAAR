@@ -1,3 +1,4 @@
+using Imaar.Medias;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,31 +17,9 @@ namespace Imaar.Medias
             int? orderMin = null,
             int? orderMax = null,
             bool? isActive = null,
-            Guid? imaarServiceId = null,
-            Guid? vacancyId = null,
-            Guid? storyId = null,
+            MediaEntityType? sourceEntityType = null,
+            string? sourceEntityId = null,
             CancellationToken cancellationToken = default);
-        Task<MediaWithNavigationProperties> GetWithNavigationPropertiesAsync(
-            Guid id,
-            CancellationToken cancellationToken = default
-        );
-
-        Task<List<MediaWithNavigationProperties>> GetListWithNavigationPropertiesAsync(
-            string? filterText = null,
-            string? title = null,
-            string? file = null,
-            int? orderMin = null,
-            int? orderMax = null,
-            bool? isActive = null,
-            Guid? imaarServiceId = null,
-            Guid? vacancyId = null,
-            Guid? storyId = null,
-            string? sorting = null,
-            int maxResultCount = int.MaxValue,
-            int skipCount = 0,
-            CancellationToken cancellationToken = default
-        );
-
         Task<List<Media>> GetListAsync(
                     string? filterText = null,
                     string? title = null,
@@ -48,6 +27,8 @@ namespace Imaar.Medias
                     int? orderMin = null,
                     int? orderMax = null,
                     bool? isActive = null,
+                    MediaEntityType? sourceEntityType = null,
+                    string? sourceEntityId = null,
                     string? sorting = null,
                     int maxResultCount = int.MaxValue,
                     int skipCount = 0,
@@ -61,9 +42,8 @@ namespace Imaar.Medias
             int? orderMin = null,
             int? orderMax = null,
             bool? isActive = null,
-            Guid? imaarServiceId = null,
-            Guid? vacancyId = null,
-            Guid? storyId = null,
+            MediaEntityType? sourceEntityType = null,
+            string? sourceEntityId = null,
             CancellationToken cancellationToken = default);
     }
 }

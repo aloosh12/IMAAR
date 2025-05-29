@@ -244,6 +244,10 @@
     "TicketEntityId": "Ticket Entity Id",
     "ServiceTickets": "Service Tickets",
     "NewServiceTicket": "New Service Ticket",
-    "Menu:ServiceTickets": "Service Tickets"
+    "Menu:ServiceTickets": "Service Tickets",
+    "Enum:MediaEntityType.0": "Story",
+    "Enum:MediaEntityType.1": "Service",
+    "Enum:MediaEntityType.2": "Vacancies",
+    "Enum:MediaEntityType.3": "Building"
   }
 }

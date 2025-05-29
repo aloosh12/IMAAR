@@ -1,4 +1,3 @@
-using Imaar.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,17 +11,9 @@ namespace Imaar.Medias
     public partial interface IMediasAppService : IApplicationService
     {
 
-        Task<PagedResultDto<MediaWithNavigationPropertiesDto>> GetListAsync(GetMediasInput input);
-
-        Task<MediaWithNavigationPropertiesDto> GetWithNavigationPropertiesAsync(Guid id);
+        Task<PagedResultDto<MediaDto>> GetListAsync(GetMediasInput input);
 
         Task<MediaDto> GetAsync(Guid id);
-
-        Task<PagedResultDto<LookupDto<Guid>>> GetImaarServiceLookupAsync(LookupRequestDto input);
-
-        Task<PagedResultDto<LookupDto<Guid>>> GetVacancyLookupAsync(LookupRequestDto input);
-
-        Task<PagedResultDto<LookupDto<Guid>>> GetStoryLookupAsync(LookupRequestDto input);
 
         Task DeleteAsync(Guid id);
 

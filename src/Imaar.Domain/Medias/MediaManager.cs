@@ -1,3 +1,4 @@
+using Imaar.Medias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,15 @@ namespace Imaar.Medias
         }
 
         public virtual async Task<Media> CreateAsync(
-        Guid? imaarServiceId, Guid? vacancyId, Guid? storyId, string file, int order, bool isActive, string? title = null)
+        string file, int order, bool isActive, MediaEntityType sourceEntityType, string sourceEntityId, string? title = null)
         {
             Check.NotNullOrWhiteSpace(file, nameof(file));
+            Check.NotNull(sourceEntityType, nameof(sourceEntityType));
+            Check.NotNullOrWhiteSpace(sourceEntityId, nameof(sourceEntityId));
 
             var media = new Media(
              GuidGenerator.Create(),
-             imaarServiceId, vacancyId, storyId, file, order, isActive, title
+             file, order, isActive, sourceEntityType, sourceEntityId, title
              );
 
             return await _mediaRepository.InsertAsync(media);
@@ -34,19 +37,20 @@ namespace Imaar.Medias
 
         public virtual async Task<Media> UpdateAsync(
             Guid id,
-            Guid? imaarServiceId, Guid? vacancyId, Guid? storyId, string file, int order, bool isActive, string? title = null, [CanBeNull] string? concurrencyStamp = null
+            string file, int order, bool isActive, MediaEntityType sourceEntityType, string sourceEntityId, string? title = null, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNullOrWhiteSpace(file, nameof(file));
+            Check.NotNull(sourceEntityType, nameof(sourceEntityType));
+            Check.NotNullOrWhiteSpace(sourceEntityId, nameof(sourceEntityId));
 
             var media = await _mediaRepository.GetAsync(id);
 
-            media.ImaarServiceId = imaarServiceId;
-            media.VacancyId = vacancyId;
-            media.StoryId = storyId;
             media.File = file;
             media.Order = order;
             media.IsActive = isActive;
+            media.SourceEntityType = sourceEntityType;
+            media.SourceEntityId = sourceEntityId;
             media.Title = title;
 
             media.SetConcurrencyStampIfNotNull(concurrencyStamp);

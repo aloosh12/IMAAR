@@ -1,6 +1,4 @@
-using Imaar.ImaarServices;
-using Imaar.Vacancies;
-using Imaar.Stories;
+using Imaar.Medias;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -25,27 +23,29 @@ namespace Imaar.Medias
         public virtual int Order { get; set; }
 
         public virtual bool IsActive { get; set; }
-        public Guid? ImaarServiceId { get; set; }
-        public Guid? VacancyId { get; set; }
-        public Guid? StoryId { get; set; }
+
+        public virtual MediaEntityType SourceEntityType { get; set; }
+
+        [NotNull]
+        public virtual string SourceEntityId { get; set; }
 
         protected MediaBase()
         {
 
         }
 
-        public MediaBase(Guid id, Guid? imaarServiceId, Guid? vacancyId, Guid? storyId, string file, int order, bool isActive, string? title = null)
+        public MediaBase(Guid id, string file, int order, bool isActive, MediaEntityType sourceEntityType, string sourceEntityId, string? title = null)
         {
 
             Id = id;
             Check.NotNull(file, nameof(file));
+            Check.NotNull(sourceEntityId, nameof(sourceEntityId));
             File = file;
             Order = order;
             IsActive = isActive;
+            SourceEntityType = sourceEntityType;
+            SourceEntityId = sourceEntityId;
             Title = title;
-            ImaarServiceId = imaarServiceId;
-            VacancyId = vacancyId;
-            StoryId = storyId;
         }
 
     }

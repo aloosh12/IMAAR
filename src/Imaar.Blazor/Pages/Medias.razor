@@ -29,6 +29,8 @@
 @inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
 @inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
 @inject NavigationManager NavigationManager
+@using Imaar.Medias
+
 
 @* ************************* PAGE HEADER ************************* *@
 <PageHeader Title="@L["Medias"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
@@ -116,17 +118,17 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
-                        <FieldLabel>@L["ImaarService"]</FieldLabel>
-                        <Select TValue="Guid?"
-		SelectedValue="@Filter.ImaarServiceId"
-		SelectedValueChanged="@OnImaarServiceIdChangedAsync">
+                        <FieldLabel>@L["SourceEntityType"]</FieldLabel>
+                        <Select TValue="MediaEntityType?"
+		SelectedValue="@Filter.SourceEntityType"
+		SelectedValueChanged="@OnSourceEntityTypeChangedAsync">
 
 <SelectItem></SelectItem>
 
-@foreach(var item in ImaarServicesCollection)
+@foreach(MediaEntityType value in Enum.GetValues(typeof(MediaEntityType)))
 {
-	<SelectItem TValue="Guid?" Value="@item.Id">
-		@item.DisplayName
+	<SelectItem Value="value">
+		@value
 	</SelectItem>
 }
 
@@ -135,40 +137,8 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
-                        <FieldLabel>@L["Vacancy"]</FieldLabel>
-                        <Select TValue="Guid?"
-		SelectedValue="@Filter.VacancyId"
-		SelectedValueChanged="@OnVacancyIdChangedAsync">
-
-<SelectItem></SelectItem>
-
-@foreach(var item in VacanciesCollection)
-{
-	<SelectItem TValue="Guid?" Value="@item.Id">
-		@item.DisplayName
-	</SelectItem>
-}
-
-</Select>                       
-                    </Field>
-                </Column>
-                <Column ColumnSize="ColumnSize.Is3">
-                    <Field>
-                        <FieldLabel>@L["Story"]</FieldLabel>
-                        <Select TValue="Guid?"
-		SelectedValue="@Filter.StoryId"
-		SelectedValueChanged="@OnStoryIdChangedAsync">
-
-<SelectItem></SelectItem>
-
-@foreach(var item in StoriesCollection)
-{
-	<SelectItem TValue="Guid?" Value="@item.Id">
-		@item.DisplayName
-	</SelectItem>
-}
-
-</Select>                       
+                        <FieldLabel>@L["SourceEntityId"]</FieldLabel>
+                        <TextEdit Text="@Filter.SourceEntityId" TextChanged="@OnSourceEntityIdChangedAsync" />                       
                     </Field>
                 </Column>
             </Row>
@@ -230,7 +200,7 @@
             
             <hr class="my-1 mx-0"/>
         }
-        <DataGrid TItem="MediaWithNavigationPropertiesDto"
+        <DataGrid TItem="MediaDto"
                   Data="MediaList"
                   
                   SelectionMode="DataGridSelectionMode.Multiple"
@@ -264,17 +234,17 @@
                 
                 @if (CanDeleteMedia && MediaList.Any())
                 {
-                    <DataGridMultiSelectColumn TItem="MediaWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                    <DataGridMultiSelectColumn TItem="MediaDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
                 }
                 
-                <DataGridEntityActionsColumn TItem="MediaWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                <DataGridEntityActionsColumn TItem="MediaDto" @ref="@EntityActionsColumn">
                     <DisplayTemplate>
-                        <EntityActions TItem="MediaWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
-                            <EntityAction TItem="MediaWithNavigationPropertiesDto"
+                        <EntityActions TItem="MediaDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="MediaDto"
                                           Visible="@CanEditMedia"
                                           Clicked="async () => await OpenEditMediaModalAsync(context)"
                                           Text="@L["Edit"]"></EntityAction>
-                            <EntityAction TItem="MediaWithNavigationPropertiesDto"
+                            <EntityAction TItem="MediaDto"
                                           Visible="@CanDeleteMedia"
                                           Clicked="() => DeleteMediaAsync(context)"
                                           ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
@@ -285,26 +255,26 @@
                     </DisplayTemplate>
                 </DataGridEntityActionsColumn>
                
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="Media.Title"
+              <DataGridColumn TItem="MediaDto"
+                      Field="Title"
                       Caption="@L["Title"]">
               </DataGridColumn>
 
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="Media.File"
+              <DataGridColumn TItem="MediaDto"
+                      Field="File"
                       Caption="@L["File"]">
               </DataGridColumn>
 
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="Media.Order"
+              <DataGridColumn TItem="MediaDto"
+                      Field="Order"
                       Caption="@L["Order"]">
               </DataGridColumn>
 
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="Media.IsActive"
+              <DataGridColumn TItem="MediaDto"
+                      Field="IsActive"
                       Caption="@L["IsActive"]">
                     <DisplayTemplate>
-                        @if (context.Media.IsActive)
+                        @if (context.IsActive)
                         {
                             <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
                         }
@@ -316,19 +286,18 @@
               </DataGridColumn>
 
 
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="ImaarService.Title"
-                      Caption="@L["ImaarService"]">
+              <DataGridColumn TItem="MediaDto"
+                      Field="SourceEntityType"
+                      Caption="@L["SourceEntityType"]">
+                    <DisplayTemplate>
+                        @L[$"Enum:MediaEntityType.{(int)context.SourceEntityType}"]
+                    </DisplayTemplate>
               </DataGridColumn>
 
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="Vacancy.Title"
-                      Caption="@L["Vacancy"]">
-              </DataGridColumn>
 
-              <DataGridColumn TItem="MediaWithNavigationPropertiesDto"
-                      Field="Story.Title"
-                      Caption="@L["Story"]">
+              <DataGridColumn TItem="MediaDto"
+                      Field="SourceEntityId"
+                      Caption="@L["SourceEntityId"]">
               </DataGridColumn>
 
             </DataGridColumns>
@@ -396,45 +365,28 @@
                     </Field>
 
                     <Field>
-                        <FieldLabel>@L["ImaarService"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@NewMedia.ImaarServiceId">
-                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
-                            @foreach (var imaarService in ImaarServicesCollection)
+                        <FieldLabel>@L["SourceEntityType"]</FieldLabel>
+                        <Select TValue="MediaEntityType" @bind-SelectedValue="@NewMedia.SourceEntityType" >
+                            @foreach (var itemValue in Enum.GetValues(typeof(MediaEntityType)))
                             {
-                                <SelectItem TValue="Guid?" Value="@(imaarService.Id)">
-                                    @(imaarService.DisplayName)
+                                <SelectItem TValue="MediaEntityType" Value="@((MediaEntityType) itemValue)">
+                                    @L[$"Enum:MediaEntityType.{((MediaEntityType) itemValue).ToString("d")}"]
                                 </SelectItem>
                             }
                         </Select>
                     </Field>
 
 
-                    <Field>
-                        <FieldLabel>@L["Vacancy"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@NewMedia.VacancyId">
-                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
-                            @foreach (var vacancy in VacanciesCollection)
-                            {
-                                <SelectItem TValue="Guid?" Value="@(vacancy.Id)">
-                                    @(vacancy.DisplayName)
-                                </SelectItem>
-                            }
-                        </Select>
-                    </Field>
-
-
-                    <Field>
-                        <FieldLabel>@L["Story"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@NewMedia.StoryId">
-                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
-                            @foreach (var story in StoriesCollection)
-                            {
-                                <SelectItem TValue="Guid?" Value="@(story.Id)">
-                                    @(story.DisplayName)
-                                </SelectItem>
-                            }
-                        </Select>
-                    </Field>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["SourceEntityId"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewMedia.SourceEntityId"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
 
 
                     
@@ -514,45 +466,28 @@
                     </Field>
 
                     <Field>
-                        <FieldLabel>@L["ImaarService"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@EditingMedia.ImaarServiceId">
-                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
-                            @foreach (var imaarService in ImaarServicesCollection)
+                        <FieldLabel>@L["SourceEntityType"]</FieldLabel>
+                        <Select TValue="MediaEntityType" @bind-SelectedValue="@EditingMedia.SourceEntityType" >
+                            @foreach (var itemValue in Enum.GetValues(typeof(MediaEntityType)))
                             {
-                                <SelectItem TValue="Guid?" Value="@(imaarService.Id)">
-                                    @(imaarService.DisplayName)
+                                <SelectItem TValue="MediaEntityType" Value="@((MediaEntityType) itemValue)">
+                                    @L[$"Enum:MediaEntityType.{((MediaEntityType) itemValue).ToString("d")}"]
                                 </SelectItem>
                             }
                         </Select>
                     </Field>
 
 
-                    <Field>
-                        <FieldLabel>@L["Vacancy"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@EditingMedia.VacancyId">
-                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
-                            @foreach (var vacancy in VacanciesCollection)
-                            {
-                                <SelectItem TValue="Guid?" Value="@(vacancy.Id)">
-                                    @(vacancy.DisplayName)
-                                </SelectItem>
-                            }
-                        </Select>
-                    </Field>
-
-
-                    <Field>
-                        <FieldLabel>@L["Story"]</FieldLabel>
-                        <Select TValue="Guid?" @bind-SelectedValue="@EditingMedia.StoryId">
-                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
-                            @foreach (var story in StoriesCollection)
-                            {
-                                <SelectItem TValue="Guid?" Value="@(story.Id)">
-                                    @(story.DisplayName)
-                                </SelectItem>
-                            }
-                        </Select>
-                    </Field>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["SourceEntityId"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingMedia.SourceEntityId"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
 
 
                     

@@ -29,7 +29,7 @@ namespace Imaar.UserProfiles
             var dbContext = await GetDbContextAsync();
             var identityuser = dbContext.Set<IdentityUser>().FirstOrDefault(c => c.Id == id);
             var roles = await _identityUserRepository.GetRolesAsync(identityuser.Id);
-            var rolId = roles.Any(r => r.Id == Guid.Parse("3454fc01-7d85-48cf-9d7d-3a19d0565a75")) ? "2" : (roles.Any(r => r.Id == Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e")) ? "2" : "3");
+            var rolId = roles.Any(r => r.Id == Guid.Parse("3454fc01-7d85-48cf-9d7d-3a19d0565a75")) ? "2" : (roles.Any(r => r.Id == Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e")) ? "1" : "3");
 
             // Calculate averages from UserEvalauation
             var evals = dbContext.Set<Imaar.UserEvalauations.UserEvalauation>()

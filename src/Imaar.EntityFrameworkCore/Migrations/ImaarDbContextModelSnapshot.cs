@@ -709,8 +709,6 @@ namespace Imaar.Migrations
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("File");
 
-                b.Property<Guid?>("ImaarServiceId")
-                    .HasColumnType("uniqueidentifier");
 
                 b.Property<bool>("IsActive")
                     .HasColumnType("bit")
@@ -734,15 +732,19 @@ namespace Imaar.Migrations
                     .HasColumnType("int")
                     .HasColumnName("Order");
 
-                b.Property<Guid?>("StoryId")
-                    .HasColumnType("uniqueidentifier");
 
                 b.Property<string>("Title")
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("Title");
+                b.Property<string>("SourceEntityId")
+     .IsRequired()
+     .HasColumnType("nvarchar(max)")
+     .HasColumnName("SourceEntityId");
 
-                b.Property<Guid?>("VacancyId")
-                    .HasColumnType("uniqueidentifier");
+                b.Property<byte>("SourceEntityType")
+                    .HasColumnType("tinyint")
+                    .HasColumnName("SourceEntityType");
+
 
                 b.HasKey("Id");
 
@@ -1175,6 +1177,81 @@ namespace Imaar.Migrations
                 b.ToTable("AppServiceTicketTypes", (string)null);
             });
 
+            modelBuilder.Entity("Imaar.ServiceTickets.ServiceTicket", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("Description")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Description");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<Guid>("ServiceTicketTypeId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("TicketCreatorId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("TicketEntityId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("TicketEntityId");
+
+                b.Property<byte>("TicketEntityType")
+                    .HasColumnType("tinyint")
+                    .HasColumnName("TicketEntityType");
+
+                b.HasKey("Id");
+
+                b.HasIndex("ServiceTicketTypeId");
+
+                b.HasIndex("TicketCreatorId");
+
+                b.ToTable("AppServiceTickets", (string)null);
+            });
 
             modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {
@@ -3796,6 +3873,22 @@ namespace Imaar.Migrations
                     .HasForeignKey("VacancyId")
                     .OnDelete(DeleteBehavior.SetNull);
             });
+
+            modelBuilder.Entity("Imaar.ServiceTickets.ServiceTicket", b =>
+            {
+                b.HasOne("Imaar.ServiceTicketTypes.ServiceTicketType", null)
+                    .WithMany()
+                    .HasForeignKey("ServiceTicketTypeId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("TicketCreatorId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
+
 
             modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {

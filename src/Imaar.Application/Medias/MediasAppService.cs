@@ -1,7 +1,3 @@
-using Imaar.Shared;
-using Imaar.Stories;
-using Imaar.Vacancies;
-using Imaar.ImaarServices;
 using System;
 using System.IO;
 using System.Linq;
@@ -21,6 +17,8 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using Imaar.Shared;
+using AutoMapper.Internal.Mappers;
+using Imaar.Medias;
 
 namespace Imaar.Medias
 {
@@ -32,89 +30,29 @@ namespace Imaar.Medias
         protected IMediaRepository _mediaRepository;
         protected MediaManager _mediaManager;
 
-        protected IRepository<Imaar.ImaarServices.ImaarService, Guid> _imaarServiceRepository;
-        protected IRepository<Imaar.Vacancies.Vacancy, Guid> _vacancyRepository;
-        protected IRepository<Imaar.Stories.Story, Guid> _storyRepository;
-
-        public MediasAppServiceBase(IMediaRepository mediaRepository, MediaManager mediaManager, IDistributedCache<MediaDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.ImaarServices.ImaarService, Guid> imaarServiceRepository, IRepository<Imaar.Vacancies.Vacancy, Guid> vacancyRepository, IRepository<Imaar.Stories.Story, Guid> storyRepository)
+        public MediasAppServiceBase(IMediaRepository mediaRepository, MediaManager mediaManager, IDistributedCache<MediaDownloadTokenCacheItem, string> downloadTokenCache)
         {
             _downloadTokenCache = downloadTokenCache;
             _mediaRepository = mediaRepository;
-            _mediaManager = mediaManager; _imaarServiceRepository = imaarServiceRepository;
-            _vacancyRepository = vacancyRepository;
-            _storyRepository = storyRepository;
+            _mediaManager = mediaManager;
 
         }
 
-        public virtual async Task<PagedResultDto<MediaWithNavigationPropertiesDto>> GetListAsync(GetMediasInput input)
+        public virtual async Task<PagedResultDto<MediaDto>> GetListAsync(GetMediasInput input)
         {
-            var totalCount = await _mediaRepository.GetCountAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.ImaarServiceId, input.VacancyId, input.StoryId);
-            var items = await _mediaRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.ImaarServiceId, input.VacancyId, input.StoryId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _mediaRepository.GetCountAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.SourceEntityType, input.SourceEntityId);
+            var items = await _mediaRepository.GetListAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.SourceEntityType, input.SourceEntityId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
-            return new PagedResultDto<MediaWithNavigationPropertiesDto>
+            return new PagedResultDto<MediaDto>
             {
                 TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<MediaWithNavigationProperties>, List<MediaWithNavigationPropertiesDto>>(items)
+                Items = ObjectMapper.Map<List<Media>, List<MediaDto>>(items)
             };
-        }
-
-        public virtual async Task<MediaWithNavigationPropertiesDto> GetWithNavigationPropertiesAsync(Guid id)
-        {
-            return ObjectMapper.Map<MediaWithNavigationProperties, MediaWithNavigationPropertiesDto>
-                (await _mediaRepository.GetWithNavigationPropertiesAsync(id));
         }
 
         public virtual async Task<MediaDto> GetAsync(Guid id)
         {
             return ObjectMapper.Map<Media, MediaDto>(await _mediaRepository.GetAsync(id));
-        }
-
-        public virtual async Task<PagedResultDto<LookupDto<Guid>>> GetImaarServiceLookupAsync(LookupRequestDto input)
-        {
-            var query = (await _imaarServiceRepository.GetQueryableAsync())
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
-                    x => x.Title != null &&
-                         x.Title.Contains(input.Filter));
-
-            var lookupData = await query.PageBy(input.SkipCount, input.MaxResultCount).ToDynamicListAsync<Imaar.ImaarServices.ImaarService>();
-            var totalCount = query.Count();
-            return new PagedResultDto<LookupDto<Guid>>
-            {
-                TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<Imaar.ImaarServices.ImaarService>, List<LookupDto<Guid>>>(lookupData)
-            };
-        }
-
-        public virtual async Task<PagedResultDto<LookupDto<Guid>>> GetVacancyLookupAsync(LookupRequestDto input)
-        {
-            var query = (await _vacancyRepository.GetQueryableAsync())
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
-                    x => x.Title != null &&
-                         x.Title.Contains(input.Filter));
-
-            var lookupData = await query.PageBy(input.SkipCount, input.MaxResultCount).ToDynamicListAsync<Imaar.Vacancies.Vacancy>();
-            var totalCount = query.Count();
-            return new PagedResultDto<LookupDto<Guid>>
-            {
-                TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<Imaar.Vacancies.Vacancy>, List<LookupDto<Guid>>>(lookupData)
-            };
-        }
-
-        public virtual async Task<PagedResultDto<LookupDto<Guid>>> GetStoryLookupAsync(LookupRequestDto input)
-        {
-            var query = (await _storyRepository.GetQueryableAsync())
-                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
-                    x => x.Title != null &&
-                         x.Title.Contains(input.Filter));
-
-            var lookupData = await query.PageBy(input.SkipCount, input.MaxResultCount).ToDynamicListAsync<Imaar.Stories.Story>();
-            var totalCount = query.Count();
-            return new PagedResultDto<LookupDto<Guid>>
-            {
-                TotalCount = totalCount,
-                Items = ObjectMapper.Map<List<Imaar.Stories.Story>, List<LookupDto<Guid>>>(lookupData)
-            };
         }
 
         [Authorize(ImaarPermissions.Medias.Delete)]
@@ -128,7 +66,7 @@ namespace Imaar.Medias
         {
 
             var media = await _mediaManager.CreateAsync(
-            input.ImaarServiceId, input.VacancyId, input.StoryId, input.File, input.Order, input.IsActive, input.Title
+            input.File, input.Order, input.IsActive, input.SourceEntityType, input.SourceEntityId, input.Title
             );
 
             return ObjectMapper.Map<Media, MediaDto>(media);
@@ -140,7 +78,7 @@ namespace Imaar.Medias
 
             var media = await _mediaManager.UpdateAsync(
             id,
-            input.ImaarServiceId, input.VacancyId, input.StoryId, input.File, input.Order, input.IsActive, input.Title, input.ConcurrencyStamp
+            input.File, input.Order, input.IsActive, input.SourceEntityType, input.SourceEntityId, input.Title, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<Media, MediaDto>(media);
@@ -155,22 +93,10 @@ namespace Imaar.Medias
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var medias = await _mediaRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.ImaarServiceId, input.VacancyId, input.StoryId);
-            var items = medias.Select(item => new
-            {
-                Title = item.Media.Title,
-                File = item.Media.File,
-                Order = item.Media.Order,
-                IsActive = item.Media.IsActive,
-
-                ImaarService = item.ImaarService?.Title,
-                Vacancy = item.Vacancy?.Title,
-                Story = item.Story?.Title,
-
-            });
+            var items = await _mediaRepository.GetListAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.SourceEntityType, input.SourceEntityId);
 
             var memoryStream = new MemoryStream();
-            await memoryStream.SaveAsAsync(items);
+            await memoryStream.SaveAsAsync(ObjectMapper.Map<List<Media>, List<MediaExcelDto>>(items));
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             return new RemoteStreamContent(memoryStream, "Medias.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -185,7 +111,7 @@ namespace Imaar.Medias
         [Authorize(ImaarPermissions.Medias.Delete)]
         public virtual async Task DeleteAllAsync(GetMediasInput input)
         {
-            await _mediaRepository.DeleteAllAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.ImaarServiceId, input.VacancyId, input.StoryId);
+            await _mediaRepository.DeleteAllAsync(input.FilterText, input.Title, input.File, input.OrderMin, input.OrderMax, input.IsActive, input.SourceEntityType, input.SourceEntityId);
         }
         public virtual async Task<Imaar.Shared.DownloadTokenResultDto> GetDownloadTokenAsync()
         {

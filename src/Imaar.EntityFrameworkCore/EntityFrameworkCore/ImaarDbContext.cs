@@ -39,6 +39,7 @@ using Imaar.Notifications;
 using Imaar.NotificationTypes;
 using Imaar.ServiceTickets;
 using Imaar.ServiceTicketTypes;
+using Imaar.Medias;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -303,19 +304,6 @@ public class ImaarDbContext :
         }
         if (builder.IsHostDatabase())
         {
-            builder.Entity<Media>(b =>
-            {
-                b.ToTable(ImaarConsts.DbTablePrefix + "Medias", ImaarConsts.DbSchema);
-                b.ConfigureByConvention();
-                b.Property(x => x.Title).HasColumnName(nameof(Media.Title));
-                b.Property(x => x.File).HasColumnName(nameof(Media.File)).IsRequired();
-                b.Property(x => x.Order).HasColumnName(nameof(Media.Order));
-                b.Property(x => x.IsActive).HasColumnName(nameof(Media.IsActive));
-                b.HasOne<ImaarService>().WithMany().HasForeignKey(x => x.ImaarServiceId).OnDelete(DeleteBehavior.SetNull);
-                b.HasOne<Vacancy>().WithMany().HasForeignKey(x => x.VacancyId).OnDelete(DeleteBehavior.SetNull);
-                b.HasOne<Story>().WithMany().HasForeignKey(x => x.StoryId).OnDelete(DeleteBehavior.SetNull);
-            });
-
         }
         if (builder.IsHostDatabase())
         {
@@ -627,6 +615,22 @@ if (builder.IsHostDatabase())
                 });
             }
 
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<Media>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "Medias", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Title).HasColumnName(nameof(Media.Title));
+                    b.Property(x => x.File).HasColumnName(nameof(Media.File)).IsRequired();
+                    b.Property(x => x.Order).HasColumnName(nameof(Media.Order));
+                    b.Property(x => x.IsActive).HasColumnName(nameof(Media.IsActive));
+                    b.Property(x => x.SourceEntityType).HasColumnName(nameof(Media.SourceEntityType));
+                    b.Property(x => x.SourceEntityId).HasColumnName(nameof(Media.SourceEntityId)).IsRequired();
+                });
+
             }
+
+        }
         }
 }

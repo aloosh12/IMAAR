@@ -20,6 +20,8 @@ using Microsoft.JSInterop;
 using Volo.Abp;
 using Volo.Abp.Content;
 
+using Imaar.Medias;
+
 
 
 namespace Imaar.Blazor.Pages
@@ -34,7 +36,7 @@ namespace Imaar.Blazor.Pages
         protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new List<Volo.Abp.BlazoriseUI.BreadcrumbItem>();
         protected PageToolbar Toolbar {get;} = new PageToolbar();
         protected bool ShowAdvancedFilters { get; set; }
-        private IReadOnlyList<MediaWithNavigationPropertiesDto> MediaList { get; set; }
+        private IReadOnlyList<MediaDto> MediaList { get; set; }
         private int PageSize { get; } = LimitedResultRequestDto.DefaultMaxResultCount;
         private int CurrentPage { get; set; } = 1;
         private string CurrentSorting { get; set; } = string.Empty;
@@ -50,19 +52,16 @@ namespace Imaar.Blazor.Pages
         private Modal CreateMediaModal { get; set; } = new();
         private Modal EditMediaModal { get; set; } = new();
         private GetMediasInput Filter { get; set; }
-        private DataGridEntityActionsColumn<MediaWithNavigationPropertiesDto> EntityActionsColumn { get; set; } = new();
+        private DataGridEntityActionsColumn<MediaDto> EntityActionsColumn { get; set; } = new();
         protected string SelectedCreateTab = "media-create-tab";
         protected string SelectedEditTab = "media-edit-tab";
-        private MediaWithNavigationPropertiesDto? SelectedMedia;
-        private IReadOnlyList<LookupDto<Guid>> ImaarServicesCollection { get; set; } = new List<LookupDto<Guid>>();
-private IReadOnlyList<LookupDto<Guid>> VacanciesCollection { get; set; } = new List<LookupDto<Guid>>();
-private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new List<LookupDto<Guid>>();
-
+        private MediaDto? SelectedMedia;
         
         
         
         
-        private List<MediaWithNavigationPropertiesDto> SelectedMedias { get; set; } = new();
+        
+        private List<MediaDto> SelectedMedias { get; set; } = new();
         private bool AllMediasSelected { get; set; }
         
         public Medias()
@@ -75,7 +74,7 @@ private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new Lis
                 SkipCount = (CurrentPage - 1) * PageSize,
                 Sorting = CurrentSorting
             };
-            MediaList = new List<MediaWithNavigationPropertiesDto>();
+            MediaList = new List<MediaDto>();
             
             
         }
@@ -83,15 +82,6 @@ private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new Lis
         protected override async Task OnInitializedAsync()
         {
             await SetPermissionsAsync();
-            await GetImaarServiceCollectionLookupAsync();
-
-
-            await GetVacancyCollectionLookupAsync();
-
-
-            await GetStoryCollectionLookupAsync();
-
-
             
         }
 
@@ -166,10 +156,10 @@ private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new Lis
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/medias/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&File={HttpUtility.UrlEncode(Filter.File)}&OrderMin={Filter.OrderMin}&OrderMax={Filter.OrderMax}&IsActive={Filter.IsActive}&ImaarServiceId={Filter.ImaarServiceId}&VacancyId={Filter.VacancyId}&StoryId={Filter.StoryId}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/medias/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&File={HttpUtility.UrlEncode(Filter.File)}&OrderMin={Filter.OrderMin}&OrderMax={Filter.OrderMax}&IsActive={Filter.IsActive}&SourceEntityType={Filter.SourceEntityType}&SourceEntityId={HttpUtility.UrlEncode(Filter.SourceEntityId)}", forceLoad: true);
         }
 
-        private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<MediaWithNavigationPropertiesDto> e)
+        private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<MediaDto> e)
         {
             CurrentSorting = e.Columns
                 .Where(c => c.SortDirection != SortDirection.Default)
@@ -203,23 +193,23 @@ private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new Lis
             await CreateMediaModal.Hide();
         }
 
-        private async Task OpenEditMediaModalAsync(MediaWithNavigationPropertiesDto input)
+        private async Task OpenEditMediaModalAsync(MediaDto input)
         {
             SelectedEditTab = "media-edit-tab";
             
             
-            var media = await MediasAppService.GetWithNavigationPropertiesAsync(input.Media.Id);
+            var media = await MediasAppService.GetAsync(input.Id);
             
-            EditingMediaId = media.Media.Id;
-            EditingMedia = ObjectMapper.Map<MediaDto, MediaUpdateDto>(media.Media);
+            EditingMediaId = media.Id;
+            EditingMedia = ObjectMapper.Map<MediaDto, MediaUpdateDto>(media);
             
             await EditingMediaValidations.ClearAll();
             await EditMediaModal.Show();
         }
 
-        private async Task DeleteMediaAsync(MediaWithNavigationPropertiesDto input)
+        private async Task DeleteMediaAsync(MediaDto input)
         {
-            await MediasAppService.DeleteAsync(input.Media.Id);
+            await MediasAppService.DeleteAsync(input.Id);
             await GetMediasAsync();
         }
 
@@ -309,37 +299,17 @@ private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new Lis
             Filter.IsActive = isActive;
             await SearchAsync();
         }
-        protected virtual async Task OnImaarServiceIdChangedAsync(Guid? imaarServiceId)
+        protected virtual async Task OnSourceEntityTypeChangedAsync(MediaEntityType? sourceEntityType)
         {
-            Filter.ImaarServiceId = imaarServiceId;
+            Filter.SourceEntityType = sourceEntityType;
             await SearchAsync();
         }
-        protected virtual async Task OnVacancyIdChangedAsync(Guid? vacancyId)
+        protected virtual async Task OnSourceEntityIdChangedAsync(string? sourceEntityId)
         {
-            Filter.VacancyId = vacancyId;
-            await SearchAsync();
-        }
-        protected virtual async Task OnStoryIdChangedAsync(Guid? storyId)
-        {
-            Filter.StoryId = storyId;
+            Filter.SourceEntityId = sourceEntityId;
             await SearchAsync();
         }
         
-
-        private async Task GetImaarServiceCollectionLookupAsync(string? newValue = null)
-        {
-            ImaarServicesCollection = (await MediasAppService.GetImaarServiceLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
-        }
-
-        private async Task GetVacancyCollectionLookupAsync(string? newValue = null)
-        {
-            VacanciesCollection = (await MediasAppService.GetVacancyLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
-        }
-
-        private async Task GetStoryCollectionLookupAsync(string? newValue = null)
-        {
-            StoriesCollection = (await MediasAppService.GetStoryLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
-        }
 
 
 
@@ -385,7 +355,7 @@ private IReadOnlyList<LookupDto<Guid>> StoriesCollection { get; set; } = new Lis
             }
             else
             {
-                await MediasAppService.DeleteByIdsAsync(SelectedMedias.Select(x => x.Media.Id).ToList());
+                await MediasAppService.DeleteByIdsAsync(SelectedMedias.Select(x => x.Id).ToList());
             }
 
             SelectedMedias.Clear();

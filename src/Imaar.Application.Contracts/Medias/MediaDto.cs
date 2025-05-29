@@ -1,3 +1,4 @@
+using Imaar.Medias;
 using System;
 using System.Collections.Generic;
 
@@ -12,9 +13,8 @@ namespace Imaar.Medias
         public string File { get; set; } = null!;
         public int Order { get; set; }
         public bool IsActive { get; set; }
-        public Guid? ImaarServiceId { get; set; }
-        public Guid? VacancyId { get; set; }
-        public Guid? StoryId { get; set; }
+        public MediaEntityType SourceEntityType { get; set; }
+        public string SourceEntityId { get; set; } = null!;
 
         public string ConcurrencyStamp { get; set; } = null!;
 
