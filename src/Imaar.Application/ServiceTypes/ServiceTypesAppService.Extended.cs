@@ -30,7 +30,7 @@ namespace Imaar.ServiceTypes
         [AllowAnonymous]
         public async Task<List<ServiceTypeDto>> GetBuildingServiceTypesByCategoryAsync()
         {
-            Guid categoryId = Guid.Parse("");
+            Guid categoryId = Guid.Parse("403b9deb-0805-b321-cd0a-3a19c0e95438");
             var serviceTypes = await _serviceTypeRepository.GetListByCategoryIdAsync(
                 categoryId,
                 null,
@@ -46,7 +46,7 @@ namespace Imaar.ServiceTypes
             // Use GetListByCategoryIdAsync for filtering by category, or customize your query if needed
             // For this example, I'm assuming there's a specific category for vacancy service types
             // You might need to adjust the logic based on your business needs
-            Guid categoryId = Guid.Parse("");
+            Guid categoryId = Guid.Parse("1b5c7398-ab5f-5a65-4d41-3a19e3aafec8");
             var serviceTypes = await _serviceTypeRepository.GetListByCategoryIdAsync(
                 categoryId,
                 null,
@@ -60,7 +60,7 @@ namespace Imaar.ServiceTypes
         public async Task<List<ServiceTypeDto>> GetImaarServiceTypesAsync()
         {
             // Similar to the vacancy method but with different filtering
-            Guid categoryId = Guid.Parse("");
+            Guid categoryId = Guid.Parse("c2e51c10-d389-d9ba-45bb-3a19ad0ed525");
             var serviceTypes = await _serviceTypeRepository.GetListByCategoryIdAsync(
                 categoryId,
                 null,
