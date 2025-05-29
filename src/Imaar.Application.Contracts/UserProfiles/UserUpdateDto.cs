@@ -23,6 +23,6 @@ namespace Imaar.UserProfiles
         [Required]
         public BiologicalSex? BiologicalSex { get; set; } = null!;
 
-        public IFormFile ProfilePhoto { get; set; }
+        public IFormFile? ProfilePhoto { get; set; }
     }
 }

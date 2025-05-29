@@ -53,7 +53,8 @@ namespace Imaar.UserProfiles
                 var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
                 identityUser.Name = firstName;
                 identityUser.Surname = lastName;
-                identityUser.SetPhoneNumber(phoneNumber, false);
+                string formattedPhoneNumber = phoneNumber.StartsWith("+") ? phoneNumber : "+" + phoneNumber;
+                identityUser.SetPhoneNumber(formattedPhoneNumber, false);
                 if (roleName.Trim() == "1")
                     identityUser.AddRole(Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e"));
                 if (roleName.Trim() == "2")
@@ -80,7 +81,7 @@ namespace Imaar.UserProfiles
                     Id = identityUser.Id.ToString(),
                     FirstName = firstName,
                     LastName = lastName,
-                    PhoneNumber = phoneNumber,
+                    PhoneNumber = formattedPhoneNumber,
                     Email = email,
                     SecurityCode = securityCode,
                     BiologicalSex = biologicalSex,
@@ -125,10 +126,32 @@ namespace Imaar.UserProfiles
                     return mobileResponse;
                 }
 
+                // Check if email exists for a different user
+                var existingUserWithEmail = await _identityUserManager.FindByEmailAsync(email);
+                if (existingUserWithEmail != null && existingUserWithEmail.Id != user.Id)
+                {
+                    mobileResponse.Code = 400;
+                    mobileResponse.Message = "Email is already in use by another user.";
+                    mobileResponse.Data = null;
+                    return mobileResponse;
+                }
+
+                // Check if phone number exists for a different user
+                var users = await _identityUserRepository.GetListAsync();
+                string formattedPhoneNumber = phoneNumber.StartsWith("+") ? phoneNumber : "+" + phoneNumber;
+                var existingUserWithPhone = users.FirstOrDefault(u => u.PhoneNumber == formattedPhoneNumber && u.Id != user.Id);
+                if (existingUserWithPhone != null)
+                {
+                    mobileResponse.Code = 400;
+                    mobileResponse.Message = "Phone number is already in use by another user.";
+                    mobileResponse.Data = null;
+                    return mobileResponse;
+                }
+
                 // Update identity user
                 user.Name = firstName;
                 user.Surname = lastName;
-                user.SetPhoneNumber(phoneNumber, false);
+                user.SetPhoneNumber(formattedPhoneNumber, false);
                 await _identityUserManager.SetEmailAsync(user, email);
 
                 // Update roles if needed
