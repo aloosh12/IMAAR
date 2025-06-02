@@ -1,0 +1,83 @@
+@* @page "/admin/page-sections/medias/{id}" *@
+
+@attribute [Authorize(ImaarPermissions.Medias.Default)]
+@using Imaar.Permissions
+@using Imaar.Blazor.Components
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@using Imaar.Helper
+@inherits ImaarComponentBase
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@( $"{L["Update"]} {L["ZoneParagraphs"]}")" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <Form id="EditZoneParagraphForm">
+
+                <Card>
+                    <CardTitle>@L["ZoneParagraphs"].Value</CardTitle>
+                    <CardBody>
+                                <Field>
+                        <FieldLabel>@L["Name"]</FieldLabel>
+                        <TextEdit @bind-Text="@Name" Disabled>
+                                    </TextEdit>
+                                </Field>
+
+                        <Div Class="mb-2">
+                            <Button Class="btn-light" Clicked="async ()=>await addNewMediaAsync()"><Icon Name="@IconName.Add" /> @L["Add"] @L["Media"]</Button>
+                        </Div>
+                        <Card>
+                            <CardBody>
+                                @if (!MediaDtos.IsNullOrEmpty())
+                                {
+                                    <Tabs SelectedTab="@SelectedTab" SelectedTabChanged="@OnSelectedCreateTabChanged">
+                                        <Items>
+                                          
+                                             @foreach (var (item, index) in MediaDtos.WithIndex())
+                                                {
+                                                <Tab Name="@((index+1).ToString())">@item.Title</Tab>
+                                                }
+                                        </Items>
+                                        <Content>
+                                            @foreach (var (item, index) in MediaDtos.WithIndex())
+                                            {
+                                                <TabPanel Name="@((index+1).ToString())">
+                                                    <CustomMedia Media="item" MediaDeleted="MediaDeleted"></CustomMedia>
+                                                </TabPanel>
+                                            }
+                                        </Content>
+                                    </Tabs>   
+                                }
+                            </CardBody>
+                        </Card>
+                    </CardBody>
+                    <CardFooter>
+                        <SubmitButton Form="EditZoneParagraphForm" Clicked="Cancel">@L["Cancel"]</SubmitButton>
+                        <SubmitButton Form="EditZoneParagraphForm" Clicked="async()=> await UpdatePageSectionMediasAsync()" />
+                    </CardFooter>
+                </Card>
+    </Form>
+</Card>

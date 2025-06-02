@@ -1,0 +1,77 @@
+@attribute [Authorize(ImaarPermissions.Medias.Default)]
+@using Imaar.Medias;
+@using Imaar.Permissions;
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IMediasAppService MediasAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+
+
+<Card>
+
+    <CardBody>
+        <Validations @ref="@MediaValidations"
+                     Mode="ValidationMode.Auto"
+                     Model="@Media"
+                     ValidateOnLoad="false">
+            <Field>
+                <FieldLabel>@L["File"]</FieldLabel>
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is11">
+                        <FilePicker Multiple Changed="FileChanged" Upload="OnFileUpload" ShowMode="FilePickerShowMode.List" />
+                    </Column>
+                    <Column ColumnSize="ColumnSize.Is1">
+                        <Button Color="Color.Primary" Clicked="async()=> await RemoveMedia()">@L["Reset"]</Button>
+                    </Column>
+                </Row>
+
+                @if (Media.FileNewUpload && !Media.File.IsNullOrEmpty() && !Media.FileContent.IsNullOrEmpty())
+                {
+                    <div style="width:256px;height:256px;background-size: cover; background-image:url(@($"data:{MimeTypes.MimeTypeMap.GetMimeType(Media.File)};base64,{Convert.ToBase64String(Media.FileContent)}"))"></div>
+                }
+                else
+                {
+                    if (!Media.File.IsNullOrEmpty())
+                    {
+                        <div style="width:256px;height:256px;background-size: contain;background-repeat: no-repeat; background-image:url(@($"{MimeTypes.MimeTypeMap.GetAttachmentPath()}/mediasimages/{Media.File}"))"></div>
+                    }
+                }
+            </Field>
+            <Validation>
+                <Field>
+                    <FieldLabel>@L["Order"]</FieldLabel>
+                    <NumericPicker TValue="int" @bind-Value="@Media.Order" Decimals="0">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </NumericPicker>
+                </Field>
+            </Validation>
+            <Field>
+                <Check TValue="bool" @bind-Checked="@Media.IsActive">@L["IsActive"]</Check>
+            </Field>
+        </Validations>
+    </CardBody>
+    <CardFooter>
+        <Button Class="btn btn-danger" Clicked="async ()=>await deleteMediaAsync(Media)">@L["Delete"]</Button>
+    </CardFooter>
+
+
+
+</Card>
