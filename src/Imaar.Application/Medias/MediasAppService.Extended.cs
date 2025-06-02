@@ -22,6 +22,7 @@ using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using Imaar.Shared;
 using Imaar.Medias;
+using Imaar.Notifications;
 using Volo.Abp.BlobStoring;
 
 namespace Imaar.Medias
@@ -110,6 +111,15 @@ namespace Imaar.Medias
             }
 
             return ObjectMapper.Map<List<Media>, List<MediaDto>>(updatedMedias);
+        }
+        [AllowAnonymous]
+        public async Task<MediaDto> GetFirstMediaByEntityIdAsync(Guid entityId, MediaEntityType sourceEntityType)
+        {
+            var media = await _mediaRepository.FirstOrDefaultAsync(m => 
+                m.SourceEntityId == entityId.ToString() && 
+                m.SourceEntityType == sourceEntityType);
+                
+            return ObjectMapper.Map<Media, MediaDto>(media);
         }
     }
 }

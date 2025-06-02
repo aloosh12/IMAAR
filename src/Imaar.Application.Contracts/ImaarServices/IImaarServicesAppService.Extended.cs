@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Imaar.MobileResponses;
+using Volo.Abp.Application.Dtos;
 
 namespace Imaar.ImaarServices
 {
@@ -7,5 +8,7 @@ namespace Imaar.ImaarServices
     {
         //Write your custom code here...
         Task<MobileResponseDto> CreateWithFilesAsync(ImaarServiceCreateWithFilesDto input);
+        
+        Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input);
     }
 }
