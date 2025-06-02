@@ -28,5 +28,12 @@ namespace Imaar.Controllers.ImaarServices
         {
             return _imaarServicesAppService.CreateWithFilesAsync(input);
         }
+        
+        [HttpGet("shop-list")]
+        [AllowAnonymous]
+        public virtual Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input)
+        {
+            return _imaarServicesAppService.GetShopListAsync(input);
+        }
     }
 }
