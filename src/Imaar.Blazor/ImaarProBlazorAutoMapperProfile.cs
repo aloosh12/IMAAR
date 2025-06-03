@@ -1,30 +1,32 @@
-using Volo.Abp.AutoMapper;
-using Imaar.Categories;
 using AutoMapper;
-using Imaar.UserProfiles;
-using Imaar.ServiceTypes;
-using Imaar.VerificationCodes;
-using Imaar.TicketTypes;
-using Imaar.Tickets;
-using Imaar.Medias;
-using Imaar.Stories;
-using Imaar.StoryLovers;
-using Imaar.Vacancies;
-using Imaar.UserEvalauations;
-using Imaar.ServiceEvaluations;
-using Imaar.UserWorksExhibitions;
-using Imaar.UserFollows;
 using Imaar.BuildingFacades;
 using Imaar.Buildings;
+using Imaar.Categories;
 using Imaar.Cities;
 using Imaar.FurnishingLevels;
 using Imaar.MainAmenities;
-using Imaar.Regions;
-using Imaar.SecondaryAmenities;
+using Imaar.Medias;
 using Imaar.Notifications;
 using Imaar.NotificationTypes;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
+using Imaar.ServiceEvaluations;
 using Imaar.ServiceTickets;
 using Imaar.ServiceTicketTypes;
+using Imaar.ServiceTypes;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Tickets;
+using Imaar.TicketTypes;
+using Imaar.UserEvalauations;
+using Imaar.UserFollows;
+using Imaar.UserProfiles;
+using Imaar.UserWorksExhibitions;
+using Imaar.Vacancies;
+using Imaar.VerificationCodes;
+using Imaar.StoryTickets;
+using Imaar.StoryTicketTypes;
+using Volo.Abp.AutoMapper;
 
 namespace Imaar.Blazor;
 
@@ -76,5 +78,9 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<NotificationDto, NotificationUpdateDto>();
 
         CreateMap<ServiceTicketDto, ServiceTicketUpdateDto>();
+
+        CreateMap<StoryTicketTypeDto, StoryTicketTypeUpdateDto>();
+
+        CreateMap<StoryTicketDto, StoryTicketUpdateDto>();
     }
 }

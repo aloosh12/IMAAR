@@ -1,6 +1,33 @@
-﻿using System;
+﻿using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Categories;
+using Imaar.Cities;
+using Imaar.FurnishingLevels;
+using Imaar.ImaarServices;
+using Imaar.MainAmenities;
+using Imaar.Medias;
+using Imaar.Notifications;
+using Imaar.NotificationTypes;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
+using Imaar.ServiceEvaluations;
+using Imaar.ServiceTickets;
+using Imaar.ServiceTicketTypes;
+using Imaar.ServiceTypes;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Tickets;
+using Imaar.TicketTypes;
+using Imaar.UserEvalauations;
+using Imaar.UserFollows;
+using Imaar.UserProfiles;
+using Imaar.UserWorksExhibitions;
+using Imaar.Vacancies;
+using Imaar.VerificationCodes;
+using Imaar.StoryTickets;
+using Imaar.StoryTicketTypes;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.Uow;
+using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,32 +39,7 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using Imaar.Categories;
-using Imaar.UserProfiles;
-using Imaar.ServiceTypes;
-using Imaar.ImaarServices;
-using Imaar.VerificationCodes;
-using Imaar.TicketTypes;
-using Imaar.Tickets;
-using Imaar.Medias;
-using Imaar.Stories;
-using Imaar.StoryLovers;
-using Imaar.Vacancies;
-using Imaar.UserEvalauations;
-using Imaar.ServiceEvaluations;
-using Imaar.UserWorksExhibitions;
-using Imaar.UserFollows;
-using Imaar.BuildingFacades;
-using Imaar.Buildings;
-using Imaar.Cities;
-using Imaar.FurnishingLevels;
-using Imaar.MainAmenities;
-using Imaar.Regions;
-using Imaar.SecondaryAmenities;
-using Imaar.Notifications;
-using Imaar.NotificationTypes;
-using Imaar.ServiceTickets;
-using Imaar.ServiceTicketTypes;
+using Volo.Abp.Uow;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -102,6 +104,9 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<Notification, Notifications.EfCoreNotificationRepository>();
 
             options.AddRepository<ServiceTicket, ServiceTickets.EfCoreServiceTicketRepository>();
+            options.AddRepository<StoryTicketType, StoryTicketTypes.EfCoreStoryTicketTypeRepository>();
+
+            options.AddRepository<StoryTicket, StoryTickets.EfCoreStoryTicketRepository>();
 
 
         });

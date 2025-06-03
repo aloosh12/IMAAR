@@ -1,0 +1,452 @@
+
+
+@page "/story-tickets"
+
+@attribute [Authorize(ImaarPermissions.StoryTickets.Default)]
+@using Imaar.StoryTickets
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IStoryTicketsAppService StoryTicketsAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["StoryTickets"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="StoryTicketSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="StoryTicketSearchForm" Clicked="GetStoryTicketsAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Description"]</FieldLabel>
+                        <TextEdit Text="@Filter.Description" TextChanged="@OnDescriptionChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["StoryTicketType"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.StoryTicketTypeId"
+		SelectedValueChanged="@OnStoryTicketTypeIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in StoryTicketTypesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.TicketCreatorId"
+		SelectedValueChanged="@OnTicketCreatorIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Story"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.StoryAgainstId"
+		SelectedValueChanged="@OnStoryAgainstIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in StoriesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedStoryTickets.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllStoryTicketsSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedStoryTickets.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedStoryTickets.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedStoryTickets.Count == PageSize || SelectedStoryTickets.Count == StoryTicketList.Count) && TotalCount > SelectedStoryTickets.Count)
+                    {
+                        if (!AllStoryTicketsSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedStoryTicketsAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="StoryTicketWithNavigationPropertiesDto"
+                  Data="StoryTicketList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedStoryTickets"
+                  RowSelectable="@((args) => CanDeleteStoryTicket)"
+                  SelectedRowsChanged="SelectedStoryTicketRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteStoryTicket && StoryTicketList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="StoryTicketWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="StoryTicketWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="StoryTicketWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="StoryTicketWithNavigationPropertiesDto"
+                                          Visible="@CanEditStoryTicket"
+                                          Clicked="async () => await OpenEditStoryTicketModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="StoryTicketWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteStoryTicket"
+                                          Clicked="() => DeleteStoryTicketAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="StoryTicketWithNavigationPropertiesDto"
+                      Field="StoryTicket.Description"
+                      Caption="@L["Description"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="StoryTicketWithNavigationPropertiesDto"
+                      Field="StoryTicketType.Title"
+                      Caption="@L["StoryTicketType"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="StoryTicketWithNavigationPropertiesDto"
+                      Field="TicketCreator.SecurityNumber"
+                      Caption="@L["TicketCreator"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="StoryTicketWithNavigationPropertiesDto"
+                      Field="StoryAgainst.Title"
+                      Caption="@L["StoryAgainst"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateStoryTicketModal" Closing="@CreateStoryTicketModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateStoryTicketForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewStoryTicket"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateStoryTicketModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewStoryTicketValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewStoryTicket"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description"] *</FieldLabel>
+                            <MemoEdit @bind-Text="@NewStoryTicket.Description"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["StoryTicketType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewStoryTicket.StoryTicketTypeId">
+                            @foreach (var storyTicketType in StoryTicketTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(storyTicketType.Id)">
+                                    @(storyTicketType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewStoryTicket.TicketCreatorId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Story"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewStoryTicket.StoryAgainstId">
+                            @foreach (var story in StoriesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(story.Id)">
+                                    @(story.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateStoryTicketModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateStoryTicketForm" Clicked="CreateStoryTicketAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditStoryTicketModal" Closing="@EditStoryTicketModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditStoryTicketForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditStoryTicketModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingStoryTicketValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingStoryTicket"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Description"] *</FieldLabel>
+                            <MemoEdit @bind-Text="@EditingStoryTicket.Description"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["StoryTicketType"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingStoryTicket.StoryTicketTypeId">
+                            @foreach (var storyTicketType in StoryTicketTypesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(storyTicketType.Id)">
+                                    @(storyTicketType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingStoryTicket.TicketCreatorId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Story"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingStoryTicket.StoryAgainstId">
+                            @foreach (var story in StoriesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(story.Id)">
+                                    @(story.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditStoryTicketModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditStoryTicketForm" Clicked="UpdateStoryTicketAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+

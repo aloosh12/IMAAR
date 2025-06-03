@@ -1,6 +1,32 @@
-﻿using Imaar.Categories;
-using Imaar.UserProfiles;
+﻿using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Categories;
+using Imaar.Cities;
+using Imaar.FurnishingLevels;
+using Imaar.ImaarServices;
+using Imaar.MainAmenities;
+using Imaar.Medias;
+using Imaar.Medias;
+using Imaar.Notifications;
+using Imaar.NotificationTypes;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
+using Imaar.ServiceEvaluations;
+using Imaar.ServiceTickets;
+using Imaar.ServiceTicketTypes;
 using Imaar.ServiceTypes;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Tickets;
+using Imaar.TicketTypes;
+using Imaar.UserEvalauations;
+using Imaar.UserFollows;
+using Imaar.UserProfiles;
+using Imaar.UserWorksExhibitions;
+using Imaar.Vacancies;
+using Imaar.VerificationCodes;
+using Imaar.StoryTickets;
+using Imaar.StoryTicketTypes;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -16,30 +42,6 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using Imaar.ImaarServices;
-using Imaar.VerificationCodes;
-using Imaar.TicketTypes;
-using Imaar.Tickets;
-using Imaar.Medias;
-using Imaar.Stories;
-using Imaar.StoryLovers;
-using Imaar.Vacancies;
-using Imaar.UserEvalauations;
-using Imaar.ServiceEvaluations;
-using Imaar.UserWorksExhibitions;
-using Imaar.UserFollows;
-using Imaar.BuildingFacades;
-using Imaar.Buildings;
-using Imaar.Cities;
-using Imaar.FurnishingLevels;
-using Imaar.MainAmenities;
-using Imaar.Regions;
-using Imaar.SecondaryAmenities;
-using Imaar.Notifications;
-using Imaar.NotificationTypes;
-using Imaar.ServiceTickets;
-using Imaar.ServiceTicketTypes;
-using Imaar.Medias;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -51,6 +53,8 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<StoryTicket> StoryTickets { get; set; } = null!;
+    public DbSet<StoryTicketType> StoryTicketTypes { get; set; } = null!;
     public DbSet<ServiceTicket> ServiceTickets { get; set; } = null!;
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<NotificationType> NotificationTypes { get; set; } = null!;
@@ -627,6 +631,40 @@ if (builder.IsHostDatabase())
                     b.Property(x => x.IsActive).HasColumnName(nameof(Media.IsActive));
                     b.Property(x => x.SourceEntityType).HasColumnName(nameof(Media.SourceEntityType));
                     b.Property(x => x.SourceEntityId).HasColumnName(nameof(Media.SourceEntityId)).IsRequired();
+                });
+
+            }
+
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<StoryTicketType>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "StoryTicketTypes", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Title).HasColumnName(nameof(StoryTicketType.Title)).IsRequired();
+                    b.Property(x => x.Order).HasColumnName(nameof(StoryTicketType.Order));
+                    b.Property(x => x.IsActive).HasColumnName(nameof(StoryTicketType.IsActive));
+                });
+
+            }
+            if (builder.IsHostDatabase())
+            {
+
+            }
+            if (builder.IsHostDatabase())
+            {
+
+            }
+            if (builder.IsHostDatabase())
+            {
+                builder.Entity<StoryTicket>(b =>
+                {
+                    b.ToTable(ImaarConsts.DbTablePrefix + "StoryTickets", ImaarConsts.DbSchema);
+                    b.ConfigureByConvention();
+                    b.Property(x => x.Description).HasColumnName(nameof(StoryTicket.Description)).IsRequired();
+                    b.HasOne<StoryTicketType>().WithMany().IsRequired().HasForeignKey(x => x.StoryTicketTypeId).OnDelete(DeleteBehavior.NoAction);
+                    b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.TicketCreatorId).OnDelete(DeleteBehavior.NoAction);
+                    b.HasOne<Story>().WithMany().IsRequired().HasForeignKey(x => x.StoryAgainstId).OnDelete(DeleteBehavior.NoAction);
                 });
 
             }

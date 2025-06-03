@@ -215,4 +215,20 @@ public static class ImaarPermissions
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class StoryTicketTypes
+    {
+        public const string Default = GroupName + ".StoryTicketTypes";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
+
+    public static class StoryTickets
+    {
+        public const string Default = GroupName + ".StoryTickets";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
 }

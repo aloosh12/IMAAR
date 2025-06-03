@@ -148,6 +148,17 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         serviceTicketPermission.AddChild(ImaarPermissions.ServiceTickets.Create, L("Permission:Create"));
         serviceTicketPermission.AddChild(ImaarPermissions.ServiceTickets.Edit, L("Permission:Edit"));
         serviceTicketPermission.AddChild(ImaarPermissions.ServiceTickets.Delete, L("Permission:Delete"));
+
+
+        var storyTicketTypePermission = myGroup.AddPermission(ImaarPermissions.StoryTicketTypes.Default, L("Permission:StoryTicketTypes"));
+        storyTicketTypePermission.AddChild(ImaarPermissions.StoryTicketTypes.Create, L("Permission:Create"));
+        storyTicketTypePermission.AddChild(ImaarPermissions.StoryTicketTypes.Edit, L("Permission:Edit"));
+        storyTicketTypePermission.AddChild(ImaarPermissions.StoryTicketTypes.Delete, L("Permission:Delete"));
+
+        var storyTicketPermission = myGroup.AddPermission(ImaarPermissions.StoryTickets.Default, L("Permission:StoryTickets"));
+        storyTicketPermission.AddChild(ImaarPermissions.StoryTickets.Create, L("Permission:Create"));
+        storyTicketPermission.AddChild(ImaarPermissions.StoryTickets.Edit, L("Permission:Edit"));
+        storyTicketPermission.AddChild(ImaarPermissions.StoryTickets.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

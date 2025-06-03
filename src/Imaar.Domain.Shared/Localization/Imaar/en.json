@@ -248,6 +248,16 @@
     "Enum:MediaEntityType.0": "Story",
     "Enum:MediaEntityType.1": "Service",
     "Enum:MediaEntityType.2": "Vacancies",
-    "Enum:MediaEntityType.3": "Building"
+    "Enum:MediaEntityType.3": "Building",
+    "Permission:StoryTicketTypes": "Story Ticket Types",
+    "StoryTicketTypes": "Story Ticket Types",
+    "NewStoryTicketType": "New Story Ticket Type",
+    "Menu:StoryTicketTypes": "Story Ticket Types",
+    "StoryTicketType": "Story ticket type",
+    "StoryAgainst": "Story against",
+    "NewStoryTicket": "New Story Ticket",
+    "Permission:StoryTickets": "Story Tickets",
+    "StoryTickets": "Story Tickets",
+    "Menu:StoryTickets": "Story Tickets"
   }
 }

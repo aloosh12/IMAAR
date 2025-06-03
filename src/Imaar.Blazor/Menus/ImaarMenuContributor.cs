@@ -273,6 +273,25 @@ icon: "fa fa-file-alt",
 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.ServiceTickets.Default)
         );
+
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.StoryTicketTypes,
+                l["Menu:StoryTicketTypes"],
+                url: "/story-ticket-types",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.StoryTicketTypes.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.StoryTickets,
+                l["Menu:StoryTickets"],
+                url: "/story-tickets",
+icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.StoryTickets.Default)
+        );
         return Task.CompletedTask;
     }
 }

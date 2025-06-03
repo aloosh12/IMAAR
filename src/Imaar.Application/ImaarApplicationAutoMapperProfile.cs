@@ -1,36 +1,38 @@
 ﻿using AutoMapper;
-using Imaar.Categories;
-using Imaar.UserProfiles;
-using Imaar.ServiceTypes;
-using Imaar.Shared;
-using Imaar.ImaarServices;
-using System;
-using Imaar.MobileResponses;
-using Imaar.VerificationCodes;
-using Imaar.TicketTypes;
-using Imaar.Tickets;
-using Imaar.Medias;
-using Imaar.Stories;
-using Imaar.StoryLovers;
-using Imaar.Vacancies;
-using Imaar.MimeTypes;
-using Imaar.UserEvalauations;
-using Imaar.ServiceEvaluations;
-using Imaar.UserWorksExhibitions;
-using System.Linq;
-using System.Collections.Generic;
-using Imaar.UserFollows;
 using Imaar.BuildingFacades;
 using Imaar.Buildings;
+using Imaar.Categories;
 using Imaar.Cities;
 using Imaar.FurnishingLevels;
+using Imaar.ImaarServices;
 using Imaar.MainAmenities;
-using Imaar.Regions;
-using Imaar.SecondaryAmenities;
+using Imaar.Medias;
+using Imaar.MimeTypes;
+using Imaar.MobileResponses;
 using Imaar.Notifications;
 using Imaar.NotificationTypes;
+using Imaar.Regions;
+using Imaar.SecondaryAmenities;
+using Imaar.ServiceEvaluations;
 using Imaar.ServiceTickets;
 using Imaar.ServiceTicketTypes;
+using Imaar.ServiceTypes;
+using Imaar.Shared;
+using Imaar.Stories;
+using Imaar.StoryLovers;
+using Imaar.Tickets;
+using Imaar.TicketTypes;
+using Imaar.UserEvalauations;
+using Imaar.UserFollows;
+using Imaar.UserProfiles;
+using Imaar.UserWorksExhibitions;
+using Imaar.Vacancies;
+using Imaar.VerificationCodes;
+using Imaar.StoryTickets;
+using Imaar.StoryTicketTypes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Imaar;
 
@@ -185,5 +187,12 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<ServiceTicket, ServiceTicketExcelDto>();
         CreateMap<ServiceTicketWithNavigationProperties, ServiceTicketWithNavigationPropertiesDto>();
         CreateMap<ServiceTicketType, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));
+
+        CreateMap<StoryTicketType, StoryTicketTypeDto>();
+        CreateMap<StoryTicketType, StoryTicketTypeExcelDto>();
+
+        CreateMap<StoryTicket, StoryTicketDto>();
+        CreateMap<StoryTicket, StoryTicketExcelDto>();
+        CreateMap<StoryTicketWithNavigationProperties, StoryTicketWithNavigationPropertiesDto>();
     }
 }
