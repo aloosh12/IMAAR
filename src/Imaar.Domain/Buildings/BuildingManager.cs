@@ -30,7 +30,7 @@ namespace Imaar.Buildings
         public virtual async Task<Building> CreateAsync(
         List<Guid> mainAmenityIds,
         List<Guid> secondaryAmenityIds,
-        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo)
+        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
         {
             Check.NotNull(regionId, nameof(regionId));
             Check.NotNull(furnishingLevelId, nameof(furnishingLevelId));
@@ -46,7 +46,7 @@ namespace Imaar.Buildings
 
             var building = new Building(
              GuidGenerator.Create(),
-             regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo
+             regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounter, orderCounter
              );
 
             await SetMainAmenitiesAsync(building, mainAmenityIds);
@@ -59,7 +59,7 @@ namespace Imaar.Buildings
             Guid id,
             List<Guid> mainAmenityIds,
         List<Guid> secondaryAmenityIds,
-        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, [CanBeNull] string? concurrencyStamp = null
+        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNull(regionId, nameof(regionId));
@@ -90,6 +90,8 @@ namespace Imaar.Buildings
             building.NumberOfRooms = numberOfRooms;
             building.NumberOfBaths = numberOfBaths;
             building.FloorNo = floorNo;
+            building.ViewCounter = viewCounter;
+            building.OrderCounter = orderCounter;
 
             await SetMainAmenitiesAsync(building, mainAmenityIds);
             await SetSecondaryAmenitiesAsync(building, secondaryAmenityIds);

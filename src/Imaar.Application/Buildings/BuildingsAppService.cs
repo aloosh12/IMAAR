@@ -24,6 +24,9 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using Imaar.Shared;
+using AutoMapper.Internal.Mappers;
+using Imaar.Buildings;
+using Imaar.Shared;
 
 namespace Imaar.Buildings
 {
@@ -57,8 +60,8 @@ namespace Imaar.Buildings
 
         public virtual async Task<PagedResultDto<BuildingWithNavigationPropertiesDto>> GetListAsync(GetBuildingsInput input)
         {
-            var totalCount = await _buildingRepository.GetCountAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
-            var items = await _buildingRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _buildingRepository.GetCountAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
+            var items = await _buildingRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<BuildingWithNavigationPropertiesDto>
             {
@@ -201,7 +204,7 @@ namespace Imaar.Buildings
             }
 
             var building = await _buildingManager.CreateAsync(
-            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo
+            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounter, input.OrderCounter
             );
 
             return ObjectMapper.Map<Building, BuildingDto>(building);
@@ -229,7 +232,7 @@ namespace Imaar.Buildings
 
             var building = await _buildingManager.UpdateAsync(
             id,
-            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ConcurrencyStamp
+            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounter, input.OrderCounter, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<Building, BuildingDto>(building);
@@ -244,7 +247,7 @@ namespace Imaar.Buildings
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var buildings = await _buildingRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
+            var buildings = await _buildingRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
             var items = buildings.Select(item => new
             {
                 MainTitle = item.Building.MainTitle,
@@ -254,6 +257,8 @@ namespace Imaar.Buildings
                 NumberOfRooms = item.Building.NumberOfRooms,
                 NumberOfBaths = item.Building.NumberOfBaths,
                 FloorNo = item.Building.FloorNo,
+                ViewCounter = item.Building.ViewCounter,
+                OrderCounter = item.Building.OrderCounter,
 
                 Region = item.Region?.Name,
                 FurnishingLevel = item.FurnishingLevel?.Name,
@@ -278,7 +283,7 @@ namespace Imaar.Buildings
         [Authorize(ImaarPermissions.Buildings.Delete)]
         public virtual async Task DeleteAllAsync(GetBuildingsInput input)
         {
-            await _buildingRepository.DeleteAllAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
+            await _buildingRepository.DeleteAllAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
         }
         public virtual async Task<Imaar.Shared.DownloadTokenResultDto> GetDownloadTokenAsync()
         {

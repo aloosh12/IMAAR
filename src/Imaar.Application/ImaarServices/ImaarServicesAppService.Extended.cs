@@ -194,6 +194,92 @@ namespace Imaar.ImaarServices
             };
         }
 
-        //Write your custom code...
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the ImaarService
+                var imaarService = await _imaarServiceRepository.GetAsync(id);
+                
+                if (imaarService == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "ImaarService not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Increment the view counter
+                imaarService.ViewCounter += 1;
+                
+                // Update the entity
+                await _imaarServiceRepository.UpdateAsync(imaarService);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "View counter incremented successfully";
+                mobileResponse.Data = new { 
+                    ImaarServiceId = imaarService.Id, 
+                    ViewCounter = imaarService.ViewCounter 
+                };
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
+        
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the ImaarService
+                var imaarService = await _imaarServiceRepository.GetAsync(id);
+                
+                if (imaarService == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "ImaarService not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Increment the order counter
+                imaarService.OrderCounter += 1;
+                
+                // Update the entity
+                await _imaarServiceRepository.UpdateAsync(imaarService);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "Order counter incremented successfully";
+                mobileResponse.Data = new { 
+                    ImaarServiceId = imaarService.Id, 
+                    OrderCounter = imaarService.OrderCounter 
+                };
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
     }
 }

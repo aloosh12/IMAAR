@@ -36,6 +36,10 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? regionId = null,
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
@@ -46,7 +50,7 @@ namespace Imaar.Buildings
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
 
             var ids = query.Select(x => x.Building.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -82,6 +86,10 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? regionId = null,
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
@@ -94,7 +102,7 @@ namespace Imaar.Buildings
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? BuildingConsts.GetDefaultSorting(true) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -132,6 +140,10 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? regionId = null,
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
@@ -148,6 +160,10 @@ namespace Imaar.Buildings
                     .WhereIf(!string.IsNullOrWhiteSpace(numberOfRooms), e => e.Building.NumberOfRooms.Contains(numberOfRooms))
                     .WhereIf(!string.IsNullOrWhiteSpace(numberOfBaths), e => e.Building.NumberOfBaths.Contains(numberOfBaths))
                     .WhereIf(!string.IsNullOrWhiteSpace(floorNo), e => e.Building.FloorNo.Contains(floorNo))
+                    .WhereIf(viewCounterMin.HasValue, e => e.Building.ViewCounter >= viewCounterMin!.Value)
+                    .WhereIf(viewCounterMax.HasValue, e => e.Building.ViewCounter <= viewCounterMax!.Value)
+                    .WhereIf(orderCounterMin.HasValue, e => e.Building.OrderCounter >= orderCounterMin!.Value)
+                    .WhereIf(orderCounterMax.HasValue, e => e.Building.OrderCounter <= orderCounterMax!.Value)
                     .WhereIf(regionId != null && regionId != Guid.Empty, e => e.Region != null && e.Region.Id == regionId)
                     .WhereIf(furnishingLevelId != null && furnishingLevelId != Guid.Empty, e => e.FurnishingLevel != null && e.FurnishingLevel.Id == furnishingLevelId)
                     .WhereIf(buildingFacadeId != null && buildingFacadeId != Guid.Empty, e => e.BuildingFacade != null && e.BuildingFacade.Id == buildingFacadeId)
@@ -165,12 +181,16 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             string? sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo);
+            var query = ApplyFilter((await GetQueryableAsync()), filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? BuildingConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -184,6 +204,10 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? regionId = null,
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
@@ -193,7 +217,7 @@ namespace Imaar.Buildings
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -206,7 +230,11 @@ namespace Imaar.Buildings
             string? buildingArea = null,
             string? numberOfRooms = null,
             string? numberOfBaths = null,
-            string? floorNo = null)
+            string? floorNo = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null)
         {
             return query
                     .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.MainTitle!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.Price!.Contains(filterText!) || e.BuildingArea!.Contains(filterText!) || e.NumberOfRooms!.Contains(filterText!) || e.NumberOfBaths!.Contains(filterText!) || e.FloorNo!.Contains(filterText!))
@@ -216,7 +244,11 @@ namespace Imaar.Buildings
                     .WhereIf(!string.IsNullOrWhiteSpace(buildingArea), e => e.BuildingArea.Contains(buildingArea))
                     .WhereIf(!string.IsNullOrWhiteSpace(numberOfRooms), e => e.NumberOfRooms.Contains(numberOfRooms))
                     .WhereIf(!string.IsNullOrWhiteSpace(numberOfBaths), e => e.NumberOfBaths.Contains(numberOfBaths))
-                    .WhereIf(!string.IsNullOrWhiteSpace(floorNo), e => e.FloorNo.Contains(floorNo));
+                    .WhereIf(!string.IsNullOrWhiteSpace(floorNo), e => e.FloorNo.Contains(floorNo))
+                    .WhereIf(viewCounterMin.HasValue, e => e.ViewCounter >= viewCounterMin!.Value)
+                    .WhereIf(viewCounterMax.HasValue, e => e.ViewCounter <= viewCounterMax!.Value)
+                    .WhereIf(orderCounterMin.HasValue, e => e.OrderCounter >= orderCounterMin!.Value)
+                    .WhereIf(orderCounterMax.HasValue, e => e.OrderCounter <= orderCounterMax!.Value);
         }
     }
 }

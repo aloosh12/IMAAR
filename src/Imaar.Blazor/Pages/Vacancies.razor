@@ -191,6 +191,38 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["MinViewCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.ViewCounterMin"
+             ValueChanged="@OnViewCounterMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxViewCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.ViewCounterMax"
+             ValueChanged="@OnViewCounterMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinOrderCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderCounterMin"
+             ValueChanged="@OnOrderCounterMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxOrderCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderCounterMax"
+             ValueChanged="@OnOrderCounterMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["ServiceType"]</FieldLabel>
                         <Select TValue="Guid?"
 		SelectedValue="@Filter.ServiceTypeId"
@@ -406,6 +438,16 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.ViewCounter"
+                      Caption="@L["ViewCounter"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.OrderCounter"
+                      Caption="@L["OrderCounter"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
                       Field="ServiceType.Title"
                       Caption="@L["ServiceType"]">
               </DataGridColumn>
@@ -618,6 +660,30 @@
                             </TextEdit>
                         </Field>
                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ViewCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewVacancy.ViewCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrderCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewVacancy.OrderCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
 
 
                     <Field>
@@ -861,6 +927,30 @@
                             </TextEdit>
                         </Field>
                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ViewCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingVacancy.ViewCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrderCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingVacancy.OrderCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
 
 
                     <Field>

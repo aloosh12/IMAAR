@@ -49,5 +49,19 @@ namespace Imaar.Controllers.ImaarServices
         {
             return await _mediasAppService.BulkUpdateMediasAsync(input);
         }
+        
+        [HttpPost("increment-view-counter/{id}")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
+        {
+            return _imaarServicesAppService.IncrementViewCounterAsync(id);
+        }
+        
+        [HttpPost("increment-order-counter/{id}")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id)
+        {
+            return _imaarServicesAppService.IncrementOrderCounterAsync(id);
+        }
     }
 }

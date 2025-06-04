@@ -116,6 +116,38 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["MinViewCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.ViewCounterMin"
+             ValueChanged="@OnViewCounterMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxViewCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.ViewCounterMax"
+             ValueChanged="@OnViewCounterMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinOrderCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderCounterMin"
+             ValueChanged="@OnOrderCounterMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxOrderCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderCounterMax"
+             ValueChanged="@OnOrderCounterMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["Region"]</FieldLabel>
                         <Select TValue="Guid?"
 		SelectedValue="@Filter.RegionId"
@@ -378,6 +410,16 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.ViewCounter"
+                      Caption="@L["ViewCounter"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.OrderCounter"
+                      Caption="@L["OrderCounter"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
                       Field="Region.Name"
                       Caption="@L["Region"]">
               </DataGridColumn>
@@ -510,6 +552,30 @@
                             </TextEdit>
                         </Field>
                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ViewCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewBuilding.ViewCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrderCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewBuilding.OrderCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
 
 
                     <Field>
@@ -788,6 +854,30 @@
                             </TextEdit>
                         </Field>
                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ViewCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingBuilding.ViewCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrderCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingBuilding.OrderCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
 
 
                     <Field>

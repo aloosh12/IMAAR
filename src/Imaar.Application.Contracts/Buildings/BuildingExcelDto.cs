@@ -11,5 +11,7 @@ namespace Imaar.Buildings
         public string NumberOfRooms { get; set; } = null!;
         public string NumberOfBaths { get; set; } = null!;
         public string FloorNo { get; set; } = null!;
+        public int ViewCounter { get; set; }
+        public int OrderCounter { get; set; }
     }
 }

@@ -144,6 +144,38 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["MinViewCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.ViewCounterMin"
+             ValueChanged="@OnViewCounterMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxViewCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.ViewCounterMax"
+             ValueChanged="@OnViewCounterMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinOrderCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderCounterMin"
+             ValueChanged="@OnOrderCounterMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxOrderCounter"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderCounterMax"
+             ValueChanged="@OnOrderCounterMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["ServiceType"]</FieldLabel>
                         <Select TValue="Guid?"
 		SelectedValue="@Filter.ServiceTypeId"
@@ -320,6 +352,16 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="ImaarServiceWithNavigationPropertiesDto"
+                      Field="ImaarService.ViewCounter"
+                      Caption="@L["ViewCounter"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ImaarServiceWithNavigationPropertiesDto"
+                      Field="ImaarService.OrderCounter"
+                      Caption="@L["OrderCounter"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ImaarServiceWithNavigationPropertiesDto"
                       Field="ServiceType.Title"
                       Caption="@L["ServiceType"]">
               </DataGridColumn>
@@ -447,6 +489,30 @@
                             </TextEdit>
                         </Field>
                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ViewCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewImaarService.ViewCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrderCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewImaarService.OrderCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
 
 
                     <Field>
@@ -605,6 +671,30 @@
                             </TextEdit>
                         </Field>
                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ViewCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingImaarService.ViewCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrderCounter"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingImaarService.OrderCounter"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
 
 
                     <Field>

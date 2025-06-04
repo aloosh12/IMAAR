@@ -20,6 +20,8 @@ namespace Imaar.Buildings
         public string NumberOfBaths { get; set; } = null!;
         [Required]
         public string FloorNo { get; set; } = null!;
+        public int ViewCounter { get; set; } = 0;
+        public int OrderCounter { get; set; } = 0;
         public Guid RegionId { get; set; }
         public Guid FurnishingLevelId { get; set; }
         public Guid BuildingFacadeId { get; set; }

@@ -11,6 +11,7 @@ using Volo.Abp.MultiTenancy;
 using JetBrains.Annotations;
 
 using Volo.Abp;
+using Imaar.UserProfiles;
 
 namespace Imaar.Vacancies
 {
@@ -58,6 +59,10 @@ namespace Imaar.Vacancies
 
         [CanBeNull]
         public virtual string? Salary { get; set; }
+
+        public virtual int ViewCounter { get; set; }
+
+        public virtual int OrderCounter { get; set; }
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
 
@@ -66,7 +71,7 @@ namespace Imaar.Vacancies
 
         }
 
-        public VacancyBase(Guid id, Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
+        public VacancyBase(Guid id, Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
         {
 
             Id = id;
@@ -80,6 +85,8 @@ namespace Imaar.Vacancies
             Number = number;
             DateOfPublish = dateOfPublish;
             BiologicalSex = biologicalSex;
+            ViewCounter = viewCounter;
+            OrderCounter = orderCounter;
             Latitude = latitude;
             Longitude = longitude;
             ExpectedExperience = expectedExperience;

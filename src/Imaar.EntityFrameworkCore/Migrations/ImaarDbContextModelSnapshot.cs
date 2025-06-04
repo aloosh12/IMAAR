@@ -170,6 +170,10 @@ namespace Imaar.Migrations
                     .IsRequired()
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("NumberOfRooms");
+                
+                b.Property<int>("OrderCounter")
+                    .HasColumnType("int")
+                    .HasColumnName("OrderCounter");
 
                 b.Property<string>("Price")
                     .IsRequired()
@@ -181,6 +185,11 @@ namespace Imaar.Migrations
 
                 b.Property<Guid>("ServiceTypeId")
                     .HasColumnType("uniqueidentifier");
+
+                b.Property<int>("ViewCounter")
+                     .HasColumnType("int")
+                     .HasColumnName("ViewCounter");
+
 
                 b.HasKey("Id");
 
@@ -572,6 +581,10 @@ namespace Imaar.Migrations
                 b.Property<string>("Longitude")
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("Longitude");
+               
+                b.Property<int>("OrderCounter")
+                    .HasColumnType("int")
+                    .HasColumnName("OrderCounter");
 
                 b.Property<int>("Price")
                     .HasColumnType("int")
@@ -598,6 +611,9 @@ namespace Imaar.Migrations
                 b.Property<Guid>("UserProfileId")
                     .HasColumnType("uniqueidentifier");
 
+                b.Property<int>("ViewCounter")
+                    .HasColumnType("int")
+                    .HasColumnName("ViewCounter");
                 b.HasKey("Id");
 
                 b.HasIndex("ServiceTypeId");
@@ -2129,6 +2145,10 @@ namespace Imaar.Migrations
                     .IsRequired()
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("Number");
+                
+                b.Property<int>("OrderCounter")
+                    .HasColumnType("int")
+                    .HasColumnName("OrderCounter");
 
                 b.Property<string>("Salary")
                     .HasColumnType("nvarchar(max)")
@@ -2148,6 +2168,10 @@ namespace Imaar.Migrations
                 b.Property<string>("WorkSchedule")
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("WorkSchedule");
+
+                b.Property<int>("ViewCounter")
+                    .HasColumnType("int")
+                    .HasColumnName("ViewCounter");
 
                 b.HasKey("Id");
 

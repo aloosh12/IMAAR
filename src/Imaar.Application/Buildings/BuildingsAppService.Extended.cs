@@ -71,5 +71,93 @@ namespace Imaar.Buildings
             
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(result);
         }
+        
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the Building
+                var building = await _buildingRepository.GetAsync(id);
+                
+                if (building == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Building not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Increment the view counter
+                building.ViewCounter += 1;
+                
+                // Update the entity
+                await _buildingRepository.UpdateAsync(building);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "View counter incremented successfully";
+                mobileResponse.Data = new { 
+                    BuildingId = building.Id, 
+                    ViewCounter = building.ViewCounter 
+                };
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
+        
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the Building
+                var building = await _buildingRepository.GetAsync(id);
+                
+                if (building == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Building not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Increment the order counter
+                building.OrderCounter += 1;
+                
+                // Update the entity
+                await _buildingRepository.UpdateAsync(building);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "Order counter incremented successfully";
+                mobileResponse.Data = new { 
+                    BuildingId = building.Id, 
+                    OrderCounter = building.OrderCounter 
+                };
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
     }
 }

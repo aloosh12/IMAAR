@@ -34,12 +34,16 @@ namespace Imaar.ImaarServices
 
         [CanBeNull]
         public virtual string? Latitude { get; set; }
-       
+
         [NotMapped]
         public virtual string? DefaultMedia { get; set; }
 
         [CanBeNull]
         public virtual string? Longitude { get; set; }
+
+        public virtual int ViewCounter { get; set; }
+
+        public virtual int OrderCounter { get; set; }
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
 
@@ -48,7 +52,7 @@ namespace Imaar.ImaarServices
 
         }
 
-        public ImaarServiceBase(Guid id, Guid serviceTypeId, Guid userProfileId, string title, string description, string serviceLocation, string serviceNumber, DateOnly dateOfPublish, int price, string? latitude = null, string? longitude = null)
+        public ImaarServiceBase(Guid id, Guid serviceTypeId, Guid userProfileId, string title, string description, string serviceLocation, string serviceNumber, DateOnly dateOfPublish, int price, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null)
         {
 
             Id = id;
@@ -62,6 +66,8 @@ namespace Imaar.ImaarServices
             ServiceNumber = serviceNumber;
             DateOfPublish = dateOfPublish;
             Price = price;
+            ViewCounter = viewCounter;
+            OrderCounter = orderCounter;
             Latitude = latitude;
             Longitude = longitude;
             ServiceTypeId = serviceTypeId;

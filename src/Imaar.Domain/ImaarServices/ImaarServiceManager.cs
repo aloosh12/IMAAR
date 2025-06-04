@@ -20,7 +20,7 @@ namespace Imaar.ImaarServices
         }
 
         public virtual async Task<ImaarService> CreateAsync(
-        Guid serviceTypeId, Guid userProfileId, string title, string description, string serviceLocation, string serviceNumber, DateOnly dateOfPublish, int price, string? latitude = null, string? longitude = null)
+        Guid serviceTypeId, Guid userProfileId, string title, string description, string serviceLocation, string serviceNumber, DateOnly dateOfPublish, int price, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null)
         {
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
             Check.NotNull(userProfileId, nameof(userProfileId));
@@ -31,7 +31,7 @@ namespace Imaar.ImaarServices
 
             var imaarService = new ImaarService(
              GuidGenerator.Create(),
-             serviceTypeId, userProfileId, title, description, serviceLocation, serviceNumber, dateOfPublish, price, latitude, longitude
+             serviceTypeId, userProfileId, title, description, serviceLocation, serviceNumber, dateOfPublish, price, viewCounter, orderCounter, latitude, longitude
              );
 
             return await _imaarServiceRepository.InsertAsync(imaarService);
@@ -39,7 +39,7 @@ namespace Imaar.ImaarServices
 
         public virtual async Task<ImaarService> UpdateAsync(
             Guid id,
-            Guid serviceTypeId, Guid userProfileId, string title, string description, string serviceLocation, string serviceNumber, DateOnly dateOfPublish, int price, string? latitude = null, string? longitude = null, [CanBeNull] string? concurrencyStamp = null
+            Guid serviceTypeId, Guid userProfileId, string title, string description, string serviceLocation, string serviceNumber, DateOnly dateOfPublish, int price, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
@@ -59,6 +59,8 @@ namespace Imaar.ImaarServices
             imaarService.ServiceNumber = serviceNumber;
             imaarService.DateOfPublish = dateOfPublish;
             imaarService.Price = price;
+            imaarService.ViewCounter = viewCounter;
+            imaarService.OrderCounter = orderCounter;
             imaarService.Latitude = latitude;
             imaarService.Longitude = longitude;
 

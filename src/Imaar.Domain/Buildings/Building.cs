@@ -37,6 +37,10 @@ namespace Imaar.Buildings
 
         [NotNull]
         public virtual string FloorNo { get; set; }
+
+        public virtual int ViewCounter { get; set; }
+
+        public virtual int OrderCounter { get; set; }
         public Guid RegionId { get; set; }
         public Guid FurnishingLevelId { get; set; }
         public Guid BuildingFacadeId { get; set; }
@@ -49,7 +53,7 @@ namespace Imaar.Buildings
 
         }
 
-        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo)
+        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
         {
 
             Id = id;
@@ -67,6 +71,8 @@ namespace Imaar.Buildings
             NumberOfRooms = numberOfRooms;
             NumberOfBaths = numberOfBaths;
             FloorNo = floorNo;
+            ViewCounter = viewCounter;
+            OrderCounter = orderCounter;
             RegionId = regionId;
             FurnishingLevelId = furnishingLevelId;
             BuildingFacadeId = buildingFacadeId;

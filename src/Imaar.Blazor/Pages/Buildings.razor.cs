@@ -192,7 +192,7 @@ private IReadOnlyList<LookupDto<Guid>> MainAmenities { get; set; } = new List<Lo
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/buildings/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&MainTitle={HttpUtility.UrlEncode(Filter.MainTitle)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Price={HttpUtility.UrlEncode(Filter.Price)}&BuildingArea={HttpUtility.UrlEncode(Filter.BuildingArea)}&NumberOfRooms={HttpUtility.UrlEncode(Filter.NumberOfRooms)}&NumberOfBaths={HttpUtility.UrlEncode(Filter.NumberOfBaths)}&FloorNo={HttpUtility.UrlEncode(Filter.FloorNo)}&RegionId={Filter.RegionId}&FurnishingLevelId={Filter.FurnishingLevelId}&BuildingFacadeId={Filter.BuildingFacadeId}&ServiceTypeId={Filter.ServiceTypeId}&MainAmenityId={Filter.MainAmenityId}&SecondaryAmenityId={Filter.SecondaryAmenityId}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/buildings/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&MainTitle={HttpUtility.UrlEncode(Filter.MainTitle)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Price={HttpUtility.UrlEncode(Filter.Price)}&BuildingArea={HttpUtility.UrlEncode(Filter.BuildingArea)}&NumberOfRooms={HttpUtility.UrlEncode(Filter.NumberOfRooms)}&NumberOfBaths={HttpUtility.UrlEncode(Filter.NumberOfBaths)}&FloorNo={HttpUtility.UrlEncode(Filter.FloorNo)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&RegionId={Filter.RegionId}&FurnishingLevelId={Filter.FurnishingLevelId}&BuildingFacadeId={Filter.BuildingFacadeId}&ServiceTypeId={Filter.ServiceTypeId}&MainAmenityId={Filter.MainAmenityId}&SecondaryAmenityId={Filter.SecondaryAmenityId}", forceLoad: true);
         }
 
         private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<BuildingWithNavigationPropertiesDto> e)
@@ -375,6 +375,26 @@ ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
         protected virtual async Task OnFloorNoChangedAsync(string? floorNo)
         {
             Filter.FloorNo = floorNo;
+            await SearchAsync();
+        }
+        protected virtual async Task OnViewCounterMinChangedAsync(int? viewCounterMin)
+        {
+            Filter.ViewCounterMin = viewCounterMin;
+            await SearchAsync();
+        }
+        protected virtual async Task OnViewCounterMaxChangedAsync(int? viewCounterMax)
+        {
+            Filter.ViewCounterMax = viewCounterMax;
+            await SearchAsync();
+        }
+        protected virtual async Task OnOrderCounterMinChangedAsync(int? orderCounterMin)
+        {
+            Filter.OrderCounterMin = orderCounterMin;
+            await SearchAsync();
+        }
+        protected virtual async Task OnOrderCounterMaxChangedAsync(int? orderCounterMax)
+        {
+            Filter.OrderCounterMax = orderCounterMax;
             await SearchAsync();
         }
         protected virtual async Task OnRegionIdChangedAsync(Guid? regionId)

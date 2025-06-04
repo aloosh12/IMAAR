@@ -258,6 +258,12 @@
     "NewStoryTicket": "New Story Ticket",
     "Permission:StoryTickets": "Story Tickets",
     "StoryTickets": "Story Tickets",
-    "Menu:StoryTickets": "Story Tickets"
+    "Menu:StoryTickets": "Story Tickets",
+    "ViewCounter": "View Counter",
+    "OrderCounter": "Order Counter",
+    "MinViewCounter": "Min View Counter",
+    "MinOrderCounter": "Min Order Counter",
+    "MaxViewCounter": "Max View Counter",
+    "MaxOrderCounter": "Max Order Counter"
   }
 }

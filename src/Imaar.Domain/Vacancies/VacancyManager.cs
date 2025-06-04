@@ -21,7 +21,7 @@ namespace Imaar.Vacancies
         }
 
         public virtual async Task<Vacancy> CreateAsync(
-        Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
+        Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
         {
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
             Check.NotNull(userProfileId, nameof(userProfileId));
@@ -33,7 +33,7 @@ namespace Imaar.Vacancies
 
             var vacancy = new Vacancy(
              GuidGenerator.Create(),
-             serviceTypeId, userProfileId, title, description, location, number, dateOfPublish, biologicalSex, latitude, longitude, expectedExperience, educationLevel, workSchedule, employmentType, languages, driveLicense, salary
+             serviceTypeId, userProfileId, title, description, location, number, dateOfPublish, biologicalSex, viewCounter, orderCounter, latitude, longitude, expectedExperience, educationLevel, workSchedule, employmentType, languages, driveLicense, salary
              );
 
             return await _vacancyRepository.InsertAsync(vacancy);
@@ -41,7 +41,7 @@ namespace Imaar.Vacancies
 
         public virtual async Task<Vacancy> UpdateAsync(
             Guid id,
-            Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null, [CanBeNull] string? concurrencyStamp = null
+            Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
@@ -62,6 +62,8 @@ namespace Imaar.Vacancies
             vacancy.Number = number;
             vacancy.DateOfPublish = dateOfPublish;
             vacancy.BiologicalSex = biologicalSex;
+            vacancy.ViewCounter = viewCounter;
+            vacancy.OrderCounter = orderCounter;
             vacancy.Latitude = latitude;
             vacancy.Longitude = longitude;
             vacancy.ExpectedExperience = expectedExperience;

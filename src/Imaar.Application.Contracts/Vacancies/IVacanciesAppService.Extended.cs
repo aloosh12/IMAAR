@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Imaar.MobileResponses;
 
@@ -7,5 +8,9 @@ namespace Imaar.Vacancies
     {
         //Write your custom code here...
         Task<MobileResponseDto> CreateWithFilesAsync(VacancyCreateWithFilesDto input);
+        
+        Task<MobileResponseDto> IncrementViewCounterAsync(Guid id);
+        
+        Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id);
     }
 }

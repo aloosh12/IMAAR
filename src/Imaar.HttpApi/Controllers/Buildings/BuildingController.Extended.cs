@@ -28,5 +28,19 @@ namespace Imaar.Controllers.Buildings
         {
             return _buildingsAppService.CreateWithFilesAsync(input);
         }
+        
+        [HttpPost("increment-view-counter/{id}")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
+        {
+            return _buildingsAppService.IncrementViewCounterAsync(id);
+        }
+        
+        [HttpPost("increment-order-counter/{id}")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id)
+        {
+            return _buildingsAppService.IncrementOrderCounterAsync(id);
+        }
     }
 }

@@ -33,13 +33,17 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
 
             var ids = query.Select(x => x.ImaarService.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -70,6 +74,10 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
             string? sorting = null,
@@ -78,7 +86,7 @@ namespace Imaar.ImaarServices
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? ImaarServiceConsts.GetDefaultSorting(true) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -111,6 +119,10 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null)
         {
@@ -126,6 +138,10 @@ namespace Imaar.ImaarServices
                     .WhereIf(priceMax.HasValue, e => e.ImaarService.Price <= priceMax!.Value)
                     .WhereIf(!string.IsNullOrWhiteSpace(latitude), e => e.ImaarService.Latitude.Contains(latitude))
                     .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.ImaarService.Longitude.Contains(longitude))
+                    .WhereIf(viewCounterMin.HasValue, e => e.ImaarService.ViewCounter >= viewCounterMin!.Value)
+                    .WhereIf(viewCounterMax.HasValue, e => e.ImaarService.ViewCounter <= viewCounterMax!.Value)
+                    .WhereIf(orderCounterMin.HasValue, e => e.ImaarService.OrderCounter >= orderCounterMin!.Value)
+                    .WhereIf(orderCounterMax.HasValue, e => e.ImaarService.OrderCounter <= orderCounterMax!.Value)
                     .WhereIf(serviceTypeId != null && serviceTypeId != Guid.Empty, e => e.ServiceType != null && e.ServiceType.Id == serviceTypeId)
                     .WhereIf(userProfileId != null && userProfileId != Guid.Empty, e => e.UserProfile != null && e.UserProfile.Id == userProfileId);
         }
@@ -142,12 +158,16 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             string? sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude);
+            var query = ApplyFilter((await GetQueryableAsync()), filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? ImaarServiceConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -164,12 +184,16 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -185,7 +209,11 @@ namespace Imaar.ImaarServices
             int? priceMin = null,
             int? priceMax = null,
             string? latitude = null,
-            string? longitude = null)
+            string? longitude = null,
+            int? viewCounterMin = null,
+            int? viewCounterMax = null,
+            int? orderCounterMin = null,
+            int? orderCounterMax = null)
         {
             return query
                     .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Title!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.ServiceLocation!.Contains(filterText!) || e.ServiceNumber!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!))
@@ -198,7 +226,11 @@ namespace Imaar.ImaarServices
                     .WhereIf(priceMin.HasValue, e => e.Price >= priceMin!.Value)
                     .WhereIf(priceMax.HasValue, e => e.Price <= priceMax!.Value)
                     .WhereIf(!string.IsNullOrWhiteSpace(latitude), e => e.Latitude.Contains(latitude))
-                    .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.Longitude.Contains(longitude));
+                    .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.Longitude.Contains(longitude))
+                    .WhereIf(viewCounterMin.HasValue, e => e.ViewCounter >= viewCounterMin!.Value)
+                    .WhereIf(viewCounterMax.HasValue, e => e.ViewCounter <= viewCounterMax!.Value)
+                    .WhereIf(orderCounterMin.HasValue, e => e.OrderCounter >= orderCounterMin!.Value)
+                    .WhereIf(orderCounterMax.HasValue, e => e.OrderCounter <= orderCounterMax!.Value);
         }
     }
 }

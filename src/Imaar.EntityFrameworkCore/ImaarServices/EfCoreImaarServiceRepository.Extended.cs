@@ -26,18 +26,18 @@ namespace Imaar.ImaarServices
             var dbContext = await GetDbContextAsync();
 
             return (from imaarService in (await GetDbSetAsync())
-                   where imaarService.Id == id
-                   join serviceType in (await GetDbContextAsync()).Set<ServiceType>() on imaarService.ServiceTypeId equals serviceType.Id into serviceTypes
-                   from serviceType in serviceTypes.DefaultIfEmpty()
-                   join userProfile in (await GetDbContextAsync()).Set<UserProfile>() on imaarService.UserProfileId equals userProfile.Id into userProfiles
-                   from userProfile in userProfiles.DefaultIfEmpty()
-                   select new ImaarServiceWithDetails
-                   {
-                       ImaarService = imaarService,
-                       ServiceType = serviceType,
-                       UserProfile = userProfile,  // Changed from userProfiles to userProfile
-                     //  Medias = (await GetDbContextAsync()).Set<Media>().Where(m => m.ImaarServiceId == id).ToList()
-                   }).FirstOrDefault();
+                    where imaarService.Id == id
+                    join serviceType in (await GetDbContextAsync()).Set<ServiceType>() on imaarService.ServiceTypeId equals serviceType.Id into serviceTypes
+                    from serviceType in serviceTypes.DefaultIfEmpty()
+                    join userProfile in (await GetDbContextAsync()).Set<UserProfile>() on imaarService.UserProfileId equals userProfile.Id into userProfiles
+                    from userProfile in userProfiles.DefaultIfEmpty()
+                    select new ImaarServiceWithDetails
+                    {
+                        ImaarService = imaarService,
+                        ServiceType = serviceType,
+                        UserProfile = userProfile,  // Changed from userProfiles to userProfile
+                                                    //  Medias = (await GetDbContextAsync()).Set<Media>().Where(m => m.ImaarServiceId == id).ToList()
+                    }).FirstOrDefault();
         }
     }
 }

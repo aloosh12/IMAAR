@@ -66,5 +66,93 @@ namespace Imaar.Vacancies
             
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(result);
         }
+        
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the Vacancy
+                var vacancy = await _vacancyRepository.GetAsync(id);
+                
+                if (vacancy == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Vacancy not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Increment the view counter
+                vacancy.ViewCounter += 1;
+                
+                // Update the entity
+                await _vacancyRepository.UpdateAsync(vacancy);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "View counter incremented successfully";
+                mobileResponse.Data = new { 
+                    VacancyId = vacancy.Id, 
+                    ViewCounter = vacancy.ViewCounter 
+                };
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
+        
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the Vacancy
+                var vacancy = await _vacancyRepository.GetAsync(id);
+                
+                if (vacancy == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Vacancy not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Increment the order counter
+                vacancy.OrderCounter += 1;
+                
+                // Update the entity
+                await _vacancyRepository.UpdateAsync(vacancy);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "Order counter incremented successfully";
+                mobileResponse.Data = new { 
+                    VacancyId = vacancy.Id, 
+                    OrderCounter = vacancy.OrderCounter 
+                };
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
     }
 }
