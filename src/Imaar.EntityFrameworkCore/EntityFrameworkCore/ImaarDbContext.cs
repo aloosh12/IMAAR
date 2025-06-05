@@ -42,6 +42,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Imaar.UserSavedItems;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -53,6 +54,8 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<UserSavedItem> UserSavedItems { get; set; } = null!;
+
     public DbSet<StoryTicket> StoryTickets { get; set; } = null!;
     public DbSet<StoryTicketType> StoryTicketTypes { get; set; } = null!;
     public DbSet<ServiceTicket> ServiceTickets { get; set; } = null!;
@@ -670,5 +673,19 @@ if (builder.IsHostDatabase())
             }
 
         }
+
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<UserSavedItem>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "UserSavedItems", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.SourceId).HasColumnName(nameof(UserSavedItem.SourceId)).IsRequired();
+                b.Property(x => x.SavedItemType).HasColumnName(nameof(UserSavedItem.SavedItemType));
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+            });
+
         }
+
+    }
 }

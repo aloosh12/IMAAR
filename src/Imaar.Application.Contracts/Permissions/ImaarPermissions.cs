@@ -231,4 +231,12 @@ public static class ImaarPermissions
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class UserSavedItems
+    {
+        public const string Default = GroupName + ".UserSavedItems";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
 }

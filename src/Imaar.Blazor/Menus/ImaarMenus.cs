@@ -48,6 +48,6 @@ public class ImaarMenus
     public const string StoryTicketTypes = Prefix + ".StoryTicketTypes";
 
     public const string StoryTickets = Prefix + ".StoryTickets";
-
+    public const string UserSavedItems = Prefix + ".UserSavedItems";
 
 }

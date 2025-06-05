@@ -27,6 +27,7 @@ using Imaar.VerificationCodes;
 using Imaar.StoryTickets;
 using Imaar.StoryTicketTypes;
 using Volo.Abp.AutoMapper;
+using Imaar.UserSavedItems;
 
 namespace Imaar.Blazor;
 
@@ -82,5 +83,7 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<StoryTicketTypeDto, StoryTicketTypeUpdateDto>();
 
         CreateMap<StoryTicketDto, StoryTicketUpdateDto>();
+
+        CreateMap<UserSavedItemDto, UserSavedItemUpdateDto>();
     }
 }

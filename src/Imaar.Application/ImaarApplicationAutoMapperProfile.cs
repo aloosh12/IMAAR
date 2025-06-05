@@ -33,6 +33,7 @@ using Imaar.StoryTicketTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Imaar.UserSavedItems;
 
 namespace Imaar;
 
@@ -194,5 +195,9 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<StoryTicket, StoryTicketDto>();
         CreateMap<StoryTicket, StoryTicketExcelDto>();
         CreateMap<StoryTicketWithNavigationProperties, StoryTicketWithNavigationPropertiesDto>();
+
+        CreateMap<UserSavedItem, UserSavedItemDto>();
+        CreateMap<UserSavedItem, UserSavedItemExcelDto>();
+        CreateMap<UserSavedItemWithNavigationProperties, UserSavedItemWithNavigationPropertiesDto>();
     }
 }

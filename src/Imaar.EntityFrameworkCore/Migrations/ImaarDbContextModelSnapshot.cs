@@ -1978,6 +1978,73 @@ namespace Imaar.Migrations
                     .IsRequired();
             });
 
+            modelBuilder.Entity("Imaar.UserSavedItems.UserSavedItem", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<byte>("SavedItemType")
+                    .HasColumnType("tinyint")
+                    .HasColumnName("SavedItemType");
+
+                b.Property<string>("SourceId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("SourceId");
+
+                b.Property<Guid>("UserProfileId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.HasKey("Id");
+
+                b.HasIndex("UserProfileId");
+
+                b.ToTable("AppUserSavedItems", (string)null);
+            });
+
+
             modelBuilder.Entity("Imaar.UserWorksExhibitions.UserWorksExhibition", b =>
             {
                 b.Property<Guid>("Id")
@@ -4135,6 +4202,15 @@ namespace Imaar.Migrations
                 b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("FollowingUserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Imaar.UserSavedItems.UserSavedItem", b =>
+            {
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });

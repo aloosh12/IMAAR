@@ -40,6 +40,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Uow;
+using Imaar.UserSavedItems;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -107,6 +108,8 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<StoryTicketType, StoryTicketTypes.EfCoreStoryTicketTypeRepository>();
 
             options.AddRepository<StoryTicket, StoryTickets.EfCoreStoryTicketRepository>();
+            options.AddRepository<UserSavedItem, UserSavedItems.EfCoreUserSavedItemRepository>();
+
 
 
         });

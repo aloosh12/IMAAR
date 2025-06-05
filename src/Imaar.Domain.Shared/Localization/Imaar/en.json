@@ -264,6 +264,16 @@
     "MinViewCounter": "Min View Counter",
     "MinOrderCounter": "Min Order Counter",
     "MaxViewCounter": "Max View Counter",
-    "MaxOrderCounter": "Max Order Counter"
+    "MaxOrderCounter": "Max Order Counter",
+    "Enum:UserSavedItemType.0": "User",
+    "Enum:UserSavedItemType.1": "Service",
+    "Enum:UserSavedItemType.2": "Vacancy",
+    "Enum:UserSavedItemType.3": "Building",
+    "Permission:UserSavedItems": "User Saved Items",
+    "SourceId": "Source Id",
+    "SavedItemType": "Saved Item Type",
+    "UserSavedItems": "User Saved Items",
+    "NewUserSavedItem": "New User Saved Item",
+    "Menu:UserSavedItems": "User Saved Items"
   }
 }
