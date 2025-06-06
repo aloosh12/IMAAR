@@ -29,7 +29,7 @@ namespace Imaar.Controllers.Vacancies
             return _vacanciesAppService.CreateWithFilesAsync(input);
         }
         
-        [HttpGet("{id}/with-details")]
+        [HttpGet("with-details/{id}")]
         [AllowAnonymous]
         public virtual Task<MobileResponseDto> GetVacancyWithDetailsAsync(Guid id)
         {

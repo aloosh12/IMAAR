@@ -32,6 +32,7 @@ namespace Imaar.Buildings
     public class BuildingsAppService : BuildingsAppServiceBase, IBuildingsAppService
     {
         protected IMediasAppService _mediasAppService;
+        protected IBuildingsAppService _buildingsAppService;
         
         public BuildingsAppService(
             IBuildingRepository buildingRepository, 
@@ -43,10 +44,12 @@ namespace Imaar.Buildings
             IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, 
             IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, 
             IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository,
-            IMediasAppService mediasAppService)
+            IMediasAppService mediasAppService,
+            IBuildingsAppService buildingsAppService)
             : base(buildingRepository, buildingManager, downloadTokenCache, regionRepository, furnishingLevelRepository, buildingFacadeRepository, serviceTypeRepository, mainAmenityRepository, secondaryAmenityRepository)
         {
             _mediasAppService = mediasAppService;
+            _buildingsAppService = buildingsAppService;
         }
 
         [AllowAnonymous]
@@ -70,6 +73,80 @@ namespace Imaar.Buildings
             );
             
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(result);
+        }
+        
+        [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> GetBuildingWithDetailsAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the Building with navigation properties
+                var buildingWithDetails = await _buildingsAppService.GetWithNavigationPropertiesAsync(id);
+                
+                if (buildingWithDetails == null || buildingWithDetails.Building == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Building not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Map to DTOs
+                //var buildingDto = ObjectMapper.Map<Building, BuildingDto>(buildingWithDetails.Building);
+                //var serviceTypeDto = ObjectMapper.Map<ServiceType, ServiceTypeDto>(buildingWithDetails.ServiceType);
+                //var regionDto = ObjectMapper.Map<Region, RegionDto>(buildingWithDetails.Region);
+                //var furnishingLevelDto = ObjectMapper.Map<FurnishingLevel, FurnishingLevelDto>(buildingWithDetails.FurnishingLevel);
+                //var buildingFacadeDto = ObjectMapper.Map<BuildingFacade, BuildingFacadeDto>(buildingWithDetails.BuildingFacade);
+                
+                // Get media for this building
+                var getMediasInput = new GetMediasInput
+                {
+                    SkipCount = 0,
+                    MaxResultCount = 1000,
+                    SourceEntityId = id.ToString(),
+                    SourceEntityType = MediaEntityType.Building,
+                    IsActive = true,
+                    Sorting = "Order asc"
+                };
+                var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
+                
+                // Create result DTO
+                var result = new BuildingWithDetailsMobileDto
+                {
+                    // Copy properties from buildingDto
+                    
+                    
+                    // Add navigation properties
+                    Building = buildingWithDetails.Building,
+                    ServiceType = buildingWithDetails.ServiceType,
+                    Region = buildingWithDetails.Region,
+                    FurnishingLevel = buildingWithDetails.FurnishingLevel,
+                    BuildingFacade = buildingWithDetails.BuildingFacade,
+                    MainAmenities = buildingWithDetails.MainAmenities,
+                    SecondaryAmenities = buildingWithDetails.SecondaryAmenities,
+                    Media = mediaListDto != null ? mediaListDto.Items.ToList() : new List<MediaDto>()
+                };
+                
+                // Increment the view counter asynchronously (fire and forget)
+                _ = IncrementViewCounterAsync(id);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "Building retrieved successfully";
+                mobileResponse.Data = result;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
         }
         
         [AllowAnonymous]

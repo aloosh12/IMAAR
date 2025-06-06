@@ -9,6 +9,8 @@ namespace Imaar.Buildings
         //Write your custom code here...
         Task<MobileResponseDto> CreateWithFilesAsync(BuildingCreateWithFilesDto input);
         
+        Task<MobileResponseDto> GetBuildingWithDetailsAsync(Guid id);
+        
         Task<MobileResponseDto> IncrementViewCounterAsync(Guid id);
         
         Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id);
