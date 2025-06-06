@@ -8,6 +8,7 @@ using Volo.Abp.Application.Dtos;
 using Imaar.Buildings;
 using Microsoft.AspNetCore.Authorization;
 using Imaar.MobileResponses;
+using Imaar.Shared;
 
 namespace Imaar.Controllers.Buildings
 {
@@ -48,6 +49,11 @@ namespace Imaar.Controllers.Buildings
         public virtual Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id)
         {
             return _buildingsAppService.IncrementOrderCounterAsync(id);
+        }
+
+        public Task<PagedResultDto<LookupDto<Guid>>> GetUserProfileLookupAsync(LookupRequestDto input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

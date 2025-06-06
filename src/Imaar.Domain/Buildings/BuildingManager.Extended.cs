@@ -57,6 +57,7 @@ namespace Imaar.Buildings
             Guid furnishingLevelId,
             Guid buildingFacadeId,
             Guid serviceTypeId,
+            Guid userProfileId,
             List<Guid> mainAmenityIds,
             List<Guid> secondaryAmenityIds,
             List<IFormFile> files)
@@ -72,7 +73,8 @@ namespace Imaar.Buildings
                     regionId,
                     furnishingLevelId, 
                     buildingFacadeId, 
-                    serviceTypeId, 
+                    serviceTypeId,
+                    userProfileId,
                     mainTitle, 
                     description, 
                     price,

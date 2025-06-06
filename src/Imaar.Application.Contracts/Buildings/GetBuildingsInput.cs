@@ -23,6 +23,7 @@ namespace Imaar.Buildings
         public Guid? FurnishingLevelId { get; set; }
         public Guid? BuildingFacadeId { get; set; }
         public Guid? ServiceTypeId { get; set; }
+        public Guid? UserProfileId { get; set; }
         public Guid? MainAmenityId { get; set; }
         public Guid? SecondaryAmenityId { get; set; }
 

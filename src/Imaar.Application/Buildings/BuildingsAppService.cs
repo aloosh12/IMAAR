@@ -1,32 +1,33 @@
-using Imaar.Shared;
-using Imaar.SecondaryAmenities;
-using Imaar.MainAmenities;
-using Imaar.ServiceTypes;
+using AutoMapper.Internal.Mappers;
 using Imaar.BuildingFacades;
+using Imaar.Buildings;
+using Imaar.Buildings;
 using Imaar.FurnishingLevels;
+using Imaar.MainAmenities;
+using Imaar.Permissions;
 using Imaar.Regions;
+using Imaar.SecondaryAmenities;
+using Imaar.ServiceTypes;
+using Imaar.Shared;
+using Imaar.Shared;
+using Imaar.Shared;
+using Imaar.UserProfiles;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using MiniExcelLibs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using Imaar.Permissions;
-using Imaar.Buildings;
-using MiniExcelLibs;
-using Volo.Abp.Content;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
-using Microsoft.Extensions.Caching.Distributed;
-using Imaar.Shared;
-using AutoMapper.Internal.Mappers;
-using Imaar.Buildings;
-using Imaar.Shared;
+using Volo.Abp.Content;
+using Volo.Abp.Domain.Repositories;
 
 namespace Imaar.Buildings
 {
@@ -42,10 +43,11 @@ namespace Imaar.Buildings
         protected IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> _furnishingLevelRepository;
         protected IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> _buildingFacadeRepository;
         protected IRepository<Imaar.ServiceTypes.ServiceType, Guid> _serviceTypeRepository;
+        protected IRepository<Imaar.UserProfiles.UserProfile, Guid> _userProfileRepository;
         protected IRepository<Imaar.MainAmenities.MainAmenity, Guid> _mainAmenityRepository;
         protected IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> _secondaryAmenityRepository;
 
-        public BuildingsAppServiceBase(IBuildingRepository buildingRepository, BuildingManager buildingManager, IDistributedCache<BuildingDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.Regions.Region, Guid> regionRepository, IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> furnishingLevelRepository, IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> buildingFacadeRepository, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository)
+        public BuildingsAppServiceBase(IBuildingRepository buildingRepository, BuildingManager buildingManager, IDistributedCache<BuildingDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.Regions.Region, Guid> regionRepository, IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> furnishingLevelRepository, IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> buildingFacadeRepository, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository, IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository)
         {
             _downloadTokenCache = downloadTokenCache;
             _buildingRepository = buildingRepository;
@@ -53,6 +55,7 @@ namespace Imaar.Buildings
             _furnishingLevelRepository = furnishingLevelRepository;
             _buildingFacadeRepository = buildingFacadeRepository;
             _serviceTypeRepository = serviceTypeRepository;
+            _userProfileRepository = userProfileRepository;
             _mainAmenityRepository = mainAmenityRepository;
             _secondaryAmenityRepository = secondaryAmenityRepository;
 
@@ -60,8 +63,8 @@ namespace Imaar.Buildings
 
         public virtual async Task<PagedResultDto<BuildingWithNavigationPropertiesDto>> GetListAsync(GetBuildingsInput input)
         {
-            var totalCount = await _buildingRepository.GetCountAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId);
-            var items = await _buildingRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainAmenityId, input.SecondaryAmenityId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _buildingRepository.GetCountAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.UserProfileId, input.MainAmenityId, input.SecondaryAmenityId);
+            var items = await _buildingRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.UserProfileId, input.MainAmenityId, input.SecondaryAmenityId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<BuildingWithNavigationPropertiesDto>
             {
@@ -144,7 +147,21 @@ namespace Imaar.Buildings
                 Items = ObjectMapper.Map<List<Imaar.ServiceTypes.ServiceType>, List<LookupDto<Guid>>>(lookupData)
             };
         }
+        public virtual async Task<PagedResultDto<LookupDto<Guid>>> GetUserProfileLookupAsync(LookupRequestDto input)
+        {
+            var query = (await _userProfileRepository.GetQueryableAsync())
+                .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
+                    x => x.SecurityNumber != null &&
+                         x.SecurityNumber.Contains(input.Filter));
 
+            var lookupData = await query.PageBy(input.SkipCount, input.MaxResultCount).ToDynamicListAsync<Imaar.UserProfiles.UserProfile>();
+            var totalCount = query.Count();
+            return new PagedResultDto<LookupDto<Guid>>
+            {
+                TotalCount = totalCount,
+                Items = ObjectMapper.Map<List<Imaar.UserProfiles.UserProfile>, List<LookupDto<Guid>>>(lookupData)
+            };
+        }
         public virtual async Task<PagedResultDto<LookupDto<Guid>>> GetMainAmenityLookupAsync(LookupRequestDto input)
         {
             var query = (await _mainAmenityRepository.GetQueryableAsync())
@@ -204,7 +221,7 @@ namespace Imaar.Buildings
             }
 
             var building = await _buildingManager.CreateAsync(
-            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounter, input.OrderCounter
+            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.UserProfileId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounter, input.OrderCounter
             );
 
             return ObjectMapper.Map<Building, BuildingDto>(building);
@@ -232,7 +249,7 @@ namespace Imaar.Buildings
 
             var building = await _buildingManager.UpdateAsync(
             id,
-            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounter, input.OrderCounter, input.ConcurrencyStamp
+            input.MainAmenityIds, input.SecondaryAmenityIds, input.RegionId, input.FurnishingLevelId, input.BuildingFacadeId, input.ServiceTypeId, input.UserProfileId, input.MainTitle, input.Description, input.Price, input.BuildingArea, input.NumberOfRooms, input.NumberOfBaths, input.FloorNo, input.ViewCounter, input.OrderCounter, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<Building, BuildingDto>(building);

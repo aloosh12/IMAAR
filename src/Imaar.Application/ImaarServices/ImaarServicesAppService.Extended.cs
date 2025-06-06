@@ -51,14 +51,25 @@ namespace Imaar.ImaarServices
         }
 
         [AllowAnonymous]
+        public virtual async Task<long> GetServiceNumber()
+        {
+          long serviceCount =await  _imaarServiceRepository.GetCountAsync();
+            //long buildingCount = await _buildingRepository.GetCountAsync();
+            //long vacancyCount = await _vacancyRepository.GetCountAsync();
+            long buildingCount = 0;
+            long vacancyCount = 0;
+        return serviceCount + buildingCount + vacancyCount;
+        }
+        [AllowAnonymous]
         public virtual async Task<MobileResponseDto> CreateWithFilesAsync(ImaarServiceCreateWithFilesDto input)
         {
+            var serviceNumber = await GetServiceNumber();
             var result = await _imaarServiceManager.CreateWithFilesAsync(
                 input.Title,
                 input.Description,
                 input.ServiceLocation,
-                input.ServiceNumber,
-                input.DateOfPublish,
+                serviceNumber.ToString(),
+                DateOnly.FromDateTime(DateTime.Now),
                 input.Price,
                 input.Latitude,
                 input.Longitude,

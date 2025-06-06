@@ -26,6 +26,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+            Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             CancellationToken cancellationToken = default);
@@ -51,6 +52,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+              Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             string? sorting = null,
@@ -95,6 +97,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+              Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             CancellationToken cancellationToken = default);

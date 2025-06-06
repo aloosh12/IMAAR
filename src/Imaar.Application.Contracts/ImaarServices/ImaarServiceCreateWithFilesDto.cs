@@ -16,10 +16,6 @@ namespace Imaar.ImaarServices
         [Required]
         public string ServiceLocation { get; set; } = null!;
         
-        [Required]
-        public string ServiceNumber { get; set; } = null!;
-        
-        public DateOnly DateOfPublish { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         
         public int Price { get; set; }
         

@@ -45,6 +45,8 @@ namespace Imaar.Buildings
         public Guid FurnishingLevelId { get; set; }
         public Guid BuildingFacadeId { get; set; }
         public Guid ServiceTypeId { get; set; }
+        public Guid UserProfileId { get; set; }
+
         public ICollection<BuildingMainAmenity> MainAmenities { get; private set; }
         public ICollection<BuildingSecondaryAmenity> SecondaryAmenities { get; private set; }
 
@@ -52,8 +54,7 @@ namespace Imaar.Buildings
         {
 
         }
-
-        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
+        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
         {
 
             Id = id;
@@ -77,6 +78,8 @@ namespace Imaar.Buildings
             FurnishingLevelId = furnishingLevelId;
             BuildingFacadeId = buildingFacadeId;
             ServiceTypeId = serviceTypeId;
+            UserProfileId = userProfileId;
+
             MainAmenities = new Collection<BuildingMainAmenity>();
             SecondaryAmenities = new Collection<BuildingSecondaryAmenity>();
         }

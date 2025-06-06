@@ -29,7 +29,7 @@ namespace Imaar.Buildings
         Task<PagedResultDto<LookupDto<Guid>>> GetMainAmenityLookupAsync(LookupRequestDto input);
 
         Task<PagedResultDto<LookupDto<Guid>>> GetSecondaryAmenityLookupAsync(LookupRequestDto input);
-
+        Task<PagedResultDto<LookupDto<Guid>>> GetUserProfileLookupAsync(LookupRequestDto input);
         Task DeleteAsync(Guid id);
 
         Task<BuildingDto> CreateAsync(BuildingCreateDto input);

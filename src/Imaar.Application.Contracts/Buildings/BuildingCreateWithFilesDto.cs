@@ -35,6 +35,7 @@ namespace Imaar.Buildings
         public Guid BuildingFacadeId { get; set; }
         
         public Guid ServiceTypeId { get; set; }
+        public Guid UserProfileId { get; set; }
         
         public List<Guid> MainAmenityIds { get; set; } = new List<Guid>();
         

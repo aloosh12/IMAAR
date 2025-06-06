@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20250606114656_Updated_Building_25060615462057.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Imaar.Domain\Imaar.Domain.csproj" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="9.0.4" />
     <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="9.0.4" />

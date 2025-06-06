@@ -30,12 +30,13 @@ namespace Imaar.Buildings
         public virtual async Task<Building> CreateAsync(
         List<Guid> mainAmenityIds,
         List<Guid> secondaryAmenityIds,
-        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
+        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
         {
             Check.NotNull(regionId, nameof(regionId));
             Check.NotNull(furnishingLevelId, nameof(furnishingLevelId));
             Check.NotNull(buildingFacadeId, nameof(buildingFacadeId));
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
+            Check.NotNull(userProfileId, nameof(userProfileId));
             Check.NotNullOrWhiteSpace(mainTitle, nameof(mainTitle));
             Check.NotNullOrWhiteSpace(description, nameof(description));
             Check.NotNullOrWhiteSpace(price, nameof(price));
@@ -46,7 +47,7 @@ namespace Imaar.Buildings
 
             var building = new Building(
              GuidGenerator.Create(),
-             regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounter, orderCounter
+             regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounter, orderCounter
              );
 
             await SetMainAmenitiesAsync(building, mainAmenityIds);
@@ -59,13 +60,14 @@ namespace Imaar.Buildings
             Guid id,
             List<Guid> mainAmenityIds,
         List<Guid> secondaryAmenityIds,
-        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, [CanBeNull] string? concurrencyStamp = null
+        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNull(regionId, nameof(regionId));
             Check.NotNull(furnishingLevelId, nameof(furnishingLevelId));
             Check.NotNull(buildingFacadeId, nameof(buildingFacadeId));
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
+            Check.NotNull(userProfileId, nameof(userProfileId));
             Check.NotNullOrWhiteSpace(mainTitle, nameof(mainTitle));
             Check.NotNullOrWhiteSpace(description, nameof(description));
             Check.NotNullOrWhiteSpace(price, nameof(price));
@@ -83,6 +85,7 @@ namespace Imaar.Buildings
             building.FurnishingLevelId = furnishingLevelId;
             building.BuildingFacadeId = buildingFacadeId;
             building.ServiceTypeId = serviceTypeId;
+            building.UserProfileId = userProfileId;
             building.MainTitle = mainTitle;
             building.Description = description;
             building.Price = price;

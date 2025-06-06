@@ -42,11 +42,12 @@ namespace Imaar.Buildings
             IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> furnishingLevelRepository, 
             IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> buildingFacadeRepository, 
             IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, 
+            IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository, 
             IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, 
             IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository,
             IMediasAppService mediasAppService,
             IBuildingsAppService buildingsAppService)
-            : base(buildingRepository, buildingManager, downloadTokenCache, regionRepository, furnishingLevelRepository, buildingFacadeRepository, serviceTypeRepository, mainAmenityRepository, secondaryAmenityRepository)
+            : base(buildingRepository, buildingManager, downloadTokenCache, regionRepository, furnishingLevelRepository, buildingFacadeRepository, serviceTypeRepository, userProfileRepository, mainAmenityRepository, secondaryAmenityRepository)
         {
             _mediasAppService = mediasAppService;
             _buildingsAppService = buildingsAppService;
@@ -67,6 +68,7 @@ namespace Imaar.Buildings
                 input.FurnishingLevelId,
                 input.BuildingFacadeId,
                 input.ServiceTypeId,
+                input.UserProfileId,
                 input.MainAmenityIds,
                 input.SecondaryAmenityIds,
                 input.Files

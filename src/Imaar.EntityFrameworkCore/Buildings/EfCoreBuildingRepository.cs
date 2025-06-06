@@ -44,13 +44,14 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+             Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
 
             var ids = query.Select(x => x.Building.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -94,6 +95,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+             Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             string? sorting = null,
@@ -148,6 +150,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+             Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null)
         {
@@ -212,12 +215,13 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
+            Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId,  userProfileId, mainAmenityId, secondaryAmenityId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 

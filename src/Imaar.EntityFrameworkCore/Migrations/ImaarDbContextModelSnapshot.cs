@@ -186,10 +186,12 @@ namespace Imaar.Migrations
                 b.Property<Guid>("ServiceTypeId")
                     .HasColumnType("uniqueidentifier");
 
+                b.Property<Guid>("UserProfileId")
+                     .HasColumnType("uniqueidentifier");
+
                 b.Property<int>("ViewCounter")
                      .HasColumnType("int")
                      .HasColumnName("ViewCounter");
-
 
                 b.HasKey("Id");
 
@@ -200,6 +202,7 @@ namespace Imaar.Migrations
                 b.HasIndex("RegionId");
 
                 b.HasIndex("ServiceTypeId");
+                 b.HasIndex("UserProfileId");
 
                 b.ToTable("AppBuildings", (string)null);
             });
@@ -1895,6 +1898,13 @@ namespace Imaar.Migrations
                 b.HasOne("Imaar.ServiceTypes.ServiceType", null)
                     .WithMany()
                     .HasForeignKey("ServiceTypeId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });

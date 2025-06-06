@@ -518,6 +518,7 @@ if (builder.IsHostDatabase())
         b.HasOne<FurnishingLevel>().WithMany().IsRequired().HasForeignKey(x => x.FurnishingLevelId).OnDelete(DeleteBehavior.NoAction);
         b.HasOne<BuildingFacade>().WithMany().IsRequired().HasForeignKey(x => x.BuildingFacadeId).OnDelete(DeleteBehavior.NoAction);
         b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
+        b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
         b.HasMany(x => x.MainAmenities).WithOne().HasForeignKey(x => x.BuildingId).IsRequired().OnDelete(DeleteBehavior.NoAction);
         b.HasMany(x => x.SecondaryAmenities).WithOne().HasForeignKey(x => x.BuildingId).IsRequired().OnDelete(DeleteBehavior.NoAction);
     });
