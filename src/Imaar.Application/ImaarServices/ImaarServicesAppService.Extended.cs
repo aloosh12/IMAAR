@@ -71,6 +71,65 @@ namespace Imaar.ImaarServices
         }
 
         [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> GetImaarServiceWithDetailsAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the ImaarService with navigation properties
+                var imaarServiceWithDetails = await GetWithNavigationPropertiesAsync(id);
+                
+                if (imaarServiceWithDetails == null || imaarServiceWithDetails.ImaarService == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "ImaarService not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Get media for this imaar service
+                var getMediasInput = new GetMediasInput
+                {
+                    SkipCount = 0,
+                    MaxResultCount = 1000,
+                    SourceEntityId = id.ToString(),
+                    SourceEntityType = MediaEntityType.Service,
+                    IsActive = true,
+                    Sorting = "Order asc"
+                };
+                var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
+                
+                // Create result DTO
+                var result = new ImaarServiceWithDetailsMobileDto
+                {
+                    ImaarService = imaarServiceWithDetails.ImaarService,
+                    ServiceType = imaarServiceWithDetails.ServiceType,
+                    UserProfile = imaarServiceWithDetails.UserProfile,
+                    Media = mediaListDto != null ? mediaListDto.Items.ToList() : new List<MediaDto>()
+                };
+                
+                // Increment the view counter asynchronously (fire and forget)
+                _ = IncrementViewCounterAsync(id);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "ImaarService retrieved successfully";
+                mobileResponse.Data = result;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
+
+        [AllowAnonymous]
         public virtual async Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input)
         {
             // Create a list to store the combined results

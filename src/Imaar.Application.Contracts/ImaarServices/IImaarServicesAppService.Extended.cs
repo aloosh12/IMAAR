@@ -10,6 +10,8 @@ namespace Imaar.ImaarServices
         //Write your custom code here...
         Task<MobileResponseDto> CreateWithFilesAsync(ImaarServiceCreateWithFilesDto input);
         
+        Task<MobileResponseDto> GetImaarServiceWithDetailsAsync(Guid id);
+        
         Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input);
         
         Task<MobileResponseDto> IncrementViewCounterAsync(Guid id);

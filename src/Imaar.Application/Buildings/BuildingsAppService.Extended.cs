@@ -83,7 +83,7 @@ namespace Imaar.Buildings
             try
             {
                 // Get the Building with navigation properties
-                var buildingWithDetails = await _buildingsAppService.GetWithNavigationPropertiesAsync(id);
+                var buildingWithDetails = await GetWithNavigationPropertiesAsync(id);
                 
                 if (buildingWithDetails == null || buildingWithDetails.Building == null)
                 {
