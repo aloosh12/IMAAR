@@ -68,6 +68,98 @@ namespace Imaar.Vacancies
         }
         
         [AllowAnonymous]
+        public virtual async Task<MobileResponseDto> GetVacancyWithDetailsAsync(Guid id)
+        {
+            var mobileResponse = new MobileResponse();
+            
+            try
+            {
+                // Get the Vacancy with navigation properties
+                var vacancyWithDetails = await _vacancyRepository.GetWithNavigationPropertiesAsync(id);
+                
+                if (vacancyWithDetails == null || vacancyWithDetails.Vacancy == null)
+                {
+                    mobileResponse.Code = 404;
+                    mobileResponse.Message = "Vacancy not found";
+                    mobileResponse.Data = null;
+                    
+                    return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+                }
+                
+                // Map to DTO
+                var vacancyDto = ObjectMapper.Map<Vacancy, VacancyDto>(vacancyWithDetails.Vacancy);
+                var serviceTypeDto = ObjectMapper.Map<ServiceType, ServiceTypeDto>(vacancyWithDetails.ServiceType);
+                var userProfileDto = ObjectMapper.Map<UserProfile, UserProfileDto>(vacancyWithDetails.UserProfile);
+
+                // Get media for this vacancy
+                GetMediasInput getMediasInput = new GetMediasInput();
+                getMediasInput.SkipCount = 0;
+                getMediasInput.MaxResultCount = 1000;
+                getMediasInput.SourceEntityId = id.ToString();
+                getMediasInput.SourceEntityType = MediaEntityType.Vacancy;
+                getMediasInput.IsActive = true;
+                getMediasInput.Sorting = "Order asc";
+                var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
+                
+                // Create result DTO
+                var result = new VacancyWithDetailsMobileDto
+                {
+                    // Copy properties from vacancyDto
+                    Id = vacancyDto.Id,
+                    Title = vacancyDto.Title,
+                    Description = vacancyDto.Description,
+                    Location = vacancyDto.Location,
+                    Number = vacancyDto.Number,
+                    Latitude = vacancyDto.Latitude,
+                    Longitude = vacancyDto.Longitude,
+                    DateOfPublish = vacancyDto.DateOfPublish,
+                    ExpectedExperience = vacancyDto.ExpectedExperience,
+                    EducationLevel = vacancyDto.EducationLevel,
+                    WorkSchedule = vacancyDto.WorkSchedule,
+                    EmploymentType = vacancyDto.EmploymentType,
+                    BiologicalSex = vacancyDto.BiologicalSex,
+                    Languages = vacancyDto.Languages,
+                    DriveLicense = vacancyDto.DriveLicense,
+                    Salary = vacancyDto.Salary,
+                    ViewCounter = vacancyDto.ViewCounter,
+                    OrderCounter = vacancyDto.OrderCounter,
+                    ServiceTypeId = vacancyDto.ServiceTypeId,
+                    UserProfileId = vacancyDto.UserProfileId,
+                    ConcurrencyStamp = vacancyDto.ConcurrencyStamp,
+                    CreationTime = vacancyDto.CreationTime,
+                    CreatorId = vacancyDto.CreatorId,
+                    LastModificationTime = vacancyDto.LastModificationTime,
+                    LastModifierId = vacancyDto.LastModifierId,
+                    IsDeleted = vacancyDto.IsDeleted,
+                    DeleterId = vacancyDto.DeleterId,
+                    DeletionTime = vacancyDto.DeletionTime,
+                    
+                    // Add navigation properties
+                    ServiceType = serviceTypeDto,
+                    UserProfile = userProfileDto,
+                    Media = mediaListDto != null ?mediaListDto.Items.ToList() : new List<MediaDto>(),
+                };
+                
+                // Increment the view counter asynchronously (fire and forget)
+                _ = IncrementViewCounterAsync(id);
+                
+                mobileResponse.Code = 200;
+                mobileResponse.Message = "Vacancy retrieved successfully";
+                mobileResponse.Data = result;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+            catch (Exception ex)
+            {
+                mobileResponse.Code = 500;
+                mobileResponse.Message = ex.Message;
+                mobileResponse.Data = null;
+                
+                return ObjectMapper.Map<MobileResponse, MobileResponseDto>(mobileResponse);
+            }
+        }
+        
+        [AllowAnonymous]
         public virtual async Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
         {
             var mobileResponse = new MobileResponse();

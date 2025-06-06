@@ -9,6 +9,8 @@ namespace Imaar.Vacancies
         //Write your custom code here...
         Task<MobileResponseDto> CreateWithFilesAsync(VacancyCreateWithFilesDto input);
         
+        Task<MobileResponseDto> GetVacancyWithDetailsAsync(Guid id);
+        
         Task<MobileResponseDto> IncrementViewCounterAsync(Guid id);
         
         Task<MobileResponseDto> IncrementOrderCounterAsync(Guid id);

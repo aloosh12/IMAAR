@@ -29,6 +29,13 @@ namespace Imaar.Controllers.Vacancies
             return _vacanciesAppService.CreateWithFilesAsync(input);
         }
         
+        [HttpGet("{id}/with-details")]
+        [AllowAnonymous]
+        public virtual Task<MobileResponseDto> GetVacancyWithDetailsAsync(Guid id)
+        {
+            return _vacanciesAppService.GetVacancyWithDetailsAsync(id);
+        }
+        
         [HttpPost("increment-view-counter/{id}")]
         [AllowAnonymous]
         public virtual Task<MobileResponseDto> IncrementViewCounterAsync(Guid id)
