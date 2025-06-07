@@ -53,7 +53,7 @@ namespace Imaar.UserProfiles
                 var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
                 identityUser.Name = firstName;
                 identityUser.Surname = lastName;
-                string formattedPhoneNumber = phoneNumber.StartsWith("+") ? phoneNumber : "+" + phoneNumber;
+                string formattedPhoneNumber = phoneNumber.StartsWith("+") ? phoneNumber : "+963" + phoneNumber;
                 identityUser.SetPhoneNumber(formattedPhoneNumber, false);
                 if (roleName.Trim() == "1")
                     identityUser.AddRole(Guid.Parse("84840acb-9a32-4fc8-7b98-3a19d056874e"));

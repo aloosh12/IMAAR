@@ -21,19 +21,25 @@ using Microsoft.Extensions.Caching.Distributed;
 using Imaar.Shared;
 using Imaar.MobileResponses;
 using Imaar.Medias;
+using Imaar.StoryLovers;
+using Volo.Abp.Users;
 
 namespace Imaar.Stories
 {
     public class StoriesAppService : StoriesAppServiceBase, IStoriesAppService
     {
-       // protected IMediasAppService _mediasAppService;
-        
+        // protected IMediasAppService _mediasAppService;
+
+        protected IStoryLoversAppService _storyLoversAppService;
+        protected ICurrentUser _currentUser;
         public StoriesAppService(IStoryRepository storyRepository, StoryManager storyManager, 
             IDistributedCache<StoryDownloadTokenCacheItem, string> downloadTokenCache, 
             IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository,
-            IMediasAppService mediasAppService)
+            IMediasAppService mediasAppService, IStoryLoversAppService storyLoversAppService, ICurrentUser currentUser)
             : base(storyRepository, storyManager, downloadTokenCache, userProfileRepository, mediasAppService)
         {
+            _storyLoversAppService = storyLoversAppService;
+            _currentUser = currentUser;
         }
 
         //Write your custom code...
@@ -48,6 +54,23 @@ namespace Imaar.Stories
                 Items = ObjectMapper.Map<List<StoryWithNavigationProperties>, List<StoryMobileDto>>(items)
             };
         }
+
+        //public virtual async Task<PagedResultDto<StoryMobileDto>> GetStoryLovedByUserAsync()
+        //{
+        //    GetStoryLoversInput input = new GetStoryLoversInput();
+        //    input.SkipCount = 0;
+        //    input.MaxResultCount = 1000;
+        //    input.UserProfileId = _currentUser.Id;
+        //    PagedResultDto _storyLoversAppService.GetListAsync(input);
+        //    var totalCount = await _storyRepository.GetCountAsync(input.FilterText, input.Title, input.FromTimeMin, input.FromTimeMax, input.ExpiryTimeMin, input.ExpiryTimeMax, input.StoryPublisherId);
+        //    var items = await _storyRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.FromTimeMin, input.FromTimeMax, input.ExpiryTimeMin, input.ExpiryTimeMax, input.StoryPublisherId, input.Sorting, input.MaxResultCount, input.SkipCount);
+
+        //    return new PagedResultDto<StoryMobileDto>
+        //    {
+        //        TotalCount = totalCount,
+        //        Items = ObjectMapper.Map<List<StoryWithNavigationProperties>, List<StoryMobileDto>>(items)
+        //    };
+        //}
 
         [AllowAnonymous]
         public virtual async Task<MobileResponseDto> CreateWithFilesAsync(StoryCreateWithFilesDto input)

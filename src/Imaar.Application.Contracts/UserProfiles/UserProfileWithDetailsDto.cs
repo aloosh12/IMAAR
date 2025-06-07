@@ -13,8 +13,8 @@ namespace Imaar.UserProfiles
         public string PhoneNumber { get; set; } = null!;
         public string SecurityCode { get; set; } = null!;
 
-        public BiologicalSex? BiologicalSex = null;
-        public DateOnly? DateOfBirth = null;
+        public BiologicalSex? BiologicalSex { get; set; } = null;
+        public DateOnly? DateOfBirth { get; set; } = null;
         public string? Latitude { get; set; } = null;
         public string? Longitude { get; set; } = null;
         public string? ProfilePhoto { get; set; } = null;

@@ -20,6 +20,7 @@ using Imaar.Shared;
 using Imaar.ServiceTypes;
 using Imaar.ImaarServices;
 using Imaar.Stories;
+using Volo.Abp.Users;
 
 namespace Imaar.Pages
 {
@@ -32,13 +33,14 @@ namespace Imaar.Pages
         protected IServiceTypesAppService _serviceTypesAppService;
         protected IStoriesAppService _storiesAppService;
         protected IImaarServicesAppService _imaarServicesAppService;
-
-        public HomeAppService(ICategoriesAppService categoriesAppService, IServiceTypesAppService serviceTypesAppService, IStoriesAppService storiesAppService, IImaarServicesAppService imaarServicesAppService )
+        protected ICurrentUser _currentUser;
+        public HomeAppService(ICategoriesAppService categoriesAppService, IServiceTypesAppService serviceTypesAppService, IStoriesAppService storiesAppService, IImaarServicesAppService imaarServicesAppService, ICurrentUser currentUser)
         {
             _categoriesAppService = categoriesAppService;
             _serviceTypesAppService = serviceTypesAppService;
             _storiesAppService = storiesAppService;
             _imaarServicesAppService = imaarServicesAppService;
+            _currentUser = CurrentUser;
         }
 
         public async Task<HomePageDto> GetAsync()
