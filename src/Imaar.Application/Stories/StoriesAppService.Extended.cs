@@ -26,15 +26,14 @@ namespace Imaar.Stories
 {
     public class StoriesAppService : StoriesAppServiceBase, IStoriesAppService
     {
-        protected IMediasAppService _mediasAppService;
+       // protected IMediasAppService _mediasAppService;
         
         public StoriesAppService(IStoryRepository storyRepository, StoryManager storyManager, 
             IDistributedCache<StoryDownloadTokenCacheItem, string> downloadTokenCache, 
             IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository,
             IMediasAppService mediasAppService)
-            : base(storyRepository, storyManager, downloadTokenCache, userProfileRepository)
+            : base(storyRepository, storyManager, downloadTokenCache, userProfileRepository, mediasAppService)
         {
-            _mediasAppService = mediasAppService;
         }
 
         //Write your custom code...
