@@ -54,71 +54,42 @@ namespace Imaar.Stories
                 Items = ObjectMapper.Map<List<StoryWithNavigationProperties>, List<StoryMobileDto>>(items)
             };
         }
+        
+        public virtual async Task<bool> CheckLoveStatusAsync(Guid id)
+        {
+            var currentUserId = _currentUser.Id;
+            if (currentUserId == null)
+            {
+                return false;
+            }
+            
+            // Check if the current user has loved this story
+            var input = new GetStoryLoversInput
+            {
+                UserProfileId = currentUserId,
+                StoryId = id,
+                MaxResultCount = 1
+            };
+            
+            var result = await _storyLoversAppService.GetListAsync(input);
+            return result.TotalCount > 0;
+        }
+        
+        public virtual async Task<int> GetLoveCountAsync(Guid id)
+        {
+            // Get count of loves for the story
+            var input = new GetStoryLoversInput
+            {
+                StoryId = id,
+                MaxResultCount = 0  // We only need count, not the actual items
+            };
+            
+            var result = await _storyLoversAppService.GetListAsync(input);
+            return (int)result.TotalCount;
+        }
 
         //public virtual async Task<PagedResultDto<StoryMobileDto>> GetStoriesLovedByUserAsync(Guid userId, int skipCount = 0, int maxResultCount = 10)
-        //{
-        //    // Get the story lovers records for the specified user
-        //    var getStoryLoversInput = new GetStoryLoversInput
-        //    {
-        //        UserProfileId = userId,
-        //        MaxResultCount = maxResultCount,
-        //        SkipCount = skipCount
-        //    };
-            
-        //    var storyLoversResult = await _storyLoversAppService.GetListAsync(getStoryLoversInput);
-            
-        //    if (storyLoversResult.TotalCount == 0)
-        //    {
-        //        return new PagedResultDto<StoryMobileDto>
-        //        {
-        //            TotalCount = 0,
-        //            Items = new List<StoryMobileDto>()
-        //        };
-        //    }
-            
-        //    // Extract story IDs from the story lovers records
-        //    var storyIds = storyLoversResult.Items.Select(sl => sl.StoryId).ToList();
-            
-        //    // Get the actual story objects with their navigation properties (including media)
-        //    var storiesWithNavProperties = await _storyRepository.GetListWithNavigationPropertiesByStoryIdsAsync(storyIds);
-            
-        //    // Map to mobile DTOs
-        //    var storyDtos = ObjectMapper.Map<List<StoryWithNavigationProperties>, List<StoryMobileDto>>(storiesWithNavProperties);
-            
-        //    return new PagedResultDto<StoryMobileDto>
-        //    {
-        //        TotalCount = storyLoversResult.TotalCount,
-        //        Items = storyDtos
-        //    };
-        //}
-        
-        // Convenience method that uses the current user's ID
         //public virtual async Task<PagedResultDto<StoryMobileDto>> GetCurrentUserLovedStoriesAsync(int skipCount = 0, int maxResultCount = 10)
-        //{
-        //    if (_currentUser?.Id == null)
-        //    {
-        //        throw new Volo.Abp.UserFriendlyException("User is not authenticated");
-        //    }
-            
-        //    return await GetStoriesLovedByUserAsync(_currentUser.Id.Value, skipCount, maxResultCount);
-        //}
-
-        //public virtual async Task<PagedResultDto<StoryMobileDto>> GetStoryLovedByUserAsync()
-        //{
-        //    GetStoryLoversInput input = new GetStoryLoversInput();
-        //    input.SkipCount = 0;
-        //    input.MaxResultCount = 1000;
-        //    input.UserProfileId = _currentUser.Id;
-        //    PagedResultDto _storyLoversAppService.GetListAsync(input);
-        //    var totalCount = await _storyRepository.GetCountAsync(input.FilterText, input.Title, input.FromTimeMin, input.FromTimeMax, input.ExpiryTimeMin, input.ExpiryTimeMax, input.StoryPublisherId);
-        //    var items = await _storyRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.FromTimeMin, input.FromTimeMax, input.ExpiryTimeMin, input.ExpiryTimeMax, input.StoryPublisherId, input.Sorting, input.MaxResultCount, input.SkipCount);
-
-        //    return new PagedResultDto<StoryMobileDto>
-        //    {
-        //        TotalCount = totalCount,
-        //        Items = ObjectMapper.Map<List<StoryWithNavigationProperties>, List<StoryMobileDto>>(items)
-        //    };
-        //}
 
         [AllowAnonymous]
         public virtual async Task<MobileResponseDto> CreateWithFilesAsync(StoryCreateWithFilesDto input)

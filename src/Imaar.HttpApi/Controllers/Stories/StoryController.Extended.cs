@@ -33,5 +33,17 @@ namespace Imaar.Controllers.Stories
         {
             return _storiesAppService.CreateWithFilesAsync(input);
         }
+
+        [HttpGet("check-love-status/{id}")]
+        public Task<bool> CheckLoveStatusAsync(Guid id)
+        {
+            return _storiesAppService.CheckLoveStatusAsync(id);
+        }
+
+        [HttpGet("love-count/{id}")]
+        public Task<int> GetLoveCountAsync(Guid id)
+        {
+            return _storiesAppService.GetLoveCountAsync(id);
+        }
     }
 }
