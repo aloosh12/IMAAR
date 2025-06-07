@@ -35,9 +35,9 @@ namespace Imaar.Vacancies
         protected VacancyManager _vacancyManager;
 
         protected IRepository<Imaar.ServiceTypes.ServiceType, Guid> _serviceTypeRepository;
-        protected IRepository<Imaar.UserProfiles.UserProfile, Guid> _userProfileRepository;
+        protected IUserProfileRepository _userProfileRepository;
 
-        public VacanciesAppServiceBase(IVacancyRepository vacancyRepository, VacancyManager vacancyManager, IDistributedCache<VacancyDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository)
+        public VacanciesAppServiceBase(IVacancyRepository vacancyRepository, VacancyManager vacancyManager, IDistributedCache<VacancyDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IUserProfileRepository userProfileRepository)
         {
             _downloadTokenCache = downloadTokenCache;
             _vacancyRepository = vacancyRepository;

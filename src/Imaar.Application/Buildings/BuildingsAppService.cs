@@ -43,11 +43,11 @@ namespace Imaar.Buildings
         protected IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> _furnishingLevelRepository;
         protected IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> _buildingFacadeRepository;
         protected IRepository<Imaar.ServiceTypes.ServiceType, Guid> _serviceTypeRepository;
-        protected IRepository<Imaar.UserProfiles.UserProfile, Guid> _userProfileRepository;
+        protected IUserProfileRepository _userProfileRepository;
         protected IRepository<Imaar.MainAmenities.MainAmenity, Guid> _mainAmenityRepository;
         protected IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> _secondaryAmenityRepository;
 
-        public BuildingsAppServiceBase(IBuildingRepository buildingRepository, BuildingManager buildingManager, IDistributedCache<BuildingDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.Regions.Region, Guid> regionRepository, IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> furnishingLevelRepository, IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> buildingFacadeRepository, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository, IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository)
+        public BuildingsAppServiceBase(IBuildingRepository buildingRepository, BuildingManager buildingManager, IDistributedCache<BuildingDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.Regions.Region, Guid> regionRepository, IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> furnishingLevelRepository, IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> buildingFacadeRepository, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IUserProfileRepository userProfileRepository, IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository)
         {
             _downloadTokenCache = downloadTokenCache;
             _buildingRepository = buildingRepository;

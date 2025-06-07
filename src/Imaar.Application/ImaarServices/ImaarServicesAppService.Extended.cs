@@ -125,7 +125,7 @@ namespace Imaar.ImaarServices
                     Media = mediaListDto != null ? mediaListDto.Items.ToList() : new List<MediaDto>()
                 };
                 
-              //  result.ImaarService.ServiceEval = await _serviceEvaluationsAppService.GetAv
+              result.ImaarService.ServiceEval = await _serviceEvaluationsAppService.GetAverageEvaluationForServiceAsync(id);
                 // Increment the view counter asynchronously (fire and forget)
                 _ = IncrementViewCounterAsync(id);
 

@@ -19,5 +19,11 @@ namespace Imaar.Controllers.ServiceEvaluations
         public ServiceEvaluationController(IServiceEvaluationsAppService serviceEvaluationsAppService) : base(serviceEvaluationsAppService)
         {
         }
+
+        [HttpGet("service-average-evaluation/{serviceId}")]
+        public async Task<double> GetAverageEvaluationForServiceAsync(Guid serviceId)
+        {
+            return await  _serviceEvaluationsAppService.GetAverageEvaluationForServiceAsync(serviceId);    
+        }
     }
 }

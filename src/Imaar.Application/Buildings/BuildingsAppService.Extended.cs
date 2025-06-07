@@ -1,31 +1,33 @@
-using Imaar.Shared;
-using Imaar.SecondaryAmenities;
-using Imaar.MainAmenities;
-using Imaar.ServiceTypes;
 using Imaar.BuildingFacades;
+using Imaar.Buildings;
 using Imaar.FurnishingLevels;
+using Imaar.ImaarServices;
+using Imaar.MainAmenities;
+using Imaar.Medias;
+using Imaar.MobileResponses;
+using Imaar.Permissions;
 using Imaar.Regions;
+using Imaar.SecondaryAmenities;
+using Imaar.ServiceTypes;
+using Imaar.Shared;
+using Imaar.Shared;
+using Imaar.UserProfiles;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using MiniExcelLibs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using Imaar.Permissions;
-using Imaar.Buildings;
-using MiniExcelLibs;
-using Volo.Abp.Content;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
-using Microsoft.Extensions.Caching.Distributed;
-using Imaar.Shared;
-using Imaar.MobileResponses;
-using Imaar.Medias;
+using Volo.Abp.Content;
+using Volo.Abp.Domain.Repositories;
 
 namespace Imaar.Buildings
 {
@@ -42,7 +44,7 @@ namespace Imaar.Buildings
             IRepository<Imaar.FurnishingLevels.FurnishingLevel, Guid> furnishingLevelRepository, 
             IRepository<Imaar.BuildingFacades.BuildingFacade, Guid> buildingFacadeRepository, 
             IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, 
-            IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository, 
+            IUserProfileRepository userProfileRepository, 
             IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, 
             IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository,
             IMediasAppService mediasAppService,
@@ -114,8 +116,10 @@ namespace Imaar.Buildings
                     Sorting = "Order asc"
                 };
                 var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
-                
+
                 // Create result DTO
+                var usertemp = ObjectMapper.Map<UserProfileWithDetails, UserProfileWithDetailsDto>(await _userProfileRepository.GetWithDetailsAsync(buildingWithDetails.UserProfile.Id));
+
                 var result = new BuildingWithDetailsMobileDto
                 {
                     // Copy properties from buildingDto
@@ -124,6 +128,7 @@ namespace Imaar.Buildings
                     // Add navigation properties
                     Building = buildingWithDetails.Building,
                     ServiceType = buildingWithDetails.ServiceType,
+                    UserProfileWithDetailsDto = usertemp,
                     Region = buildingWithDetails.Region,
                     FurnishingLevel = buildingWithDetails.FurnishingLevel,
                     BuildingFacade = buildingWithDetails.BuildingFacade,

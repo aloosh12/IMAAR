@@ -10,7 +10,7 @@ namespace Imaar.Vacancies
     public class VacancyWithDetailsMobileDto : VacancyDto
     {
         public ServiceTypeDto ServiceType { get; set; }
-        public UserProfileDto UserProfile { get; set; }
+        public UserProfileWithDetailsDto UserProfileWithDetailsDto { get; set; }
         public List<MediaDto> Media { get; set; } = new();
     }
 } 

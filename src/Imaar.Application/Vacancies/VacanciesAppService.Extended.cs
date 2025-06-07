@@ -1,27 +1,28 @@
+using Imaar.ImaarServices;
+using Imaar.Medias;
+using Imaar.MobileResponses;
+using Imaar.Permissions;
+using Imaar.ServiceTypes;
+using Imaar.Shared;
 using Imaar.Shared;
 using Imaar.UserProfiles;
-using Imaar.ServiceTypes;
+using Imaar.Vacancies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using MiniExcelLibs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using Imaar.Permissions;
-using Imaar.Vacancies;
-using MiniExcelLibs;
-using Volo.Abp.Content;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
-using Microsoft.Extensions.Caching.Distributed;
-using Imaar.Shared;
-using Imaar.MobileResponses;
-using Imaar.Medias;
+using Volo.Abp.Content;
+using Volo.Abp.Domain.Repositories;
 
 namespace Imaar.Vacancies
 {
@@ -33,7 +34,7 @@ namespace Imaar.Vacancies
             VacancyManager vacancyManager, 
             IDistributedCache<VacancyDownloadTokenCacheItem, string> downloadTokenCache, 
             IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, 
-            IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository,
+            IUserProfileRepository userProfileRepository,
             IMediasAppService mediasAppService)
             : base(vacancyRepository, vacancyManager, downloadTokenCache, serviceTypeRepository, userProfileRepository)
         {
@@ -89,7 +90,7 @@ namespace Imaar.Vacancies
                 // Map to DTO
                 var vacancyDto = ObjectMapper.Map<Vacancy, VacancyDto>(vacancyWithDetails.Vacancy);
                 var serviceTypeDto = ObjectMapper.Map<ServiceType, ServiceTypeDto>(vacancyWithDetails.ServiceType);
-                var userProfileDto = ObjectMapper.Map<UserProfile, UserProfileDto>(vacancyWithDetails.UserProfile);
+               // var userProfileDto = ObjectMapper.Map<UserProfile, UserProfileDto>(vacancyWithDetails.UserProfile);
 
                 // Get media for this vacancy
                 GetMediasInput getMediasInput = new GetMediasInput();
@@ -100,8 +101,10 @@ namespace Imaar.Vacancies
                 getMediasInput.IsActive = true;
                 getMediasInput.Sorting = "Order asc";
                 var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
-                
+
                 // Create result DTO
+                var usertemp = ObjectMapper.Map<UserProfileWithDetails, UserProfileWithDetailsDto>(await _userProfileRepository.GetWithDetailsAsync(vacancyWithDetails.UserProfile.Id));
+
                 var result = new VacancyWithDetailsMobileDto
                 {
                     // Copy properties from vacancyDto
@@ -136,7 +139,7 @@ namespace Imaar.Vacancies
                     
                     // Add navigation properties
                     ServiceType = serviceTypeDto,
-                    UserProfile = userProfileDto,
+                    UserProfileWithDetailsDto = usertemp,
                     Media = mediaListDto != null ?mediaListDto.Items.ToList() : new List<MediaDto>(),
                 };
                 
