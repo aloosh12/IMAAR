@@ -18,6 +18,10 @@ namespace Imaar.UserProfiles
             DateOnly? dateOfBirthMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? firstName = null,
+            string? lastName = null,
+            string? phoneNumber = null,
+            string? email = null,
             CancellationToken cancellationToken = default);
         Task<List<UserProfile>> GetListAsync(
                     string? filterText = null,
@@ -27,6 +31,10 @@ namespace Imaar.UserProfiles
                     DateOnly? dateOfBirthMax = null,
                     string? latitude = null,
                     string? longitude = null,
+                    string? firstName = null,
+                    string? lastName = null,
+                    string? phoneNumber = null,
+                    string? email = null,
                     string? sorting = null,
                     int maxResultCount = int.MaxValue,
                     int skipCount = 0,
@@ -41,6 +49,10 @@ namespace Imaar.UserProfiles
             DateOnly? dateOfBirthMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? firstName = null,
+            string? lastName = null,
+            string? phoneNumber = null,
+            string? email = null,
             CancellationToken cancellationToken = default);
     }
 }

@@ -274,6 +274,9 @@
     "SavedItemType": "Saved Item Type",
     "UserSavedItems": "User Saved Items",
     "NewUserSavedItem": "New User Saved Item",
-    "Menu:UserSavedItems": "User Saved Items"
+    "Menu:UserSavedItems": "User Saved Items",
+    "FirstName": "First Name",
+    "LastName": "Last Name",
+    "Email": "Email"
   }
 }

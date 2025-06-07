@@ -1799,82 +1799,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppUserFollows", (string)null);
             });
 
-            modelBuilder.Entity("Imaar.UserProfiles.UserProfile", b =>
-            {
-                b.Property<Guid>("Id")
-                    .HasColumnType("uniqueidentifier");
-
-                b.Property<byte?>("BiologicalSex")
-                    .HasColumnType("tinyint")
-                    .HasColumnName("BiologicalSex");
-
-                b.Property<string>("ConcurrencyStamp")
-                    .IsConcurrencyToken()
-                    .IsRequired()
-                    .HasMaxLength(40)
-                    .HasColumnType("nvarchar(40)")
-                    .HasColumnName("ConcurrencyStamp");
-
-                b.Property<DateTime>("CreationTime")
-                    .HasColumnType("datetime2")
-                    .HasColumnName("CreationTime");
-
-                b.Property<Guid?>("CreatorId")
-                    .HasColumnType("uniqueidentifier")
-                    .HasColumnName("CreatorId");
-
-                b.Property<DateOnly?>("DateOfBirth")
-                    .HasColumnType("date")
-                    .HasColumnName("DateOfBirth");
-
-                b.Property<Guid?>("DeleterId")
-                    .HasColumnType("uniqueidentifier")
-                    .HasColumnName("DeleterId");
-
-                b.Property<DateTime?>("DeletionTime")
-                    .HasColumnType("datetime2")
-                    .HasColumnName("DeletionTime");
-
-                b.Property<string>("ExtraProperties")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)")
-                    .HasColumnName("ExtraProperties");
-
-                b.Property<bool>("IsDeleted")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("bit")
-                    .HasDefaultValue(false)
-                    .HasColumnName("IsDeleted");
-
-                b.Property<DateTime?>("LastModificationTime")
-                    .HasColumnType("datetime2")
-                    .HasColumnName("LastModificationTime");
-
-                b.Property<Guid?>("LastModifierId")
-                    .HasColumnType("uniqueidentifier")
-                    .HasColumnName("LastModifierId");
-
-                b.Property<string>("Latitude")
-                    .HasColumnType("nvarchar(max)")
-                    .HasColumnName("Latitude");
-
-                b.Property<string>("Longitude")
-                    .HasColumnType("nvarchar(max)")
-                    .HasColumnName("Longitude");
-
-                b.Property<string>("ProfilePhoto")
-                    .HasColumnType("nvarchar(max)")
-                    .HasColumnName("ProfilePhoto");
-
-                b.Property<string>("SecurityNumber")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)")
-                    .HasColumnName("SecurityNumber");
-
-                b.HasKey("Id");
-
-                b.ToTable("AppUserProfiles", (string)null);
-            });
+      
             modelBuilder.Entity("Imaar.Buildings.Building", b =>
             {
                 b.HasOne("Imaar.BuildingFacades.BuildingFacade", null)
@@ -1986,6 +1911,103 @@ namespace Imaar.Migrations
                     .HasForeignKey("CategoryId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity("Imaar.UserProfiles.UserProfile", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<byte?>("BiologicalSex")
+                    .HasColumnType("tinyint")
+                    .HasColumnName("BiologicalSex");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<DateOnly?>("DateOfBirth")
+                    .HasColumnType("date")
+                    .HasColumnName("DateOfBirth");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("Email")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Email");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<string>("FirstName")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("FirstName");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<string>("LastName")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("LastName");
+
+                b.Property<string>("Latitude")
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Latitude");
+
+                b.Property<string>("Longitude")
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Longitude");
+
+                b.Property<string>("PhoneNumber")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("PhoneNumber");
+
+                b.Property<string>("ProfilePhoto")
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ProfilePhoto");
+
+                b.Property<string>("SecurityNumber")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("SecurityNumber");
+
+                b.HasKey("Id");
+
+                b.ToTable("AppUserProfiles", (string)null);
             });
 
             modelBuilder.Entity("Imaar.UserSavedItems.UserSavedItem", b =>

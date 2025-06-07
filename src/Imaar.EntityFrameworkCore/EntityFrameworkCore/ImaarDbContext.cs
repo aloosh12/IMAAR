@@ -17,16 +17,18 @@ using Imaar.ServiceTicketTypes;
 using Imaar.ServiceTypes;
 using Imaar.Stories;
 using Imaar.StoryLovers;
+using Imaar.StoryTickets;
+using Imaar.StoryTicketTypes;
 using Imaar.Tickets;
 using Imaar.TicketTypes;
 using Imaar.UserEvalauations;
 using Imaar.UserFollows;
 using Imaar.UserProfiles;
+using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
-using Imaar.StoryTickets;
-using Imaar.StoryTicketTypes;
+using Imaar.UserProfiles;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -42,7 +44,6 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using Imaar.UserSavedItems;
 
 namespace Imaar.EntityFrameworkCore;
 
@@ -147,21 +148,7 @@ public class ImaarDbContext :
         if (builder.IsHostDatabase())
         {
         }
-        if (builder.IsHostDatabase())
-        {
-            builder.Entity<UserProfile>(b =>
-            {
-                b.ToTable(ImaarConsts.DbTablePrefix + "UserProfiles", ImaarConsts.DbSchema);
-                b.ConfigureByConvention();
-                b.Property(x => x.SecurityNumber).HasColumnName(nameof(UserProfile.SecurityNumber)).IsRequired();
-                b.Property(x => x.BiologicalSex).HasColumnName(nameof(UserProfile.BiologicalSex));
-                b.Property(x => x.DateOfBirth).HasColumnName(nameof(UserProfile.DateOfBirth));
-                b.Property(x => x.Latitude).HasColumnName(nameof(UserProfile.Latitude));
-                b.Property(x => x.Longitude).HasColumnName(nameof(UserProfile.Longitude));
-                b.Property(x => x.ProfilePhoto).HasColumnName(nameof(UserProfile.ProfilePhoto));
-            });
-
-        }
+  
         if (builder.IsHostDatabase())
         {
             builder.Entity<Category>(b =>
@@ -684,6 +671,25 @@ if (builder.IsHostDatabase())
                 b.Property(x => x.SourceId).HasColumnName(nameof(UserSavedItem.SourceId)).IsRequired();
                 b.Property(x => x.SavedItemType).HasColumnName(nameof(UserSavedItem.SavedItemType));
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<UserProfile>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "UserProfiles", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.SecurityNumber).HasColumnName(nameof(UserProfile.SecurityNumber)).IsRequired();
+                b.Property(x => x.BiologicalSex).HasColumnName(nameof(UserProfile.BiologicalSex));
+                b.Property(x => x.DateOfBirth).HasColumnName(nameof(UserProfile.DateOfBirth));
+                b.Property(x => x.Latitude).HasColumnName(nameof(UserProfile.Latitude));
+                b.Property(x => x.Longitude).HasColumnName(nameof(UserProfile.Longitude));
+                b.Property(x => x.ProfilePhoto).HasColumnName(nameof(UserProfile.ProfilePhoto));
+                b.Property(x => x.FirstName).HasColumnName(nameof(UserProfile.FirstName)).IsRequired();
+                b.Property(x => x.LastName).HasColumnName(nameof(UserProfile.LastName)).IsRequired();
+                b.Property(x => x.PhoneNumber).HasColumnName(nameof(UserProfile.PhoneNumber)).IsRequired();
+                b.Property(x => x.Email).HasColumnName(nameof(UserProfile.Email)).IsRequired();
             });
 
         }

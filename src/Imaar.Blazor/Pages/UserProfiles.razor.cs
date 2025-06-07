@@ -156,7 +156,7 @@ namespace Imaar.Blazor.Pages
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/user-profiles/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&SecurityNumber={HttpUtility.UrlEncode(Filter.SecurityNumber)}&BiologicalSex={Filter.BiologicalSex}&DateOfBirthMin={Filter.DateOfBirthMin}&DateOfBirthMax={Filter.DateOfBirthMax}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/user-profiles/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&SecurityNumber={HttpUtility.UrlEncode(Filter.SecurityNumber)}&BiologicalSex={Filter.BiologicalSex}&DateOfBirthMin={Filter.DateOfBirthMin}&DateOfBirthMax={Filter.DateOfBirthMax}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&FirstName={HttpUtility.UrlEncode(Filter.FirstName)}&LastName={HttpUtility.UrlEncode(Filter.LastName)}&PhoneNumber={HttpUtility.UrlEncode(Filter.PhoneNumber)}&Email={HttpUtility.UrlEncode(Filter.Email)}", forceLoad: true);
         }
 
         private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<UserProfileDto> e)
@@ -304,6 +304,26 @@ namespace Imaar.Blazor.Pages
         protected virtual async Task OnLongitudeChangedAsync(string? longitude)
         {
             Filter.Longitude = longitude;
+            await SearchAsync();
+        }
+        protected virtual async Task OnFirstNameChangedAsync(string? firstName)
+        {
+            Filter.FirstName = firstName;
+            await SearchAsync();
+        }
+        protected virtual async Task OnLastNameChangedAsync(string? lastName)
+        {
+            Filter.LastName = lastName;
+            await SearchAsync();
+        }
+        protected virtual async Task OnPhoneNumberChangedAsync(string? phoneNumber)
+        {
+            Filter.PhoneNumber = phoneNumber;
+            await SearchAsync();
+        }
+        protected virtual async Task OnEmailChangedAsync(string? email)
+        {
+            Filter.Email = email;
             await SearchAsync();
         }
         

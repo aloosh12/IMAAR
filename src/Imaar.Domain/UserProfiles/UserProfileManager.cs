@@ -33,105 +33,118 @@ namespace Imaar.UserProfiles
         }
 
         public virtual async Task<UserProfile> CreateAsync(
-        string securityNumber, BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null)
+        string securityNumber, string firstName, string lastName, string phoneNumber, string email, BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null)
         {
             Check.NotNullOrWhiteSpace(securityNumber, nameof(securityNumber));
-
-            var userProfile = new UserProfile(
-             GuidGenerator.Create(),
-             securityNumber, biologicalSex, dateOfBirth, latitude, longitude, profilePhoto
-             );
-
-            return await _userProfileRepository.InsertAsync(userProfile);
-        }
-
-        public virtual async Task<MobileResponse> CreatWithDetialsAsync(string firstName, string lastName, string phoneNumber, string email,  BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null)
-        {
-            MobileResponse mobileResponse = new MobileResponse();
             Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
             Check.NotNullOrWhiteSpace(lastName, nameof(lastName));
             Check.NotNullOrWhiteSpace(phoneNumber, nameof(phoneNumber));
             Check.NotNullOrWhiteSpace(email, nameof(email));
 
-            using (_dataFilter.Disable<ISoftDelete>())
-            {
-                try
-                {
-                    var user = _identityUserManager.Users.Where(u => u.PhoneNumber == phoneNumber || u.Email == email).FirstOrDefault();
-                    if (user != null)
-                    {
-                        if (user.IsDeleted == true)
-                        {
-                            //var identityUser = new Volo.Abp.Identity.IdentityUser(user.Id, email.Split("@")[0], user.Email);
-                            //identityUser.Name = firstName;
-                            //identityUser.Surname = lastName;
-                            //identityUser.SetPhoneNumber(phoneNumber, false);
-                            //identityUser.IsDeleted = false;
-                            //Up
-                            //user = email;
-                            //user.Surname = userName;
-                            //var test = await _userManager.UpdateUserAsync(user);
-                        }
-                        return null;
-                    }
-                    else
-                    {
-                        var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
-                        identityUser.Name = firstName;
-                        identityUser.Surname = lastName;
-                        identityUser.SetPhoneNumber(phoneNumber, false);
-                        var result = await _identityUserManager.CreateAsync(identityUser);
+            var userProfile = new UserProfile(
+             GuidGenerator.Create(),
+             securityNumber, firstName, lastName, phoneNumber, email, biologicalSex, dateOfBirth, latitude, longitude, profilePhoto
+             );
 
-                        if (result.Succeeded)
-                        {
-                            Random random = new Random();
-                            int securityNum = random.Next(1000, 10000);
-                            var userProfile = new UserProfile( GuidGenerator.Create(), securityNum.ToString(), biologicalSex, dateOfBirth, latitude, longitude, profilePhoto);
+            return await _userProfileRepository.InsertAsync(userProfile);
+        }
 
-                            var userProf = await _userProfileRepository.InsertAsync(userProfile);
-                            if (userProf != null)
-                            {
-                                var register = new RegisterResponse()
-                                {
-                                    FirstName = firstName,
-                                    LastName = lastName,
-                                    PhoneNumber = phoneNumber,
-                                    Email = email,
-                                    SecurityCode = securityNum.ToString()
-                                };
-                                mobileResponse.Code = 200;
-                                mobileResponse.Message = "SUCCESS";
-                                mobileResponse.Data = register;
-                            }
-                            return mobileResponse;
-                        }
-                        else
-                        {
-                            mobileResponse.Code = 501;
-                            mobileResponse.Message = result.ToString();
-                            mobileResponse.Data = null;
+        //public virtual async Task<MobileResponse> CreatWithDetialsAsync(string firstName, string lastName, string phoneNumber, string email,  BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null)
+        //{
+        //    MobileResponse mobileResponse = new MobileResponse();
+        //    Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
+        //    Check.NotNullOrWhiteSpace(lastName, nameof(lastName));
+        //    Check.NotNullOrWhiteSpace(phoneNumber, nameof(phoneNumber));
+        //    Check.NotNullOrWhiteSpace(email, nameof(email));
 
-                            return mobileResponse;
-                            //throw new Volo.Abp.BusinessException(message: result.ToString());
-                        }
-                    }
-                }
-                catch(Exception e)
-                {
-                    mobileResponse.Code = 501;
-                    mobileResponse.Message = "Internal server error";
-                    mobileResponse.Data = null;
-                    return mobileResponse;
-                }
-                }
+        //    using (_dataFilter.Disable<ISoftDelete>())
+        //    {
+        //        try
+        //        {
+        //            var user = _identityUserManager.Users.Where(u => u.PhoneNumber == phoneNumber || u.Email == email).FirstOrDefault();
+        //            if (user != null)
+        //            {
+        //                if (user.IsDeleted == true)
+        //                {
+        //                    //var identityUser = new Volo.Abp.Identity.IdentityUser(user.Id, email.Split("@")[0], user.Email);
+        //                    //identityUser.Name = firstName;
+        //                    //identityUser.Surname = lastName;
+        //                    //identityUser.SetPhoneNumber(phoneNumber, false);
+        //                    //identityUser.IsDeleted = false;
+        //                    //Up
+        //                    //user = email;
+        //                    //user.Surname = userName;
+        //                    //var test = await _userManager.UpdateUserAsync(user);
+        //                }
+        //                return null;
+        //            }
+        //            else
+        //            {
+        //                var identityUser = new Volo.Abp.Identity.IdentityUser(Guid.NewGuid(), email.Split("@")[0], email);
+        //                identityUser.Name = firstName;
+        //                identityUser.Surname = lastName;
+        //                identityUser.SetPhoneNumber(phoneNumber, false);
+        //                var result = await _identityUserManager.CreateAsync(identityUser);
+
+        //                if (result.Succeeded)
+        //                {
+        //                    Random random = new Random();
+        //                    int securityNum = random.Next(1000, 10000);
+        //                    var userProfile = new UserProfile(
+        //   identityUser.Id,
+        //   securityNum.ToString(), firstName, lastName, phoneNumber, email, biologicalSex, dateOfBirth, latitude, longitude, profilePhoto
+        //   );
+        //                    //var userProfile = new UserProfile( GuidGenerator.Create(), securityNum.ToString(), biologicalSex, dateOfBirth, latitude, longitude, profilePhoto);
+
+        //                    var userProf = await _userProfileRepository.InsertAsync(userProfile);
+        //                    if (userProf != null)
+        //                    {
+        //                        var register = new RegisterResponse()
+        //                        {
+        //                            FirstName = firstName,
+        //                            LastName = lastName,
+        //                            DateOfBirth = dateOfBirth,
+        //                            BiologicalSex = biologicalSex,
+        //                            Latitude = latitude,
+        //                            Longitude = longitude,
+        //                            PhoneNumber = phoneNumber,
+        //                            Email = email,
+        //                            SecurityCode = securityNum.ToString(),
+        //                            ProfilePhoto = $"{MimeTypes.MimeTypeMap.GetAttachmentPath()}/adas/{profilePhoto}"
+        //                        };
+        //                        mobileResponse.Code = 200;
+        //                        mobileResponse.Message = "SUCCESS";
+        //                        mobileResponse.Data = register;
+        //                    }
+        //                    return mobileResponse;
+        //                }
+        //                else
+        //                {
+        //                    mobileResponse.Code = 501;
+        //                    mobileResponse.Message = result.ToString();
+        //                    mobileResponse.Data = null;
+
+        //                    return mobileResponse;
+        //                    //throw new Volo.Abp.BusinessException(message: result.ToString());
+        //                }
+        //            }
+        //        }
+        //        catch(Exception e)
+        //        {
+        //            mobileResponse.Code = 501;
+        //            mobileResponse.Message = "Internal server error";
+        //            mobileResponse.Data = null;
+        //            return mobileResponse;
+        //        }
+        //        }
             
 
            
-        }
+        //}
 
         public virtual async Task<UserProfile> UpdateAsync(
             Guid id,
-            string securityNumber, BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null, [CanBeNull] string? concurrencyStamp = null
+            string securityNumber, string firstName, string lastName, string phoneNumber, string email, BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNullOrWhiteSpace(securityNumber, nameof(securityNumber));
@@ -139,6 +152,10 @@ namespace Imaar.UserProfiles
             var userProfile = await _userProfileRepository.GetAsync(id);
 
             userProfile.SecurityNumber = securityNumber;
+            userProfile.FirstName = firstName;
+            userProfile.LastName = lastName;
+            userProfile.PhoneNumber = phoneNumber;
+            userProfile.Email = email;
             userProfile.BiologicalSex = biologicalSex;
             userProfile.DateOfBirth = dateOfBirth;
             userProfile.Latitude = latitude;

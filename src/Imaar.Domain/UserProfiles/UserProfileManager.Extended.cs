@@ -65,7 +65,11 @@ namespace Imaar.UserProfiles
                 if (result.Succeeded)
                 {
                     imageName = await uploadImage(profilePhoto);
-                    var userProfile = new UserProfile(identityUser.Id, securityCode, biologicalSex, dateOfBirth, latitude, longitude, imageName);
+                    var userProfile = new UserProfile(
+            identityUser.Id,
+            securityCode, firstName, lastName, phoneNumber, email, biologicalSex, dateOfBirth, latitude, longitude, imageName
+            );
+                    //var userProfile = new UserProfile(identityUser.Id, securityCode, biologicalSex, dateOfBirth, latitude, longitude, imageName);
                     var userProf = await _userProfileRepository.InsertAsync(userProfile);
                 }
                 else

@@ -1,24 +1,25 @@
+using Imaar.Medias;
+using Imaar.Permissions;
 using Imaar.Shared;
+using Imaar.Shared;
+using Imaar.Stories;
 using Imaar.UserProfiles;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using MiniExcelLibs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using Imaar.Permissions;
-using Imaar.Stories;
-using MiniExcelLibs;
-using Volo.Abp.Content;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
-using Microsoft.Extensions.Caching.Distributed;
-using Imaar.Shared;
+using Volo.Abp.Content;
+using Volo.Abp.Domain.Repositories;
 
 namespace Imaar.Stories
 {
@@ -31,12 +32,15 @@ namespace Imaar.Stories
         protected StoryManager _storyManager;
 
         protected IRepository<Imaar.UserProfiles.UserProfile, Guid> _userProfileRepository;
+        private IMediasAppService _mediasAppService;
 
-        public StoriesAppServiceBase(IStoryRepository storyRepository, StoryManager storyManager, IDistributedCache<StoryDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository)
+        public StoriesAppServiceBase(IStoryRepository storyRepository, StoryManager storyManager, IDistributedCache<StoryDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository, IMediasAppService mediasAppService)
         {
             _downloadTokenCache = downloadTokenCache;
             _storyRepository = storyRepository;
-            _storyManager = storyManager; _userProfileRepository = userProfileRepository;
+            _storyManager = storyManager; 
+            _userProfileRepository = userProfileRepository;
+            _mediasAppService = mediasAppService;
 
         }
 
@@ -54,8 +58,21 @@ namespace Imaar.Stories
 
         public virtual async Task<StoryWithNavigationPropertiesDto> GetWithNavigationPropertiesAsync(Guid id)
         {
-            return ObjectMapper.Map<StoryWithNavigationProperties, StoryWithNavigationPropertiesDto>
+            var storyWithNavigationPropertiesDto = ObjectMapper.Map<StoryWithNavigationProperties, StoryWithNavigationPropertiesDto>
                 (await _storyRepository.GetWithNavigationPropertiesAsync(id));
+            var getMediasInput = new GetMediasInput
+            {
+                SkipCount = 0,
+                MaxResultCount = 1000,
+                SourceEntityId = id.ToString(),
+                SourceEntityType = MediaEntityType.Service,
+                IsActive = true,
+                Sorting = "Order asc"
+            };
+            var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
+
+            storyWithNavigationPropertiesDto.MediaDtos = mediaListDto.Items;
+            return storyWithNavigationPropertiesDto;
         }
 
         public virtual async Task<StoryDto> GetAsync(Guid id)

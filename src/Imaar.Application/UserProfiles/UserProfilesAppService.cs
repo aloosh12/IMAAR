@@ -1,10 +1,19 @@
+using AutoMapper.Internal.Mappers;
+using Imaar.UserProfiles;
+using Imaar.Permissions;
+using Imaar.Shared;
+using Imaar.UserProfiles;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using MiniExcelLibs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -15,8 +24,8 @@ using MiniExcelLibs;
 using Volo.Abp.Content;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
-using Microsoft.Extensions.Caching.Distributed;
-using Imaar.Shared;
+using Volo.Abp.Content;
+using Volo.Abp.Domain.Repositories;
 using Imaar.Authorizations;
 
 namespace Imaar.UserProfiles
@@ -41,8 +50,8 @@ namespace Imaar.UserProfiles
 
         public virtual async Task<PagedResultDto<UserProfileDto>> GetListAsync(GetUserProfilesInput input)
         {
-            var totalCount = await _userProfileRepository.GetCountAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude);
-            var items = await _userProfileRepository.GetListAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _userProfileRepository.GetCountAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude, input.FirstName, input.LastName, input.PhoneNumber, input.Email);
+            var items = await _userProfileRepository.GetListAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude, input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<UserProfileDto>
             {
@@ -67,7 +76,7 @@ namespace Imaar.UserProfiles
         {
 
             var userProfile = await _userProfileManager.CreateAsync(
-            input.SecurityNumber, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto
+            input.SecurityNumber, input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto
             );
 
             return ObjectMapper.Map<UserProfile, UserProfileDto>(userProfile);
@@ -79,7 +88,7 @@ namespace Imaar.UserProfiles
 
             var userProfile = await _userProfileManager.UpdateAsync(
             id,
-            input.SecurityNumber, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto, input.ConcurrencyStamp
+            input.SecurityNumber, input.FirstName, input.LastName, input.PhoneNumber, input.Email, input.BiologicalSex, input.DateOfBirth, input.Latitude, input.Longitude, input.ProfilePhoto, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<UserProfile, UserProfileDto>(userProfile);
@@ -94,7 +103,7 @@ namespace Imaar.UserProfiles
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var items = await _userProfileRepository.GetListAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude);
+            var items = await _userProfileRepository.GetListAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude, input.FirstName, input.LastName, input.PhoneNumber, input.Email);
 
             var memoryStream = new MemoryStream();
             await memoryStream.SaveAsAsync(ObjectMapper.Map<List<UserProfile>, List<UserProfileExcelDto>>(items));
@@ -112,7 +121,7 @@ namespace Imaar.UserProfiles
         [Authorize(ImaarPermissions.UserProfiles.Delete)]
         public virtual async Task DeleteAllAsync(GetUserProfilesInput input)
         {
-            await _userProfileRepository.DeleteAllAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude);
+            await _userProfileRepository.DeleteAllAsync(input.FilterText, input.SecurityNumber, input.BiologicalSex, input.DateOfBirthMin, input.DateOfBirthMax, input.Latitude, input.Longitude, input.FirstName, input.LastName, input.PhoneNumber, input.Email);
         }
         public virtual async Task<Imaar.Shared.DownloadTokenResultDto> GetDownloadTokenAsync()
         {

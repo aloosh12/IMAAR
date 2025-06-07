@@ -27,7 +27,7 @@ namespace Imaar.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ImaarPro.BuildingFacades.BuildingFacade", b =>
+            modelBuilder.Entity("Imaar.BuildingFacades.BuildingFacade", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -92,7 +92,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppBuildingFacades", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.Building", b =>
+            modelBuilder.Entity("Imaar.Buildings.Building", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -212,7 +212,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppBuildings", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.BuildingMainAmenity", b =>
+            modelBuilder.Entity("Imaar.Buildings.BuildingMainAmenity", b =>
             {
                 b.Property<Guid>("BuildingId")
                     .HasColumnType("uniqueidentifier");
@@ -229,7 +229,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppBuildingMainAmenity", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.BuildingSecondaryAmenity", b =>
+            modelBuilder.Entity("Imaar.Buildings.BuildingSecondaryAmenity", b =>
             {
                 b.Property<Guid>("BuildingId")
                     .HasColumnType("uniqueidentifier");
@@ -246,7 +246,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppBuildingSecondaryAmenity", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Categories.Category", b =>
+            modelBuilder.Entity("Imaar.Categories.Category", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -316,7 +316,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppCategories", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Cities.City", b =>
+            modelBuilder.Entity("Imaar.Cities.City", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -381,7 +381,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppCities", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Evalauations.Evalauation", b =>
+            modelBuilder.Entity("Imaar.Evalauations.Evalauation", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -463,7 +463,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppEvalauations", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.FurnishingLevels.FurnishingLevel", b =>
+            modelBuilder.Entity("Imaar.FurnishingLevels.FurnishingLevel", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -528,7 +528,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppFurnishingLevels", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.ImaarServices.ImaarService", b =>
+            modelBuilder.Entity("Imaar.ImaarServices.ImaarService", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -634,7 +634,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppImaarServices", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.MainAmenities.MainAmenity", b =>
+            modelBuilder.Entity("Imaar.MainAmenities.MainAmenity", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -699,7 +699,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppMainAmenities", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Medias.Media", b =>
+            modelBuilder.Entity("Imaar.Medias.Media", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -777,7 +777,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppMedias", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.NotificationTypes.NotificationType", b =>
+            modelBuilder.Entity("Imaar.NotificationTypes.NotificationType", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -834,7 +834,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppNotificationTypes", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Notifications.Notification", b =>
+            modelBuilder.Entity("Imaar.Notifications.Notification", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -930,7 +930,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppNotifications", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Regions.Region", b =>
+            modelBuilder.Entity("Imaar.Regions.Region", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1000,7 +1000,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppRegions", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.SecondaryAmenities.SecondaryAmenity", b =>
+            modelBuilder.Entity("Imaar.SecondaryAmenities.SecondaryAmenity", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1065,7 +1065,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppSecondaryAmenities", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceEvaluations.ServiceEvaluation", b =>
+            modelBuilder.Entity("Imaar.ServiceEvaluations.ServiceEvaluation", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1131,7 +1131,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppServiceEvaluations", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceTicketTypes.ServiceTicketType", b =>
+            modelBuilder.Entity("Imaar.ServiceTicketTypes.ServiceTicketType", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1196,7 +1196,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppServiceTicketTypes", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceTickets.ServiceTicket", b =>
+            modelBuilder.Entity("Imaar.ServiceTickets.ServiceTicket", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1272,7 +1272,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppServiceTickets", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceTypes.ServiceType", b =>
+            modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1334,7 +1334,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppServiceTypes", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Stories.Story", b =>
+            modelBuilder.Entity("Imaar.Stories.Story", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1403,7 +1403,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppStories", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.StoryLovers.StoryLover", b =>
+            modelBuilder.Entity("Imaar.StoryLovers.StoryLover", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1465,7 +1465,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppStoryLovers", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.TicketTypes.TicketType", b =>
+            modelBuilder.Entity("Imaar.TicketTypes.TicketType", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1530,7 +1530,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppTicketTypes", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Tickets.Ticket", b =>
+            modelBuilder.Entity("Imaar.Tickets.Ticket", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1602,7 +1602,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppTickets", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.UserFollows.UserFollow", b =>
+            modelBuilder.Entity("Imaar.UserFollows.UserFollow", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1664,7 +1664,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppUserFollows", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.UserProfiles.UserProfile", b =>
+            modelBuilder.Entity("Imaar.UserProfiles.UserProfile", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1741,7 +1741,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppUserProfiles", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.UserSavedItems.UserSavedItem", b =>
+            modelBuilder.Entity("Imaar.UserSavedItems.UserSavedItem", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1807,7 +1807,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppUserSavedItems", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.UserWorksExhibitions.UserWorksExhibition", b =>
+            modelBuilder.Entity("Imaar.UserWorksExhibitions.UserWorksExhibition", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -1877,7 +1877,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppUserWorksExhibitions", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Vacancies.Vacancy", b =>
+            modelBuilder.Entity("Imaar.Vacancies.Vacancy", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -2011,7 +2011,7 @@ namespace Imaar.Migrations
                 b.ToTable("AppVacancies", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.VerificationCodes.VerificationCode", b =>
+            modelBuilder.Entity("Imaar.VerificationCodes.VerificationCode", b =>
             {
                 b.Property<Guid>("Id")
                     .HasColumnType("uniqueidentifier");
@@ -4400,248 +4400,248 @@ namespace Imaar.Migrations
                 b.ToTable("SaasTenantConnectionStrings", (string)null);
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.Building", b =>
+            modelBuilder.Entity("Imaar.Buildings.Building", b =>
             {
-                b.HasOne("ImaarPro.BuildingFacades.BuildingFacade", null)
+                b.HasOne("Imaar.BuildingFacades.BuildingFacade", null)
                     .WithMany()
                     .HasForeignKey("BuildingFacadeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.FurnishingLevels.FurnishingLevel", null)
+                b.HasOne("Imaar.FurnishingLevels.FurnishingLevel", null)
                     .WithMany()
                     .HasForeignKey("FurnishingLevelId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.Regions.Region", null)
+                b.HasOne("Imaar.Regions.Region", null)
                     .WithMany()
                     .HasForeignKey("RegionId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.ServiceTypes.ServiceType", null)
+                b.HasOne("Imaar.ServiceTypes.ServiceType", null)
                     .WithMany()
                     .HasForeignKey("ServiceTypeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.BuildingMainAmenity", b =>
+            modelBuilder.Entity("Imaar.Buildings.BuildingMainAmenity", b =>
             {
-                b.HasOne("ImaarPro.Buildings.Building", null)
+                b.HasOne("Imaar.Buildings.Building", null)
                     .WithMany("MainAmenities")
                     .HasForeignKey("BuildingId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.MainAmenities.MainAmenity", null)
+                b.HasOne("Imaar.MainAmenities.MainAmenity", null)
                     .WithMany()
                     .HasForeignKey("MainAmenityId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.BuildingSecondaryAmenity", b =>
+            modelBuilder.Entity("Imaar.Buildings.BuildingSecondaryAmenity", b =>
             {
-                b.HasOne("ImaarPro.Buildings.Building", null)
+                b.HasOne("Imaar.Buildings.Building", null)
                     .WithMany("SecondaryAmenities")
                     .HasForeignKey("BuildingId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.SecondaryAmenities.SecondaryAmenity", null)
+                b.HasOne("Imaar.SecondaryAmenities.SecondaryAmenity", null)
                     .WithMany()
                     .HasForeignKey("SecondaryAmenityId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Evalauations.Evalauation", b =>
+            modelBuilder.Entity("Imaar.Evalauations.Evalauation", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("EvaluatedPersonId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("Evaluatord")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.ImaarServices.ImaarService", b =>
+            modelBuilder.Entity("Imaar.ImaarServices.ImaarService", b =>
             {
-                b.HasOne("ImaarPro.ServiceTypes.ServiceType", null)
+                b.HasOne("Imaar.ServiceTypes.ServiceType", null)
                     .WithMany()
                     .HasForeignKey("ServiceTypeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Notifications.Notification", b =>
+            modelBuilder.Entity("Imaar.Notifications.Notification", b =>
             {
-                b.HasOne("ImaarPro.NotificationTypes.NotificationType", null)
+                b.HasOne("Imaar.NotificationTypes.NotificationType", null)
                     .WithMany()
                     .HasForeignKey("NotificationTypeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Regions.Region", b =>
+            modelBuilder.Entity("Imaar.Regions.Region", b =>
             {
-                b.HasOne("ImaarPro.Cities.City", null)
+                b.HasOne("Imaar.Cities.City", null)
                     .WithMany()
                     .HasForeignKey("CityId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceEvaluations.ServiceEvaluation", b =>
+            modelBuilder.Entity("Imaar.ServiceEvaluations.ServiceEvaluation", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("EvaluatorId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.ImaarServices.ImaarService", null)
+                b.HasOne("Imaar.ImaarServices.ImaarService", null)
                     .WithMany()
                     .HasForeignKey("ImaarServiceId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceTickets.ServiceTicket", b =>
+            modelBuilder.Entity("Imaar.ServiceTickets.ServiceTicket", b =>
             {
-                b.HasOne("ImaarPro.ServiceTicketTypes.ServiceTicketType", null)
+                b.HasOne("Imaar.ServiceTicketTypes.ServiceTicketType", null)
                     .WithMany()
                     .HasForeignKey("ServiceTicketTypeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("TicketCreatorId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.ServiceTypes.ServiceType", b =>
+            modelBuilder.Entity("Imaar.ServiceTypes.ServiceType", b =>
             {
-                b.HasOne("ImaarPro.Categories.Category", null)
+                b.HasOne("Imaar.Categories.Category", null)
                     .WithMany("ServiceTypes")
                     .HasForeignKey("CategoryId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Stories.Story", b =>
+            modelBuilder.Entity("Imaar.Stories.Story", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("StoryPublisherId")
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
-            modelBuilder.Entity("ImaarPro.StoryLovers.StoryLover", b =>
+            modelBuilder.Entity("Imaar.StoryLovers.StoryLover", b =>
             {
-                b.HasOne("ImaarPro.Stories.Story", null)
+                b.HasOne("Imaar.Stories.Story", null)
                     .WithMany()
                     .HasForeignKey("StoryId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Tickets.Ticket", b =>
+            modelBuilder.Entity("Imaar.Tickets.Ticket", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("TicketAgainstId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("TicketCreatorId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.TicketTypes.TicketType", null)
+                b.HasOne("Imaar.TicketTypes.TicketType", null)
                     .WithMany()
                     .HasForeignKey("TicketTypeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.UserFollows.UserFollow", b =>
+            modelBuilder.Entity("Imaar.UserFollows.UserFollow", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("FollowerUserId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("FollowingUserId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.UserSavedItems.UserSavedItem", b =>
+            modelBuilder.Entity("Imaar.UserSavedItems.UserSavedItem", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.UserWorksExhibitions.UserWorksExhibition", b =>
+            modelBuilder.Entity("Imaar.UserWorksExhibitions.UserWorksExhibition", b =>
             {
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Vacancies.Vacancy", b =>
+            modelBuilder.Entity("Imaar.Vacancies.Vacancy", b =>
             {
-                b.HasOne("ImaarPro.ServiceTypes.ServiceType", null)
+                b.HasOne("Imaar.ServiceTypes.ServiceType", null)
                     .WithMany()
                     .HasForeignKey("ServiceTypeId")
                     .OnDelete(DeleteBehavior.NoAction)
                     .IsRequired();
 
-                b.HasOne("ImaarPro.UserProfiles.UserProfile", null)
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
                     .WithMany()
                     .HasForeignKey("UserProfileId")
                     .OnDelete(DeleteBehavior.NoAction)
@@ -4817,14 +4817,14 @@ namespace Imaar.Migrations
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ImaarPro.Buildings.Building", b =>
+            modelBuilder.Entity("Imaar.Buildings.Building", b =>
             {
                 b.Navigation("MainAmenities");
 
                 b.Navigation("SecondaryAmenities");
             });
 
-            modelBuilder.Entity("ImaarPro.Categories.Category", b =>
+            modelBuilder.Entity("Imaar.Categories.Category", b =>
             {
                 b.Navigation("ServiceTypes");
             });

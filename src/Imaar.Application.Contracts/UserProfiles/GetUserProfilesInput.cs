@@ -1,6 +1,7 @@
 using Imaar.UserProfiles;
 using Volo.Abp.Application.Dtos;
 using System;
+using Imaar.UserProfiles;
 
 namespace Imaar.UserProfiles
 {
@@ -15,6 +16,10 @@ namespace Imaar.UserProfiles
         public DateOnly? DateOfBirthMax { get; set; }
         public string? Latitude { get; set; }
         public string? Longitude { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
 
         public GetUserProfilesInputBase()
         {

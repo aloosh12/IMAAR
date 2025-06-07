@@ -30,17 +30,37 @@ namespace Imaar.UserProfiles
         [CanBeNull]
         public virtual string? ProfilePhoto { get; set; }
 
+        [NotNull]
+        public virtual string FirstName { get; set; }
+
+        [NotNull]
+        public virtual string LastName { get; set; }
+
+        [NotNull]
+        public virtual string PhoneNumber { get; set; }
+
+        [NotNull]
+        public virtual string Email { get; set; }
+
         protected UserProfileBase()
         {
 
         }
 
-        public UserProfileBase(Guid id, string securityNumber, BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null)
+        public UserProfileBase(Guid id, string securityNumber, string firstName, string lastName, string phoneNumber, string email, BiologicalSex? biologicalSex = null, DateOnly? dateOfBirth = null, string? latitude = null, string? longitude = null, string? profilePhoto = null)
         {
 
             Id = id;
             Check.NotNull(securityNumber, nameof(securityNumber));
+            Check.NotNull(firstName, nameof(firstName));
+            Check.NotNull(lastName, nameof(lastName));
+            Check.NotNull(phoneNumber, nameof(phoneNumber));
+            Check.NotNull(email, nameof(email));
             SecurityNumber = securityNumber;
+            FirstName = firstName;
+            LastName = lastName;
+            PhoneNumber = phoneNumber;
+            Email = email;
             BiologicalSex = biologicalSex;
             DateOfBirth = dateOfBirth;
             Latitude = latitude;
