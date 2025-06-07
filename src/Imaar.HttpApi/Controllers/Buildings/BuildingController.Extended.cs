@@ -51,6 +51,8 @@ namespace Imaar.Controllers.Buildings
             return _buildingsAppService.IncrementOrderCounterAsync(id);
         }
 
+        [HttpGet("user-profile-get-lookup")]
+        [AllowAnonymous]
         public Task<PagedResultDto<LookupDto<Guid>>> GetUserProfileLookupAsync(LookupRequestDto input)
         {
             throw new NotImplementedException();
