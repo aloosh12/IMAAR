@@ -101,11 +101,12 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<Story, StoryDto>();
         CreateMap<Story, StoryExcelDto>();
         CreateMap<StoryWithNavigationProperties, StoryWithNavigationPropertiesDto>();
-        //CreateMap<StoryWithNavigationProperties, StoryMobileDto>()
-        //   .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Story.Title))
-        //   .ForMember(dest => dest.FromTime, opt => opt.MapFrom(src => src.Story.FromTime))
-        //   .ForMember(dest => dest.ExpiryTime, opt => opt.MapFrom(src => src.Story.ExpiryTime))
-        //   .ForMember(dest => dest.StoryPublisher, opt => opt.MapFrom(src => src.StoryPublisher.))
+        CreateMap<StoryWithNavigationProperties, StoryMobileDto>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Story.Id))
+           .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Story.Title))
+           .ForMember(dest => dest.FromTime, opt => opt.MapFrom(src => src.Story.FromTime))
+           .ForMember(dest => dest.ExpiryTime, opt => opt.MapFrom(src => src.Story.ExpiryTime))
+           .ForMember(dest => dest.StoryPublisher, opt => opt.MapFrom(src => $"{src.StoryPublisher.FirstName} {src.StoryPublisher.LastName}"));
         CreateMap<StoryLover, StoryLoverDto>();
         CreateMap<StoryLover, StoryLoverExcelDto>();
         CreateMap<StoryLoverWithNavigationProperties, StoryLoverWithNavigationPropertiesDto>();
