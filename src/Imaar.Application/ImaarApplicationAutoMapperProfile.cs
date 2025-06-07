@@ -116,7 +116,8 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<Vacancy, VacancyExcelDto>();
         CreateMap<VacancyWithNavigationProperties, VacancyWithNavigationPropertiesDto>();
 
-        CreateMap<Media, MediaDto>();
+        CreateMap<Media, MediaDto>()
+            .ForMember(dest => dest.File, opt => opt.MapFrom(src => $"{MimeTypeMap.GetAttachmentPath()}/MediaImages/{src.File}")); ;
         CreateMap<Media, MediaExcelDto>();
         CreateMap<MediaWithNavigationProperties, MediaWithNavigationPropertiesDto>();
         CreateMap<ImaarService, LookupDto<Guid>>().ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.Title));

@@ -35,9 +35,9 @@ namespace Imaar.ImaarServices
         protected ImaarServiceManager _imaarServiceManager;
 
         protected IRepository<Imaar.ServiceTypes.ServiceType, Guid> _serviceTypeRepository;
-        protected IRepository<Imaar.UserProfiles.UserProfile, Guid> _userProfileRepository;
+        protected IUserProfileRepository _userProfileRepository;
 
-        public ImaarServicesAppServiceBase(IImaarServiceRepository imaarServiceRepository, ImaarServiceManager imaarServiceManager, IDistributedCache<ImaarServiceDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository)
+        public ImaarServicesAppServiceBase(IImaarServiceRepository imaarServiceRepository, ImaarServiceManager imaarServiceManager, IDistributedCache<ImaarServiceDownloadTokenCacheItem, string> downloadTokenCache, IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, IUserProfileRepository userProfileRepository)
         {
             _downloadTokenCache = downloadTokenCache;
             _imaarServiceRepository = imaarServiceRepository;

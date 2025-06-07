@@ -55,6 +55,54 @@ namespace Imaar.Stories
             };
         }
 
+        //public virtual async Task<PagedResultDto<StoryMobileDto>> GetStoriesLovedByUserAsync(Guid userId, int skipCount = 0, int maxResultCount = 10)
+        //{
+        //    // Get the story lovers records for the specified user
+        //    var getStoryLoversInput = new GetStoryLoversInput
+        //    {
+        //        UserProfileId = userId,
+        //        MaxResultCount = maxResultCount,
+        //        SkipCount = skipCount
+        //    };
+            
+        //    var storyLoversResult = await _storyLoversAppService.GetListAsync(getStoryLoversInput);
+            
+        //    if (storyLoversResult.TotalCount == 0)
+        //    {
+        //        return new PagedResultDto<StoryMobileDto>
+        //        {
+        //            TotalCount = 0,
+        //            Items = new List<StoryMobileDto>()
+        //        };
+        //    }
+            
+        //    // Extract story IDs from the story lovers records
+        //    var storyIds = storyLoversResult.Items.Select(sl => sl.StoryId).ToList();
+            
+        //    // Get the actual story objects with their navigation properties (including media)
+        //    var storiesWithNavProperties = await _storyRepository.GetListWithNavigationPropertiesByStoryIdsAsync(storyIds);
+            
+        //    // Map to mobile DTOs
+        //    var storyDtos = ObjectMapper.Map<List<StoryWithNavigationProperties>, List<StoryMobileDto>>(storiesWithNavProperties);
+            
+        //    return new PagedResultDto<StoryMobileDto>
+        //    {
+        //        TotalCount = storyLoversResult.TotalCount,
+        //        Items = storyDtos
+        //    };
+        //}
+        
+        // Convenience method that uses the current user's ID
+        //public virtual async Task<PagedResultDto<StoryMobileDto>> GetCurrentUserLovedStoriesAsync(int skipCount = 0, int maxResultCount = 10)
+        //{
+        //    if (_currentUser?.Id == null)
+        //    {
+        //        throw new Volo.Abp.UserFriendlyException("User is not authenticated");
+        //    }
+            
+        //    return await GetStoriesLovedByUserAsync(_currentUser.Id.Value, skipCount, maxResultCount);
+        //}
+
         //public virtual async Task<PagedResultDto<StoryMobileDto>> GetStoryLovedByUserAsync()
         //{
         //    GetStoryLoversInput input = new GetStoryLoversInput();

@@ -21,6 +21,7 @@ namespace Imaar.ImaarServices
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
 
+        public double ServiceEval { get; set; }
         public string ConcurrencyStamp { get; set; } = null!;
 
     }

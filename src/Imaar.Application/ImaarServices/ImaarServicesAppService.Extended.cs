@@ -1,30 +1,32 @@
+using Imaar.Buildings;
+using Imaar.ImaarServices;
+using Imaar.Medias;
+using Imaar.MobileResponses;
+using Imaar.Notifications;
+using Imaar.Permissions;
+using Imaar.ServiceEvaluations;
+using Imaar.ServiceTypes;
+using Imaar.Shared;
 using Imaar.Shared;
 using Imaar.UserProfiles;
-using Imaar.ServiceTypes;
+using Imaar.Vacancies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
+using MiniExcelLibs;
+using Polly;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using Imaar.Permissions;
-using Imaar.ImaarServices;
-using MiniExcelLibs;
-using Volo.Abp.Content;
 using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
-using Microsoft.Extensions.Caching.Distributed;
-using Imaar.Shared;
-using Imaar.MobileResponses;
-using Imaar.Medias;
-using Imaar.Buildings;
-using Imaar.Vacancies;
-using Imaar.Notifications;
+using Volo.Abp.Content;
+using Volo.Abp.Domain.Repositories;
 
 namespace Imaar.ImaarServices
 {
@@ -33,21 +35,23 @@ namespace Imaar.ImaarServices
         protected IMediasAppService _mediasAppService;
         protected IRepository<Building, Guid> _buildingRepository;
         protected IRepository<Vacancy, Guid> _vacancyRepository;
+        protected IServiceEvaluationsAppService _serviceEvaluationsAppService;
         
         public ImaarServicesAppService(
             IImaarServiceRepository imaarServiceRepository, 
             ImaarServiceManager imaarServiceManager, 
             Volo.Abp.Caching.IDistributedCache<ImaarServiceDownloadTokenCacheItem, string> downloadTokenCache, 
-            Volo.Abp.Domain.Repositories.IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, 
-            Volo.Abp.Domain.Repositories.IRepository<Imaar.UserProfiles.UserProfile, Guid> userProfileRepository,
+            Volo.Abp.Domain.Repositories.IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository,
+            IUserProfileRepository userProfileRepository,
             IMediasAppService mediasAppService,
             IRepository<Building, Guid> buildingRepository,
-            IRepository<Vacancy, Guid> vacancyRepository)
+            IRepository<Vacancy, Guid> vacancyRepository, IServiceEvaluationsAppService serviceEvaluationsAppService)
             : base(imaarServiceRepository, imaarServiceManager, downloadTokenCache, serviceTypeRepository, userProfileRepository)
         {
             _mediasAppService = mediasAppService;
             _buildingRepository = buildingRepository;
             _vacancyRepository = vacancyRepository;
+            _serviceEvaluationsAppService = serviceEvaluationsAppService;
         }
 
         [AllowAnonymous]
@@ -111,19 +115,22 @@ namespace Imaar.ImaarServices
                     Sorting = "Order asc"
                 };
                 var mediaListDto = await _mediasAppService.GetListAsync(getMediasInput);
-                
+                var usertemp = ObjectMapper.Map<UserProfileWithDetails, UserProfileWithDetailsDto>(await _userProfileRepository.GetWithDetailsAsync(imaarServiceWithDetails.UserProfile.Id));
                 // Create result DTO
                 var result = new ImaarServiceWithDetailsMobileDto
                 {
                     ImaarService = imaarServiceWithDetails.ImaarService,
                     ServiceType = imaarServiceWithDetails.ServiceType,
-                    UserProfile = imaarServiceWithDetails.UserProfile,
+                    UserProfileWithDetailsDto = usertemp,
                     Media = mediaListDto != null ? mediaListDto.Items.ToList() : new List<MediaDto>()
                 };
                 
+              //  result.ImaarService.ServiceEval = await _serviceEvaluationsAppService.GetAv
                 // Increment the view counter asynchronously (fire and forget)
                 _ = IncrementViewCounterAsync(id);
-                
+
+               
+
                 mobileResponse.Code = 200;
                 mobileResponse.Message = "ImaarService retrieved successfully";
                 mobileResponse.Data = result;

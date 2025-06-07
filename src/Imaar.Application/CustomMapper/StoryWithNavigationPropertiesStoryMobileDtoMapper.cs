@@ -1,5 +1,4 @@
-﻿
-using Imaar.Authorizations;
+﻿using Imaar.Authorizations;
 using Imaar.Stories;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -33,23 +32,33 @@ namespace Imaar.CustomMapper
             {
                 storyMobileDto = new StoryMobileDto()
                 {
+                    Id = source.Story.Id,
                     Title = source.Story.Title,
                     FromTime = source.Story.FromTime,
                     ExpiryTime = source.Story.ExpiryTime,
+                    ConcurrencyStamp = source.Story.ConcurrencyStamp,
                 };
             }
             else
             {
                 storyMobileDto = new StoryMobileDto()
                 {
+                    Id = source.Story.Id,
                     Title = source.Story.Title,
                     FromTime = source.Story.FromTime,
                     ExpiryTime = source.Story.ExpiryTime,
+                    ConcurrencyStamp = source.Story.ConcurrencyStamp,
                 };
             }
             IdentityUser identityUser = _userManager.FindUserByClientId(source.StoryPublisher.Id.ToString()).Result;
             if (identityUser != null)
                 storyMobileDto.StoryPublisher = identityUser.Name;
+
+            // Map media items if available
+            if (source.Medias != null && source.Medias.Any())
+            {
+                storyMobileDto.Medias = _objectMapper.Map<List<Imaar.Medias.Media>, List<Imaar.Medias.MediaDto>>(source.Medias);
+            }
 
             return storyMobileDto;
         }

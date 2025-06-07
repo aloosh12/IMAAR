@@ -56,5 +56,6 @@ namespace Imaar.UserProfiles
                     Price = avgPrice
                 }).FirstOrDefault();
         }
+
     }
 }
