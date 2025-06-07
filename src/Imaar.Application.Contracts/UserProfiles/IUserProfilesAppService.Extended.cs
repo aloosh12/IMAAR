@@ -15,6 +15,9 @@ namespace Imaar.UserProfiles
         Task<MobileResponseDto> VerifyEmailExistsAsync(VerifyEmailExistsDto input);
         Task<MobileResponseDto> ResetPasswordWithoutTokenAsync(PasswordResetRequestDto input);
         Task<MobileResponseDto> ChangePasswordAsync(PasswordChangeRequestDto input);
-
+        
+        Task<bool> CheckFollowStatusAsync(Guid id);
+        
+        Task<int> GetFollowCountAsync(Guid id);
     }
 }

@@ -86,6 +86,18 @@ namespace Imaar.Controllers.UserProfiles
             return _userProfilesAppService.GetWithDetailsAsync(id);
         }
 
+        [HttpGet("check-follow-status/{id}")]
+        public Task<bool> CheckFollowStatusAsync(Guid id)
+        {
+            return _userProfilesAppService.CheckFollowStatusAsync(id);
+        }
+
+        [HttpGet("follow-count/{id}")]
+        public Task<int> GetFollowCountAsync(Guid id)
+        {
+            return _userProfilesAppService.GetFollowCountAsync(id);
+        }
+
         //[AllowAnonymous]
         //[HttpPost("complete-registration")]
         //public virtual Task<MobileResponseDto> CompleteRegisterStep1Async(RegisterCreateDt0 input)
