@@ -49,5 +49,7 @@ public class ImaarMenus
 
     public const string StoryTickets = Prefix + ".StoryTickets";
     public const string UserSavedItems = Prefix + ".UserSavedItems";
+    public const string Advertisements = Prefix + ".Advertisements";
+
 
 }

@@ -34,7 +34,6 @@ namespace Imaar.Buildings
     public class BuildingsAppService : BuildingsAppServiceBase, IBuildingsAppService
     {
         protected IMediasAppService _mediasAppService;
-        protected IBuildingsAppService _buildingsAppService;
         
         public BuildingsAppService(
             IBuildingRepository buildingRepository, 
@@ -47,12 +46,10 @@ namespace Imaar.Buildings
             IUserProfileRepository userProfileRepository, 
             IRepository<Imaar.MainAmenities.MainAmenity, Guid> mainAmenityRepository, 
             IRepository<Imaar.SecondaryAmenities.SecondaryAmenity, Guid> secondaryAmenityRepository,
-            IMediasAppService mediasAppService,
-            IBuildingsAppService buildingsAppService)
+            IMediasAppService mediasAppService)
             : base(buildingRepository, buildingManager, downloadTokenCache, regionRepository, furnishingLevelRepository, buildingFacadeRepository, serviceTypeRepository, userProfileRepository, mainAmenityRepository, secondaryAmenityRepository)
         {
             _mediasAppService = mediasAppService;
-            _buildingsAppService = buildingsAppService;
         }
 
         [AllowAnonymous]

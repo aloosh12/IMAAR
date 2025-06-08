@@ -24,11 +24,12 @@ using Imaar.TicketTypes;
 using Imaar.UserEvalauations;
 using Imaar.UserFollows;
 using Imaar.UserProfiles;
+using Imaar.UserProfiles;
 using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
-using Imaar.UserProfiles;
+using Imaar.Advertisements;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -55,6 +56,7 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<Advertisement> Advertisements { get; set; } = null!;
     public DbSet<UserSavedItem> UserSavedItems { get; set; } = null!;
 
     public DbSet<StoryTicket> StoryTickets { get; set; } = null!;
@@ -690,6 +692,23 @@ if (builder.IsHostDatabase())
                 b.Property(x => x.LastName).HasColumnName(nameof(UserProfile.LastName)).IsRequired();
                 b.Property(x => x.PhoneNumber).HasColumnName(nameof(UserProfile.PhoneNumber)).IsRequired();
                 b.Property(x => x.Email).HasColumnName(nameof(UserProfile.Email)).IsRequired();
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Advertisement>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Advertisements", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(Advertisement.Title));
+                b.Property(x => x.SubTitle).HasColumnName(nameof(Advertisement.SubTitle));
+                b.Property(x => x.File).HasColumnName(nameof(Advertisement.File)).IsRequired();
+                b.Property(x => x.FromDateTime).HasColumnName(nameof(Advertisement.FromDateTime));
+                b.Property(x => x.ToDateTime).HasColumnName(nameof(Advertisement.ToDateTime));
+                b.Property(x => x.Order).HasColumnName(nameof(Advertisement.Order));
+                b.Property(x => x.IsActive).HasColumnName(nameof(Advertisement.IsActive));
+                b.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.SetNull);
             });
 
         }

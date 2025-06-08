@@ -16,18 +16,19 @@ using Imaar.ServiceTicketTypes;
 using Imaar.ServiceTypes;
 using Imaar.Stories;
 using Imaar.StoryLovers;
+using Imaar.StoryTickets;
+using Imaar.StoryTicketTypes;
 using Imaar.Tickets;
 using Imaar.TicketTypes;
 using Imaar.UserEvalauations;
 using Imaar.UserFollows;
 using Imaar.UserProfiles;
+using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
-using Imaar.StoryTickets;
-using Imaar.StoryTicketTypes;
+using Imaar.Advertisements;
 using Volo.Abp.AutoMapper;
-using Imaar.UserSavedItems;
 
 namespace Imaar.Blazor;
 
@@ -85,5 +86,7 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<StoryTicketDto, StoryTicketUpdateDto>();
 
         CreateMap<UserSavedItemDto, UserSavedItemUpdateDto>();
+
+        CreateMap<AdvertisementDto, AdvertisementUpdateDto>();
     }
 }

@@ -1,0 +1,611 @@
+
+
+@page "/advertisements"
+
+@attribute [Authorize(ImaarPermissions.Advertisements.Default)]
+@using Imaar.Advertisements
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IAdvertisementsAppService AdvertisementsAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Advertisements"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="AdvertisementSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="AdvertisementSearchForm" Clicked="GetAdvertisementsAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Title"]</FieldLabel>
+                        <TextEdit Text="@Filter.Title" TextChanged="@OnTitleChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["SubTitle"]</FieldLabel>
+                        <TextEdit Text="@Filter.SubTitle" TextChanged="@OnSubTitleChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["File"]</FieldLabel>
+                        <TextEdit Text="@Filter.File" TextChanged="@OnFileChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinFromDateTime"]</FieldLabel>
+                        <DatePicker TValue="DateTime?"
+            InputMode="DateInputMode.Date"
+            Date="@Filter.FromDateTimeMin"
+            DateChanged="@OnFromDateTimeMinChangedAsync"
+            Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxFromDateTime"]</FieldLabel>
+                        <DatePicker TValue="DateTime?"
+            InputMode="DateInputMode.Date"
+            Date="@Filter.FromDateTimeMax"
+            DateChanged="@OnFromDateTimeMaxChangedAsync"
+            Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinToDateTime"]</FieldLabel>
+                        <DatePicker TValue="DateTime?"
+            InputMode="DateInputMode.Date"
+            Date="@Filter.ToDateTimeMin"
+            DateChanged="@OnToDateTimeMinChangedAsync"
+            Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxToDateTime"]</FieldLabel>
+                        <DatePicker TValue="DateTime?"
+            InputMode="DateInputMode.Date"
+            Date="@Filter.ToDateTimeMax"
+            DateChanged="@OnToDateTimeMaxChangedAsync"
+            Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinOrder"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderMin"
+             ValueChanged="@OnOrderMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxOrder"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.OrderMax"
+             ValueChanged="@OnOrderMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["IsActive"]</FieldLabel>
+                        <Select TValue="bool?"
+		SelectedValue="@Filter.IsActive"
+		SelectedValueChanged="@OnIsActiveChangedAsync">
+
+<SelectItem></SelectItem>
+<SelectItem Value="true">@L["Yes"]</SelectItem>
+<SelectItem Value="false">@L["No"]</SelectItem>
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.UserProfileId"
+		SelectedValueChanged="@OnUserProfileIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
+{
+	<SelectItem TValue="Guid?" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedAdvertisements.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllAdvertisementsSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedAdvertisements.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedAdvertisements.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedAdvertisements.Count == PageSize || SelectedAdvertisements.Count == AdvertisementList.Count) && TotalCount > SelectedAdvertisements.Count)
+                    {
+                        if (!AllAdvertisementsSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedAdvertisementsAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="AdvertisementWithNavigationPropertiesDto"
+                  Data="AdvertisementList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedAdvertisements"
+                  RowSelectable="@((args) => CanDeleteAdvertisement)"
+                  SelectedRowsChanged="SelectedAdvertisementRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteAdvertisement && AdvertisementList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="AdvertisementWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="AdvertisementWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="AdvertisementWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="AdvertisementWithNavigationPropertiesDto"
+                                          Visible="@CanEditAdvertisement"
+                                          Clicked="async () => await OpenEditAdvertisementModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="AdvertisementWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteAdvertisement"
+                                          Clicked="() => DeleteAdvertisementAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.Title"
+                      Caption="@L["Title"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.SubTitle"
+                      Caption="@L["SubTitle"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.File"
+                      Caption="@L["File"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.FromDateTime"
+                      Caption="@L["FromDateTime"]">
+                  <DisplayTemplate>
+                        @(context.Advertisement.FromDateTime.HasValue ? context.Advertisement.FromDateTime.Value.ToShortDateString() : string.Empty)
+                  </DisplayTemplate>
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.ToDateTime"
+                      Caption="@L["ToDateTime"]">
+                  <DisplayTemplate>
+                        @(context.Advertisement.ToDateTime.HasValue ? context.Advertisement.ToDateTime.Value.ToShortDateString() : string.Empty)
+                  </DisplayTemplate>
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.Order"
+                      Caption="@L["Order"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="Advertisement.IsActive"
+                      Caption="@L["IsActive"]">
+                    <DisplayTemplate>
+                        @if (context.Advertisement.IsActive)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+              </DataGridColumn>
+
+
+              <DataGridColumn TItem="AdvertisementWithNavigationPropertiesDto"
+                      Field="UserProfile.Email"
+                      Caption="@L["UserProfile"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateAdvertisementModal" Closing="@CreateAdvertisementModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateAdvertisementForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewAdvertisement"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateAdvertisementModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewAdvertisementValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewAdvertisement"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Title"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewAdvertisement.Title"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["SubTitle"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewAdvertisement.SubTitle"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["File"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewAdvertisement.File"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["FromDateTime"]</FieldLabel>
+                            <DateEdit TValue="DateTime?" InputMode="DateInputMode.Date" @bind-Date="@NewAdvertisement.FromDateTime" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ToDateTime"]</FieldLabel>
+                            <DateEdit TValue="DateTime?" InputMode="DateInputMode.Date" @bind-Date="@NewAdvertisement.ToDateTime" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Order"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewAdvertisement.Order"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewAdvertisement.IsActive" >@L["IsActive"]</Check>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?" @bind-SelectedValue="@NewAdvertisement.UserProfileId">
+                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid?" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateAdvertisementModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateAdvertisementForm" Clicked="CreateAdvertisementAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditAdvertisementModal" Closing="@EditAdvertisementModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditAdvertisementForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditAdvertisementModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingAdvertisementValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingAdvertisement"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Title"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingAdvertisement.Title"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["SubTitle"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingAdvertisement.SubTitle"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["File"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingAdvertisement.File"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["FromDateTime"]</FieldLabel>
+                            <DateEdit TValue="DateTime?" InputMode="DateInputMode.Date" @bind-Date="@EditingAdvertisement.FromDateTime" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["ToDateTime"]</FieldLabel>
+                            <DateEdit TValue="DateTime?" InputMode="DateInputMode.Date" @bind-Date="@EditingAdvertisement.ToDateTime" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Order"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingAdvertisement.Order"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingAdvertisement.IsActive" >@L["IsActive"]</Check>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?" @bind-SelectedValue="@EditingAdvertisement.UserProfileId">
+                            <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid?" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditAdvertisementModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditAdvertisementForm" Clicked="UpdateAdvertisementAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+

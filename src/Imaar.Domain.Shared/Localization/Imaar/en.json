@@ -277,6 +277,17 @@
     "Menu:UserSavedItems": "User Saved Items",
     "FirstName": "First Name",
     "LastName": "Last Name",
-    "Email": "Email"
+    "Email": "Email",
+    "Permission:Advertisements": "Advertisements",
+    "SubTitle": "Sub Title",
+    "FromDateTime": "From Date Time",
+    "ToDateTime": "To Date Time",
+    "Advertisements": "Advertisements",
+    "MinFromDateTime": "Min From Date Time",
+    "MinToDateTime": "Min To Date Time",
+    "MaxFromDateTime": "Max From Date Time",
+    "MaxToDateTime": "Max To Date Time",
+    "NewAdvertisement": "New Advertisement",
+    "Menu:Advertisements": "Advertisements"
   }
 }

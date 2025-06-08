@@ -258,6 +258,16 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.UserSavedItems.Default)
         );
+
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.Advertisements,
+                l["Menu:Advertisements"],
+                url: "/advertisements",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.Advertisements.Default)
+        );
         return Task.CompletedTask;
     }
 }
