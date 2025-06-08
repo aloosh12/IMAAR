@@ -41,9 +41,16 @@ namespace Imaar.Controllers.Stories
         }
 
         [HttpGet("love-count/{id}")]
-        public Task<int> GetLoveCountAsync(Guid id)
+        public Task<long> GetLoveCountAsync(Guid id)
         {
             return _storiesAppService.GetLoveCountAsync(id);
+        }
+
+        [HttpDelete]
+        [Route("un-follow/{id}")]
+        public virtual Task<bool> UnfollowStoryAsync(Guid id)
+        {
+            return _storiesAppService.UnfollowStoryAsync(id);
         }
     }
 }

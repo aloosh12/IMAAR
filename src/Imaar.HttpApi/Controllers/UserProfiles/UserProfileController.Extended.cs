@@ -93,9 +93,16 @@ namespace Imaar.Controllers.UserProfiles
         }
 
         [HttpGet("follow-count/{id}")]
-        public Task<int> GetFollowCountAsync(Guid id)
+        public Task<long> GetFollowCountAsync(Guid id)
         {
             return _userProfilesAppService.GetFollowCountAsync(id);
+        }
+
+        [HttpDelete]
+        [Route("un-follow/{id}")]
+        public virtual Task<bool> UnfollowUserAsync(Guid id)
+        {
+            return _userProfilesAppService.UnfollowUserAsync(id);
         }
 
         //[AllowAnonymous]

@@ -21,6 +21,7 @@ using Imaar.ServiceTypes;
 using Imaar.ImaarServices;
 using Imaar.Stories;
 using Volo.Abp.Users;
+using Imaar.Advertisements;
 
 namespace Imaar.Pages
 {
@@ -33,13 +34,15 @@ namespace Imaar.Pages
         protected IServiceTypesAppService _serviceTypesAppService;
         protected IStoriesAppService _storiesAppService;
         protected IImaarServicesAppService _imaarServicesAppService;
+        protected IAdvertisementsAppService _advertisementsAppService;
         protected ICurrentUser _currentUser;
-        public HomeAppService(ICategoriesAppService categoriesAppService, IServiceTypesAppService serviceTypesAppService, IStoriesAppService storiesAppService, IImaarServicesAppService imaarServicesAppService, ICurrentUser currentUser)
+        public HomeAppService(ICategoriesAppService categoriesAppService, IServiceTypesAppService serviceTypesAppService, IStoriesAppService storiesAppService, IImaarServicesAppService imaarServicesAppService, IAdvertisementsAppService advertisementsAppService, ICurrentUser currentUser)
         {
             _categoriesAppService = categoriesAppService;
             _serviceTypesAppService = serviceTypesAppService;
             _storiesAppService = storiesAppService;
             _imaarServicesAppService = imaarServicesAppService;
+            _advertisementsAppService = advertisementsAppService;
             _currentUser = CurrentUser;
         }
 
@@ -67,9 +70,18 @@ namespace Imaar.Pages
                 SkipCount = 0,
                 MaxResultCount = 10
             };
+            GetAdvertisementsInput getAdvertisementsInput = new GetAdvertisementsInput()
+            {
+                FromDateTimeMax = DateTime.Now,
+                ToDateTimeMin = DateTime.Now,
+                IsActive = true,
+                SkipCount = 0,
+                MaxResultCount = 1000
+            };
             homePageDto.CategoryDtos = (await _categoriesAppService.GetListAsync(getCategoriesInput)).Items;
             homePageDto.ServiceTypeDto = (await _serviceTypesAppService.GetListAsync(getServiceTypesInput)).Items;
             homePageDto.StoryDto = (await _storiesAppService.GetMobileListAsync(getStoriesInput)).Items;
+            homePageDto.AdvertisementDtos = (await _advertisementsAppService.GetListAsync(getAdvertisementsInput)).Items;
             homePageDto.BestServiceDtos = (await _imaarServicesAppService.GetListAsync(getImaarServicesInput)).Items;
             return homePageDto;
         }

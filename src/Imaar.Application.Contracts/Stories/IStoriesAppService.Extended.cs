@@ -16,10 +16,11 @@ namespace Imaar.Stories
         
         Task<bool> CheckLoveStatusAsync(Guid id);
         
-        Task<int> GetLoveCountAsync(Guid id);
-        
+        Task<long> GetLoveCountAsync(Guid id);
+        Task<bool> UnfollowStoryAsync(Guid id);
+
       //  Task<PagedResultDto<StoryMobileDto>> GetStoriesLovedByUserAsync(Guid userId, int skipCount = 0, int maxResultCount = 10);
-        
-     //   Task<PagedResultDto<StoryMobileDto>> GetCurrentUserLovedStoriesAsync(int skipCount = 0, int maxResultCount = 10);
+
+        //   Task<PagedResultDto<StoryMobileDto>> GetCurrentUserLovedStoriesAsync(int skipCount = 0, int maxResultCount = 10);
     }
 }

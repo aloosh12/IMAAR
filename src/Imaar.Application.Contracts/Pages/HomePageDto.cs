@@ -1,3 +1,4 @@
+using Imaar.Advertisements;
 using Imaar.Categories;
 using Imaar.ImaarServices;
 using Imaar.ServiceTypes;
@@ -15,6 +16,7 @@ namespace Imaar.Pages
         public IReadOnlyList<CategoryDto> CategoryDtos { get; set; }
         public IReadOnlyList<ServiceTypeDto> ServiceTypeDto { get; set; }
         public IReadOnlyList<StoryMobileDto> StoryDto { get; set; }
+        public IReadOnlyList<AdvertisementWithNavigationPropertiesDto> AdvertisementDtos { get; set; }
         public IReadOnlyList<ImaarServiceWithNavigationPropertiesDto> BestServiceDtos { get; set; }
 
     }

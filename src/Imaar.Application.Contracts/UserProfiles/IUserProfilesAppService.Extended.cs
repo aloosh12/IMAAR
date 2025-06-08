@@ -18,6 +18,7 @@ namespace Imaar.UserProfiles
         
         Task<bool> CheckFollowStatusAsync(Guid id);
         
-        Task<int> GetFollowCountAsync(Guid id);
+        Task<long> GetFollowCountAsync(Guid id);
+        Task<bool> UnfollowUserAsync(Guid id);
     }
 }
