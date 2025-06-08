@@ -58,7 +58,15 @@ namespace Imaar.Blazor.Pages
         private VacancyWithNavigationPropertiesDto? SelectedVacancy;
         private IReadOnlyList<LookupDto<Guid>> ServiceTypesCollection { get; set; } = new List<LookupDto<Guid>>();
 private IReadOnlyList<LookupDto<Guid>> UserProfilesCollection { get; set; } = new List<LookupDto<Guid>>();
+private IReadOnlyList<LookupDto<Guid>> VacancyAdditionalFeatures { get; set; } = new List<LookupDto<Guid>>();
+        
+        private string SelectedVacancyAdditionalFeatureId { get; set; }
+        
+        private string SelectedVacancyAdditionalFeatureText { get; set; }
 
+        private Blazorise.Components.Autocomplete<LookupDto<Guid>, string> SelectedVacancyAdditionalFeatureAutoCompleteRef { get; set; } = new();
+
+        private List<LookupDto<Guid>> SelectedVacancyAdditionalFeatures { get; set; } = new List<LookupDto<Guid>>();
         
         
         
@@ -88,6 +96,9 @@ private IReadOnlyList<LookupDto<Guid>> UserProfilesCollection { get; set; } = ne
 
 
             await GetUserProfileCollectionLookupAsync();
+
+
+            await GetVacancyAdditionalFeatureLookupAsync();
 
 
             
@@ -164,7 +175,7 @@ private IReadOnlyList<LookupDto<Guid>> UserProfilesCollection { get; set; } = ne
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/vacancies/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Location={HttpUtility.UrlEncode(Filter.Location)}&Number={HttpUtility.UrlEncode(Filter.Number)}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&DateOfPublishMin={Filter.DateOfPublishMin}&DateOfPublishMax={Filter.DateOfPublishMax}&ExpectedExperience={HttpUtility.UrlEncode(Filter.ExpectedExperience)}&EducationLevel={HttpUtility.UrlEncode(Filter.EducationLevel)}&WorkSchedule={HttpUtility.UrlEncode(Filter.WorkSchedule)}&EmploymentType={HttpUtility.UrlEncode(Filter.EmploymentType)}&BiologicalSex={Filter.BiologicalSex}&Languages={HttpUtility.UrlEncode(Filter.Languages)}&DriveLicense={HttpUtility.UrlEncode(Filter.DriveLicense)}&Salary={HttpUtility.UrlEncode(Filter.Salary)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/vacancies/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Location={HttpUtility.UrlEncode(Filter.Location)}&Number={HttpUtility.UrlEncode(Filter.Number)}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&DateOfPublishMin={Filter.DateOfPublishMin}&DateOfPublishMax={Filter.DateOfPublishMax}&ExpectedExperience={HttpUtility.UrlEncode(Filter.ExpectedExperience)}&EducationLevel={HttpUtility.UrlEncode(Filter.EducationLevel)}&WorkSchedule={HttpUtility.UrlEncode(Filter.WorkSchedule)}&EmploymentType={HttpUtility.UrlEncode(Filter.EmploymentType)}&BiologicalSex={Filter.BiologicalSex}&Languages={HttpUtility.UrlEncode(Filter.Languages)}&DriveLicense={HttpUtility.UrlEncode(Filter.DriveLicense)}&Salary={HttpUtility.UrlEncode(Filter.Salary)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}&VacancyAdditionalFeatureId={Filter.VacancyAdditionalFeatureId}", forceLoad: true);
         }
 
         private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<VacancyWithNavigationPropertiesDto> e)
@@ -180,6 +191,12 @@ private IReadOnlyList<LookupDto<Guid>> UserProfilesCollection { get; set; } = ne
 
         private async Task OpenCreateVacancyModalAsync()
         {
+            SelectedVacancyAdditionalFeatures = new List<LookupDto<Guid>>();
+            SelectedVacancyAdditionalFeatureId = string.Empty;
+            SelectedVacancyAdditionalFeatureText = string.Empty;
+
+            await SelectedVacancyAdditionalFeatureAutoCompleteRef.Clear();
+
             NewVacancy = new VacancyCreateDto{
                 DateOfPublish = DateOnly.FromDateTime(DateTime.Now),
 
@@ -216,6 +233,8 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
             
             EditingVacancyId = vacancy.Vacancy.Id;
             EditingVacancy = ObjectMapper.Map<VacancyDto, VacancyUpdateDto>(vacancy.Vacancy);
+            SelectedVacancyAdditionalFeatures = vacancy.VacancyAdditionalFeatures.Select(a => new LookupDto<Guid>{ Id = a.Id, DisplayName = a.Name}).ToList();
+
             
             await EditingVacancyValidations.ClearAll();
             await EditVacancyModal.Show();
@@ -235,6 +254,8 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
                 {
                     return;
                 }
+                NewVacancy.VacancyAdditionalFeatureIds = SelectedVacancyAdditionalFeatures.Select(x => x.Id).ToList();
+
 
                 await VacanciesAppService.CreateAsync(NewVacancy);
                 await GetVacanciesAsync();
@@ -259,6 +280,8 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
                 {
                     return;
                 }
+                EditingVacancy.VacancyAdditionalFeatureIds = SelectedVacancyAdditionalFeatures.Select(x => x.Id).ToList();
+
 
                 await VacanciesAppService.UpdateAsync(EditingVacancyId, EditingVacancy);
                 await GetVacanciesAsync();
@@ -398,6 +421,11 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
             Filter.UserProfileId = userProfileId;
             await SearchAsync();
         }
+        protected virtual async Task OnVacancyAdditionalFeatureIdChangedAsync(Guid? vacancyAdditionalFeatureId)
+        {
+            Filter.VacancyAdditionalFeatureId = vacancyAdditionalFeatureId;
+            await SearchAsync();
+        }
         
 
         private async Task GetServiceTypeCollectionLookupAsync(string? newValue = null)
@@ -408,6 +436,31 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
         private async Task GetUserProfileCollectionLookupAsync(string? newValue = null)
         {
             UserProfilesCollection = (await VacanciesAppService.GetUserProfileLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
+        }
+
+        private async Task GetVacancyAdditionalFeatureLookupAsync(string? newValue = null)
+        {
+            VacancyAdditionalFeatures = (await VacanciesAppService.GetVacancyAdditionalFeatureLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
+        }
+
+        private void AddVacancyAdditionalFeature()
+        {
+            if (SelectedVacancyAdditionalFeatureId.IsNullOrEmpty())
+            {
+                return;
+            }
+            
+            if (SelectedVacancyAdditionalFeatures.Any(p => p.Id.ToString() == SelectedVacancyAdditionalFeatureId))
+            {
+                UiMessageService.Warn(L["ItemAlreadyAdded"]);
+                return;
+            }
+
+            SelectedVacancyAdditionalFeatures.Add(new LookupDto<Guid>
+            {
+                Id = Guid.Parse(SelectedVacancyAdditionalFeatureId),
+                DisplayName = SelectedVacancyAdditionalFeatureText
+            });
         }
 
 

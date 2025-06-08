@@ -1,17 +1,18 @@
-using Imaar.Vacancies;
-using Imaar.Vacancies;
-using System;
-using Volo.Abp.Domain.Services;
-using Volo.Abp.Domain.Repositories;
-using System.Threading.Tasks;
-using Volo.Abp;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Volo.Abp.BlobStoring;
-using System.Collections.Generic;
-using Imaar.MobileResponses;
 using Imaar.Medias;
 using Imaar.MimeTypes;
+using Imaar.MobileResponses;
+using Imaar.Vacancies;
+using Imaar.Vacancies;
+using Imaar.VacancyAdditionalFeatures;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Volo.Abp;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Domain.Services;
 
 namespace Imaar.Vacancies
 {
@@ -21,11 +22,11 @@ namespace Imaar.Vacancies
         protected IMediaRepository _mediaRepository;
         protected MediaManager _mediaManager;
         
-        public VacancyManager(IVacancyRepository vacancyRepository,
+        public VacancyManager(IVacancyRepository vacancyRepository, IRepository<VacancyAdditionalFeature, Guid> vacancyAdditionalFeatureRepository,
             IBlobContainer<MediaContainer> mediasContainer,
             IMediaRepository mediaRepository,
             MediaManager mediaManager)
-            : base(vacancyRepository)
+            : base(vacancyRepository, vacancyAdditionalFeatureRepository)
         {
             _mediasContainer = mediasContainer;
             _mediaRepository = mediaRepository;
@@ -49,6 +50,7 @@ namespace Imaar.Vacancies
             string? languages,
             string? driveLicense,
             string? salary,
+            List<Guid> vacancyAdditionalFeatureIds,
             Guid serviceTypeId,
             Guid userProfileId,
             List<IFormFile> files)
@@ -59,6 +61,7 @@ namespace Imaar.Vacancies
             {
                 // Create the Vacancy first
                 var vacancy = await CreateAsync(
+                    vacancyAdditionalFeatureIds,
                     serviceTypeId,
                     userProfileId,
                     title,

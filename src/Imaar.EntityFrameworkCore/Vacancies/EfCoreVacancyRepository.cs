@@ -1,16 +1,22 @@
-using Imaar.Vacancies;
-using Imaar.UserProfiles;
 using Imaar.ServiceTypes;
+using Imaar.UserProfiles;
+using Imaar.Vacancies;
+using Imaar.VacancyAdditionalFeatures;
+using Imaar.EntityFrameworkCore;
+using Imaar.ServiceTypes;
+using Imaar.UserProfiles;
+using Imaar.Vacancies;
+using Imaar.VacancyAdditionalFeatures;
+using Imaar.VacancyAdditionalFeatures;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Imaar.EntityFrameworkCore;
 
 namespace Imaar.Vacancies
 {
@@ -46,11 +52,12 @@ namespace Imaar.Vacancies
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
 
             var ids = query.Select(x => x.Vacancy.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -60,12 +67,15 @@ namespace Imaar.Vacancies
         {
             var dbContext = await GetDbContextAsync();
 
-            return (await GetDbSetAsync()).Where(b => b.Id == id)
+            return (await GetDbSetAsync()).Where(b => b.Id == id).Include(x => x.VacancyAdditionalFeatures)
                 .Select(vacancy => new VacancyWithNavigationProperties
                 {
                     Vacancy = vacancy,
                     ServiceType = dbContext.Set<ServiceType>().FirstOrDefault(c => c.Id == vacancy.ServiceTypeId),
-                    UserProfile = dbContext.Set<UserProfile>().FirstOrDefault(c => c.Id == vacancy.UserProfileId)
+                    UserProfile = dbContext.Set<UserProfile>().FirstOrDefault(c => c.Id == vacancy.UserProfileId),
+                    VacancyAdditionalFeatures = (from vacancyVacancyAdditionalFeatures in vacancy.VacancyAdditionalFeatures
+                                                 join _vacancyAdditionalFeature in dbContext.Set<VacancyAdditionalFeature>() on vacancyVacancyAdditionalFeatures.VacancyAdditionalFeatureId equals _vacancyAdditionalFeature.Id
+                                                 select _vacancyAdditionalFeature).ToList()
                 }).FirstOrDefault();
         }
 
@@ -93,13 +103,14 @@ namespace Imaar.Vacancies
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null,
             string? sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? VacancyConsts.GetDefaultSorting(true) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -115,7 +126,8 @@ namespace Imaar.Vacancies
                    {
                        Vacancy = vacancy,
                        ServiceType = serviceType,
-                       UserProfile = userProfile
+                       UserProfile = userProfile,
+                       VacancyAdditionalFeatures = new List<VacancyAdditionalFeature>()
                    };
         }
 
@@ -143,7 +155,8 @@ namespace Imaar.Vacancies
             int? orderCounterMin = null,
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
-            Guid? userProfileId = null)
+            Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null)
         {
             return query
                 .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Vacancy.Title!.Contains(filterText!) || e.Vacancy.Description!.Contains(filterText!) || e.Vacancy.Location!.Contains(filterText!) || e.Vacancy.Number!.Contains(filterText!) || e.Vacancy.Latitude!.Contains(filterText!) || e.Vacancy.Longitude!.Contains(filterText!) || e.Vacancy.ExpectedExperience!.Contains(filterText!) || e.Vacancy.EducationLevel!.Contains(filterText!) || e.Vacancy.WorkSchedule!.Contains(filterText!) || e.Vacancy.EmploymentType!.Contains(filterText!) || e.Vacancy.Languages!.Contains(filterText!) || e.Vacancy.DriveLicense!.Contains(filterText!) || e.Vacancy.Salary!.Contains(filterText!))
@@ -168,7 +181,8 @@ namespace Imaar.Vacancies
                     .WhereIf(orderCounterMin.HasValue, e => e.Vacancy.OrderCounter >= orderCounterMin!.Value)
                     .WhereIf(orderCounterMax.HasValue, e => e.Vacancy.OrderCounter <= orderCounterMax!.Value)
                     .WhereIf(serviceTypeId != null && serviceTypeId != Guid.Empty, e => e.ServiceType != null && e.ServiceType.Id == serviceTypeId)
-                    .WhereIf(userProfileId != null && userProfileId != Guid.Empty, e => e.UserProfile != null && e.UserProfile.Id == userProfileId);
+                    .WhereIf(userProfileId != null && userProfileId != Guid.Empty, e => e.UserProfile != null && e.UserProfile.Id == userProfileId)
+                    .WhereIf(vacancyAdditionalFeatureId != null && vacancyAdditionalFeatureId != Guid.Empty, e => e.Vacancy.VacancyAdditionalFeatures.Any(x => x.VacancyAdditionalFeatureId == vacancyAdditionalFeatureId));
         }
 
         public virtual async Task<List<Vacancy>> GetListAsync(
@@ -227,10 +241,11 @@ namespace Imaar.Vacancies
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null,
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 

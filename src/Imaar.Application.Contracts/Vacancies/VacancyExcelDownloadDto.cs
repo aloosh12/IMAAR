@@ -32,6 +32,7 @@ namespace Imaar.Vacancies
         public int? OrderCounterMax { get; set; }
         public Guid? ServiceTypeId { get; set; }
         public Guid? UserProfileId { get; set; }
+        public Guid? VacancyAdditionalFeatureId { get; set; }
 
         public VacancyExcelDownloadDtoBase()
         {

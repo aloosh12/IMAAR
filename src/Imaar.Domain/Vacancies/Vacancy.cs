@@ -11,7 +11,6 @@ using Volo.Abp.MultiTenancy;
 using JetBrains.Annotations;
 
 using Volo.Abp;
-using Imaar.UserProfiles;
 
 namespace Imaar.Vacancies
 {
@@ -65,6 +64,7 @@ namespace Imaar.Vacancies
         public virtual int OrderCounter { get; set; }
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
+        public ICollection<VacancyVacancyAdditionalFeature> VacancyAdditionalFeatures { get; private set; }
 
         protected VacancyBase()
         {
@@ -98,7 +98,47 @@ namespace Imaar.Vacancies
             Salary = salary;
             ServiceTypeId = serviceTypeId;
             UserProfileId = userProfileId;
+            VacancyAdditionalFeatures = new Collection<VacancyVacancyAdditionalFeature>();
+        }
+        public virtual void AddVacancyAdditionalFeature(Guid vacancyAdditionalFeatureId)
+        {
+            Check.NotNull(vacancyAdditionalFeatureId, nameof(vacancyAdditionalFeatureId));
+
+            if (IsInVacancyAdditionalFeatures(vacancyAdditionalFeatureId))
+            {
+                return;
+            }
+
+            VacancyAdditionalFeatures.Add(new VacancyVacancyAdditionalFeature(Id, vacancyAdditionalFeatureId));
         }
 
+        public virtual void RemoveVacancyAdditionalFeature(Guid vacancyAdditionalFeatureId)
+        {
+            Check.NotNull(vacancyAdditionalFeatureId, nameof(vacancyAdditionalFeatureId));
+
+            if (!IsInVacancyAdditionalFeatures(vacancyAdditionalFeatureId))
+            {
+                return;
+            }
+
+            VacancyAdditionalFeatures.RemoveAll(x => x.VacancyAdditionalFeatureId == vacancyAdditionalFeatureId);
+        }
+
+        public virtual void RemoveAllVacancyAdditionalFeaturesExceptGivenIds(List<Guid> vacancyAdditionalFeatureIds)
+        {
+            Check.NotNullOrEmpty(vacancyAdditionalFeatureIds, nameof(vacancyAdditionalFeatureIds));
+
+            VacancyAdditionalFeatures.RemoveAll(x => !vacancyAdditionalFeatureIds.Contains(x.VacancyAdditionalFeatureId));
+        }
+
+        public virtual void RemoveAllVacancyAdditionalFeatures()
+        {
+            VacancyAdditionalFeatures.RemoveAll(x => x.VacancyId == Id);
+        }
+
+        private bool IsInVacancyAdditionalFeatures(Guid vacancyAdditionalFeatureId)
+        {
+            return VacancyAdditionalFeatures.Any(x => x.VacancyAdditionalFeatureId == vacancyAdditionalFeatureId);
+        }
     }
 }

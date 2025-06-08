@@ -55,6 +55,14 @@ namespace Imaar.Controllers.Vacancies
         }
 
         [HttpGet]
+        [Route("vacancy-additional-feature-lookup")]
+        public virtual Task<PagedResultDto<LookupDto<Guid>>> GetVacancyAdditionalFeatureLookupAsync(LookupRequestDto input)
+        {
+            return _vacanciesAppService.GetVacancyAdditionalFeatureLookupAsync(input);
+        }
+
+
+        [HttpGet]
         [Route("user-profile-lookup")]
         public virtual Task<PagedResultDto<LookupDto<Guid>>> GetUserProfileLookupAsync(LookupRequestDto input)
         {

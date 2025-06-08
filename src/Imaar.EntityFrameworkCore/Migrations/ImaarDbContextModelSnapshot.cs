@@ -2367,6 +2367,22 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppVacancies", (string)null);
             });
+            modelBuilder.Entity("Imaar.Vacancies.VacancyVacancyAdditionalFeature", b =>
+            {
+                b.Property<Guid>("VacancyId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("VacancyAdditionalFeatureId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.HasKey("VacancyId", "VacancyAdditionalFeatureId");
+
+                b.HasIndex("VacancyAdditionalFeatureId");
+
+                b.HasIndex("VacancyId", "VacancyAdditionalFeatureId");
+
+                b.ToTable("AppVacancyVacancyAdditionalFeature", (string)null);
+            });
 
             modelBuilder.Entity("Imaar.VacancyAdditionalFeatures.VacancyAdditionalFeature", b =>
             {

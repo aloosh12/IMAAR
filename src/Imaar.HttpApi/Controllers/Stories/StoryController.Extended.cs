@@ -46,7 +46,7 @@ namespace Imaar.Controllers.Stories
             return _storiesAppService.GetLoveCountAsync(id);
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("un-follow/{id}")]
         public virtual Task<bool> UnfollowStoryAsync(Guid id)
         {

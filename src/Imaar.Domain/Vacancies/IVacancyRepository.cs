@@ -34,6 +34,7 @@ namespace Imaar.Vacancies
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null,
             CancellationToken cancellationToken = default);
         Task<VacancyWithNavigationProperties> GetWithNavigationPropertiesAsync(
             Guid id,
@@ -64,6 +65,7 @@ namespace Imaar.Vacancies
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null,
             string? sorting = null,
             int maxResultCount = int.MaxValue,
             int skipCount = 0,
@@ -122,6 +124,7 @@ namespace Imaar.Vacancies
             int? orderCounterMax = null,
             Guid? serviceTypeId = null,
             Guid? userProfileId = null,
+            Guid? vacancyAdditionalFeatureId = null,
             CancellationToken cancellationToken = default);
     }
 }

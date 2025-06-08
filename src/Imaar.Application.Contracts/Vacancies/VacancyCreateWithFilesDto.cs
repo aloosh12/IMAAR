@@ -48,5 +48,7 @@ namespace Imaar.Vacancies
         
         [Required]
         public List<IFormFile> Files { get; set; } = new List<IFormFile>();
+
+        public List<Guid> VacancyAdditionalFeatureIds { get; set; }
     }
 } 

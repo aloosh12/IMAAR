@@ -1,5 +1,6 @@
 using Imaar.ServiceTypes;
 using Imaar.UserProfiles;
+using Imaar.VacancyAdditionalFeatures;
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Imaar.Vacancies
         public UserProfile UserProfile { get; set; } = null!;
         
 
+        public List<VacancyAdditionalFeature> VacancyAdditionalFeatures { get; set; } = null!;
         
     }
 }

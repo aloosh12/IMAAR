@@ -31,6 +31,8 @@ using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
 using Imaar.VacancyAdditionalFeatures;
+using Imaar.VerificationCodes;
+using Imaar.Vacancies;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -272,32 +274,6 @@ public class ImaarDbContext :
                 b.ConfigureByConvention();
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
                 b.HasOne<Story>().WithMany().IsRequired().HasForeignKey(x => x.StoryId).OnDelete(DeleteBehavior.NoAction);
-            });
-
-        }
-        if (builder.IsHostDatabase())
-        {
-            builder.Entity<Vacancy>(b =>
-            {
-                b.ToTable(ImaarConsts.DbTablePrefix + "Vacancies", ImaarConsts.DbSchema);
-                b.ConfigureByConvention();
-                b.Property(x => x.Title).HasColumnName(nameof(Vacancy.Title)).IsRequired();
-                b.Property(x => x.Description).HasColumnName(nameof(Vacancy.Description)).IsRequired();
-                b.Property(x => x.Location).HasColumnName(nameof(Vacancy.Location)).IsRequired();
-                b.Property(x => x.Number).HasColumnName(nameof(Vacancy.Number)).IsRequired();
-                b.Property(x => x.Latitude).HasColumnName(nameof(Vacancy.Latitude));
-                b.Property(x => x.Longitude).HasColumnName(nameof(Vacancy.Longitude));
-                b.Property(x => x.DateOfPublish).HasColumnName(nameof(Vacancy.DateOfPublish));
-                b.Property(x => x.ExpectedExperience).HasColumnName(nameof(Vacancy.ExpectedExperience));
-                b.Property(x => x.EducationLevel).HasColumnName(nameof(Vacancy.EducationLevel));
-                b.Property(x => x.WorkSchedule).HasColumnName(nameof(Vacancy.WorkSchedule));
-                b.Property(x => x.EmploymentType).HasColumnName(nameof(Vacancy.EmploymentType));
-                b.Property(x => x.BiologicalSex).HasColumnName(nameof(Vacancy.BiologicalSex));
-                b.Property(x => x.Languages).HasColumnName(nameof(Vacancy.Languages));
-                b.Property(x => x.DriveLicense).HasColumnName(nameof(Vacancy.DriveLicense));
-                b.Property(x => x.Salary).HasColumnName(nameof(Vacancy.Salary));
-                b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
-                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
             });
 
         }
@@ -726,6 +702,52 @@ if (builder.IsHostDatabase())
                 b.Property(x => x.IsActive).HasColumnName(nameof(VacancyAdditionalFeature.IsActive));
             });
 
+        }
+
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<Vacancy>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "Vacancies", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Title).HasColumnName(nameof(Vacancy.Title)).IsRequired();
+                b.Property(x => x.Description).HasColumnName(nameof(Vacancy.Description)).IsRequired();
+                b.Property(x => x.Location).HasColumnName(nameof(Vacancy.Location)).IsRequired();
+                b.Property(x => x.Number).HasColumnName(nameof(Vacancy.Number)).IsRequired();
+                b.Property(x => x.Latitude).HasColumnName(nameof(Vacancy.Latitude));
+                b.Property(x => x.Longitude).HasColumnName(nameof(Vacancy.Longitude));
+                b.Property(x => x.DateOfPublish).HasColumnName(nameof(Vacancy.DateOfPublish));
+                b.Property(x => x.ExpectedExperience).HasColumnName(nameof(Vacancy.ExpectedExperience));
+                b.Property(x => x.EducationLevel).HasColumnName(nameof(Vacancy.EducationLevel));
+                b.Property(x => x.WorkSchedule).HasColumnName(nameof(Vacancy.WorkSchedule));
+                b.Property(x => x.EmploymentType).HasColumnName(nameof(Vacancy.EmploymentType));
+                b.Property(x => x.BiologicalSex).HasColumnName(nameof(Vacancy.BiologicalSex));
+                b.Property(x => x.Languages).HasColumnName(nameof(Vacancy.Languages));
+                b.Property(x => x.DriveLicense).HasColumnName(nameof(Vacancy.DriveLicense));
+                b.Property(x => x.Salary).HasColumnName(nameof(Vacancy.Salary));
+                b.Property(x => x.ViewCounter).HasColumnName(nameof(Vacancy.ViewCounter));
+                b.Property(x => x.OrderCounter).HasColumnName(nameof(Vacancy.OrderCounter));
+                b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+                b.HasMany(x => x.VacancyAdditionalFeatures).WithOne().HasForeignKey(x => x.VacancyId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<VacancyVacancyAdditionalFeature>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "VacancyVacancyAdditionalFeature", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+
+                b.HasKey(
+                    x => new { x.VacancyId, x.VacancyAdditionalFeatureId }
+                );
+
+                b.HasOne<Vacancy>().WithMany(x => x.VacancyAdditionalFeatures).HasForeignKey(x => x.VacancyId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                b.HasOne<VacancyAdditionalFeature>().WithMany().HasForeignKey(x => x.VacancyAdditionalFeatureId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+                b.HasIndex(
+                        x => new { x.VacancyId, x.VacancyAdditionalFeatureId }
+                );
+            });
         }
 
     }

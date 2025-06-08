@@ -2,6 +2,7 @@ using Imaar.Vacancies;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using Imaar.UserProfiles;
 
 namespace Imaar.Vacancies
 {
@@ -30,5 +31,6 @@ namespace Imaar.Vacancies
         public int OrderCounter { get; set; } = 0;
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
+        public List<Guid> VacancyAdditionalFeatureIds { get; set; }
     }
 }

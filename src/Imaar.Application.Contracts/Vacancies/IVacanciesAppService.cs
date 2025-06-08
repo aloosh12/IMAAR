@@ -22,6 +22,8 @@ namespace Imaar.Vacancies
 
         Task<PagedResultDto<LookupDto<Guid>>> GetUserProfileLookupAsync(LookupRequestDto input);
 
+        Task<PagedResultDto<LookupDto<Guid>>> GetVacancyAdditionalFeatureLookupAsync(LookupRequestDto input);
+
         Task DeleteAsync(Guid id);
 
         Task<VacancyDto> CreateAsync(VacancyCreateDto input);

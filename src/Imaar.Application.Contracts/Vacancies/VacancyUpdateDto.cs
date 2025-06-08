@@ -31,6 +31,7 @@ namespace Imaar.Vacancies
         public int OrderCounter { get; set; }
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
+        public List<Guid> VacancyAdditionalFeatureIds { get; set; }
 
         public string ConcurrencyStamp { get; set; } = null!;
     }

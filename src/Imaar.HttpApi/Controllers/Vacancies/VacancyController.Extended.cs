@@ -8,6 +8,7 @@ using Volo.Abp.Application.Dtos;
 using Imaar.Vacancies;
 using Microsoft.AspNetCore.Authorization;
 using Imaar.MobileResponses;
+using Imaar.Shared;
 
 namespace Imaar.Controllers.Vacancies
 {
@@ -49,5 +50,7 @@ namespace Imaar.Controllers.Vacancies
         {
             return _vacanciesAppService.IncrementOrderCounterAsync(id);
         }
+
+
     }
 }

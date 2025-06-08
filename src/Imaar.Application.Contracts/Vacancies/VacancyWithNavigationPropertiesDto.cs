@@ -1,5 +1,6 @@
 using Imaar.ServiceTypes;
 using Imaar.UserProfiles;
+using Imaar.VacancyAdditionalFeatures;
 
 using System;
 using Volo.Abp.Application.Dtos;
@@ -13,6 +14,7 @@ namespace Imaar.Vacancies
 
         public ServiceTypeDto ServiceType { get; set; } = null!;
         public UserProfileDto UserProfile { get; set; } = null!;
+        public List<VacancyAdditionalFeatureDto> VacancyAdditionalFeatures { get; set; } = new List<VacancyAdditionalFeatureDto>();
 
     }
 }

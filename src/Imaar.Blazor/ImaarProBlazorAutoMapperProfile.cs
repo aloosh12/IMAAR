@@ -27,8 +27,9 @@ using Imaar.UserProfiles;
 using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
-using Imaar.VerificationCodes;
 using Imaar.VacancyAdditionalFeatures;
+using Imaar.VerificationCodes;
+using Imaar.Vacancies;
 using Volo.Abp.AutoMapper;
 
 namespace Imaar.Blazor;
@@ -91,5 +92,6 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<AdvertisementDto, AdvertisementUpdateDto>();
         CreateMap<VacancyAdditionalFeatureDto, VacancyAdditionalFeatureUpdateDto>();
 
+        CreateMap<VacancyDto, VacancyUpdateDto>().Ignore(x => x.VacancyAdditionalFeatureIds);
     }
 }

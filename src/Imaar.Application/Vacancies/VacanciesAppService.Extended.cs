@@ -34,9 +34,9 @@ namespace Imaar.Vacancies
             VacancyManager vacancyManager, 
             IDistributedCache<VacancyDownloadTokenCacheItem, string> downloadTokenCache, 
             IRepository<Imaar.ServiceTypes.ServiceType, Guid> serviceTypeRepository, 
-            IUserProfileRepository userProfileRepository,
+            IUserProfileRepository userProfileRepository, IRepository<Imaar.VacancyAdditionalFeatures.VacancyAdditionalFeature, Guid> vacancyAdditionalFeatureRepository,
             IMediasAppService mediasAppService)
-            : base(vacancyRepository, vacancyManager, downloadTokenCache, serviceTypeRepository, userProfileRepository)
+            : base(vacancyRepository, vacancyManager, downloadTokenCache, serviceTypeRepository, userProfileRepository, vacancyAdditionalFeatureRepository)
         {
             _mediasAppService = mediasAppService;
         }
@@ -60,6 +60,7 @@ namespace Imaar.Vacancies
                 input.Languages,
                 input.DriveLicense,
                 input.Salary,
+                input.VacancyAdditionalFeatureIds,
                 input.ServiceTypeId,
                 input.UserProfileId,
                 input.Files
