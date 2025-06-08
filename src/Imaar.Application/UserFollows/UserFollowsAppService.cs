@@ -84,6 +84,19 @@ namespace Imaar.UserFollows
         {
             await _userFollowRepository.DeleteAsync(id);
         }
+        
+        public virtual async Task<bool> UserFollowExistsAsync(Guid followerUserId, Guid followingUserId)
+        {
+            // Check if a user follow record already exists
+            var query = await GetListAsync(new GetUserFollowsInput
+            {
+                FollowerUserId = followerUserId,
+                FollowingUserId = followingUserId,
+                MaxResultCount = 1
+            });
+            
+            return query.TotalCount > 0;
+        }
 
         [Authorize(ImaarPermissions.UserFollows.Create)]
         public virtual async Task<UserFollowDto> CreateAsync(UserFollowCreateDto input)
@@ -95,6 +108,12 @@ namespace Imaar.UserFollows
             if (input.FollowingUserId == default)
             {
                 throw new UserFriendlyException(L["The {0} field is required.", L["UserProfile"]]);
+            }
+            
+            // Check if this user already follows the target user
+            if (await UserFollowExistsAsync(input.FollowerUserId, input.FollowingUserId))
+            {
+                throw new UserFriendlyException("You already follow this user");
             }
 
             var userFollow = await _userFollowManager.CreateAsync(

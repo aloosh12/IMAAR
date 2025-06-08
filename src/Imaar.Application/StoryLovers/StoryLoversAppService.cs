@@ -103,6 +103,19 @@ namespace Imaar.StoryLovers
         {
             await _storyLoverRepository.DeleteAsync(id);
         }
+        
+        public virtual async Task<bool> StoryLoverExistsAsync(Guid userProfileId, Guid storyId)
+        {
+            // Check if a story lover record already exists for this user and story
+            var query = await GetListAsync(new GetStoryLoversInput
+            {
+                UserProfileId = userProfileId,
+                StoryId = storyId,
+                MaxResultCount = 1
+            });
+            
+            return query.TotalCount > 0;
+        }
 
         [Authorize(ImaarPermissions.StoryLovers.Create)]
         public virtual async Task<StoryLoverDto> CreateAsync(StoryLoverCreateDto input)
@@ -114,6 +127,13 @@ namespace Imaar.StoryLovers
             if (input.StoryId == default)
             {
                 throw new UserFriendlyException(L["The {0} field is required.", L["Story"]]);
+            }
+            
+            // Check if this user already loves this story
+            if (await StoryLoverExistsAsync(input.UserProfileId, input.StoryId))
+            {
+                // User already loves this story, return existing record
+                throw new UserFriendlyException("You already Love this story");
             }
 
             var storyLover = await _storyLoverManager.CreateAsync(
