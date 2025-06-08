@@ -1,4 +1,5 @@
-﻿using Imaar.BuildingFacades;
+﻿using Imaar.Advertisements;
+using Imaar.BuildingFacades;
 using Imaar.Buildings;
 using Imaar.Categories;
 using Imaar.Cities;
@@ -27,7 +28,7 @@ using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
-using Imaar.Advertisements;
+using Imaar.VacancyAdditionalFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -111,6 +112,7 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<StoryTicket, StoryTickets.EfCoreStoryTicketRepository>();
             options.AddRepository<UserSavedItem, UserSavedItems.EfCoreUserSavedItemRepository>();
             options.AddRepository<Advertisement, Advertisements.EfCoreAdvertisementRepository>();
+            options.AddRepository<VacancyAdditionalFeature, VacancyAdditionalFeatures.EfCoreVacancyAdditionalFeatureRepository>();
 
 
 

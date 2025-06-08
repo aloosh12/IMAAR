@@ -247,4 +247,12 @@ public static class ImaarPermissions
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class VacancyAdditionalFeatures
+    {
+        public const string Default = GroupName + ".VacancyAdditionalFeatures";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
 }

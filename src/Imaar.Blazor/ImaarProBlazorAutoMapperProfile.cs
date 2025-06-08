@@ -1,4 +1,5 @@
 using AutoMapper;
+using Imaar.Advertisements;
 using Imaar.BuildingFacades;
 using Imaar.Buildings;
 using Imaar.Categories;
@@ -27,7 +28,7 @@ using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
-using Imaar.Advertisements;
+using Imaar.VacancyAdditionalFeatures;
 using Volo.Abp.AutoMapper;
 
 namespace Imaar.Blazor;
@@ -88,5 +89,7 @@ public class ImaarBlazorAutoMapperProfile : Profile
         CreateMap<UserSavedItemDto, UserSavedItemUpdateDto>();
 
         CreateMap<AdvertisementDto, AdvertisementUpdateDto>();
+        CreateMap<VacancyAdditionalFeatureDto, VacancyAdditionalFeatureUpdateDto>();
+
     }
 }

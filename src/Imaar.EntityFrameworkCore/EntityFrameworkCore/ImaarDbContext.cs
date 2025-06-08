@@ -1,4 +1,5 @@
-﻿using Imaar.BuildingFacades;
+﻿using Imaar.Advertisements;
+using Imaar.BuildingFacades;
 using Imaar.Buildings;
 using Imaar.Categories;
 using Imaar.Cities;
@@ -29,7 +30,7 @@ using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
 using Imaar.VerificationCodes;
-using Imaar.Advertisements;
+using Imaar.VacancyAdditionalFeatures;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -56,6 +57,8 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<VacancyAdditionalFeature> VacancyAdditionalFeatures { get; set; } = null!;
+
     public DbSet<Advertisement> Advertisements { get; set; } = null!;
     public DbSet<UserSavedItem> UserSavedItems { get; set; } = null!;
 
@@ -709,6 +712,18 @@ if (builder.IsHostDatabase())
                 b.Property(x => x.Order).HasColumnName(nameof(Advertisement.Order));
                 b.Property(x => x.IsActive).HasColumnName(nameof(Advertisement.IsActive));
                 b.HasOne<UserProfile>().WithMany().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.SetNull);
+            });
+
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<VacancyAdditionalFeature>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "VacancyAdditionalFeatures", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Name).HasColumnName(nameof(VacancyAdditionalFeature.Name)).IsRequired();
+                b.Property(x => x.Order).HasColumnName(nameof(VacancyAdditionalFeature.Order));
+                b.Property(x => x.IsActive).HasColumnName(nameof(VacancyAdditionalFeature.IsActive));
             });
 
         }

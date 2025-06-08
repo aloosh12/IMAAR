@@ -288,6 +288,10 @@
     "MaxFromDateTime": "Max From Date Time",
     "MaxToDateTime": "Max To Date Time",
     "NewAdvertisement": "New Advertisement",
-    "Menu:Advertisements": "Advertisements"
+    "Menu:Advertisements": "Advertisements",
+    "Permission:VacancyAdditionalFeatures": "Vacancy Additional Features",
+    "VacancyAdditionalFeatures": "Vacancy Additional Features",
+    "NewVacancyAdditionalFeature": "New Vacancy Additional Feature",
+    "Menu:VacancyAdditionalFeatures": "Vacancy Additional Features"
   }
 }

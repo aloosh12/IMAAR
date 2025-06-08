@@ -51,5 +51,7 @@ public class ImaarMenus
     public const string UserSavedItems = Prefix + ".UserSavedItems";
     public const string Advertisements = Prefix + ".Advertisements";
 
+    public const string VacancyAdditionalFeatures = Prefix + ".VacancyAdditionalFeatures";
+
 
 }

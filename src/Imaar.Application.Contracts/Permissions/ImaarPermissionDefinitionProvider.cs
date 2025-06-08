@@ -171,6 +171,12 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         advertisementPermission.AddChild(ImaarPermissions.Advertisements.Create, L("Permission:Create"));
         advertisementPermission.AddChild(ImaarPermissions.Advertisements.Edit, L("Permission:Edit"));
         advertisementPermission.AddChild(ImaarPermissions.Advertisements.Delete, L("Permission:Delete"));
+
+
+        var vacancyAdditionalFeaturePermission = myGroup.AddPermission(ImaarPermissions.VacancyAdditionalFeatures.Default, L("Permission:VacancyAdditionalFeatures"));
+        vacancyAdditionalFeaturePermission.AddChild(ImaarPermissions.VacancyAdditionalFeatures.Create, L("Permission:Create"));
+        vacancyAdditionalFeaturePermission.AddChild(ImaarPermissions.VacancyAdditionalFeatures.Edit, L("Permission:Edit"));
+        vacancyAdditionalFeaturePermission.AddChild(ImaarPermissions.VacancyAdditionalFeatures.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)
