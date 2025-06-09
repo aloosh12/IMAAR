@@ -70,7 +70,9 @@ namespace Imaar.Buildings
                 input.UserProfileId,
                 input.MainAmenityIds,
                 input.SecondaryAmenityIds,
-                input.Files
+                input.Files,
+                input.Latitude,
+                input.Longitude
             );
             
             return ObjectMapper.Map<MobileResponse, MobileResponseDto>(result);

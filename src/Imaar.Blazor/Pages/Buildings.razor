@@ -116,6 +116,18 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["Latitude"]</FieldLabel>
+                        <TextEdit Text="@Filter.Latitude" TextChanged="@OnLatitudeChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Longitude"]</FieldLabel>
+                        <TextEdit Text="@Filter.Longitude" TextChanged="@OnLongitudeChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["MinViewCounter"]</FieldLabel>
                         <NumericEdit TValue="int?" 
              Value="@Filter.ViewCounterMin"
@@ -213,6 +225,25 @@
 <SelectItem></SelectItem>
 
 @foreach(var item in ServiceTypesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.UserProfileId"
+		SelectedValueChanged="@OnUserProfileIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
 {
 	<SelectItem TValue="Guid" Value="@item.Id">
 		@item.DisplayName
@@ -410,6 +441,16 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.Latitude"
+                      Caption="@L["Latitude"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.Longitude"
+                      Caption="@L["Longitude"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
                       Field="Building.ViewCounter"
                       Caption="@L["ViewCounter"]">
               </DataGridColumn>
@@ -437,6 +478,11 @@
               <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
                       Field="ServiceType.Title"
                       Caption="@L["ServiceType"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="UserProfile.SecurityNumber"
+                      Caption="@L["UserProfile"]">
               </DataGridColumn>
 
             </DataGridColumns>
@@ -556,6 +602,30 @@
 
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
+                            <FieldLabel>@L["Latitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.Latitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Longitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
                             <FieldLabel>@L["ViewCounter"]</FieldLabel>
                             <NumericPicker TValue="int" @bind-Value="@NewBuilding.ViewCounter"  Decimals="0" >
                                 <Feedback>
@@ -624,6 +694,19 @@
                             {
                                 <SelectItem TValue="Guid" Value="@(serviceType.Id)">
                                     @(serviceType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuilding.UserProfileId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
                                 </SelectItem>
                             }
                         </Select>
@@ -858,6 +941,30 @@
 
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
+                            <FieldLabel>@L["Latitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.Latitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Longitude"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
                             <FieldLabel>@L["ViewCounter"]</FieldLabel>
                             <NumericPicker TValue="int" @bind-Value="@EditingBuilding.ViewCounter"  Decimals="0" >
                                 <Feedback>
@@ -926,6 +1033,19 @@
                             {
                                 <SelectItem TValue="Guid" Value="@(serviceType.Id)">
                                     @(serviceType.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuilding.UserProfileId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
                                 </SelectItem>
                             }
                         </Select>

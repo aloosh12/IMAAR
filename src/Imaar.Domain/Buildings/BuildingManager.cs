@@ -1,14 +1,17 @@
+using Imaar.Buildings;
 using Imaar.MainAmenities;
 using Imaar.SecondaryAmenities;
+using Imaar.MainAmenities;
+using Imaar.SecondaryAmenities;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Volo.Abp;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
-using Volo.Abp.Data;
 
 namespace Imaar.Buildings
 {
@@ -30,7 +33,7 @@ namespace Imaar.Buildings
         public virtual async Task<Building> CreateAsync(
         List<Guid> mainAmenityIds,
         List<Guid> secondaryAmenityIds,
-        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
+        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null)
         {
             Check.NotNull(regionId, nameof(regionId));
             Check.NotNull(furnishingLevelId, nameof(furnishingLevelId));
@@ -47,7 +50,7 @@ namespace Imaar.Buildings
 
             var building = new Building(
              GuidGenerator.Create(),
-             regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounter, orderCounter
+             regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, viewCounter, orderCounter, latitude, longitude
              );
 
             await SetMainAmenitiesAsync(building, mainAmenityIds);
@@ -60,7 +63,7 @@ namespace Imaar.Buildings
             Guid id,
             List<Guid> mainAmenityIds,
         List<Guid> secondaryAmenityIds,
-        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, [CanBeNull] string? concurrencyStamp = null
+        Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNull(regionId, nameof(regionId));
@@ -95,6 +98,8 @@ namespace Imaar.Buildings
             building.FloorNo = floorNo;
             building.ViewCounter = viewCounter;
             building.OrderCounter = orderCounter;
+            building.Latitude = latitude;
+            building.Longitude = longitude;
 
             await SetMainAmenitiesAsync(building, mainAmenityIds);
             await SetSecondaryAmenitiesAsync(building, secondaryAmenityIds);

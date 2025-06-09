@@ -60,7 +60,10 @@ namespace Imaar.Buildings
             Guid userProfileId,
             List<Guid> mainAmenityIds,
             List<Guid> secondaryAmenityIds,
-            List<IFormFile> files)
+            List<IFormFile> files,
+
+            string latitude,
+            string longitude)
         {
             MobileResponse mobileResponse = new MobileResponse();
             
@@ -83,7 +86,9 @@ namespace Imaar.Buildings
                     numberOfBaths,
                     floorNo,
                     0,
-                    0
+                    0,
+                    latitude,
+                    longitude
                 );
                 
                 // Process each file

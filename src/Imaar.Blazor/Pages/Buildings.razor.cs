@@ -58,6 +58,7 @@ namespace Imaar.Blazor.Pages
 private IReadOnlyList<LookupDto<Guid>> FurnishingLevelsCollection { get; set; } = new List<LookupDto<Guid>>();
 private IReadOnlyList<LookupDto<Guid>> BuildingFacadesCollection { get; set; } = new List<LookupDto<Guid>>();
 private IReadOnlyList<LookupDto<Guid>> ServiceTypesCollection { get; set; } = new List<LookupDto<Guid>>();
+private IReadOnlyList<LookupDto<Guid>> UserProfilesCollection { get; set; } = new List<LookupDto<Guid>>();
 private IReadOnlyList<LookupDto<Guid>> MainAmenities { get; set; } = new List<LookupDto<Guid>>();
         
         private string SelectedMainAmenityId { get; set; }
@@ -110,6 +111,9 @@ private IReadOnlyList<LookupDto<Guid>> MainAmenities { get; set; } = new List<Lo
 
 
             await GetServiceTypeCollectionLookupAsync();
+
+
+            await GetUserProfileCollectionLookupAsync();
 
 
             await GetMainAmenityLookupAsync();
@@ -192,7 +196,7 @@ private IReadOnlyList<LookupDto<Guid>> MainAmenities { get; set; } = new List<Lo
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/buildings/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&MainTitle={HttpUtility.UrlEncode(Filter.MainTitle)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Price={HttpUtility.UrlEncode(Filter.Price)}&BuildingArea={HttpUtility.UrlEncode(Filter.BuildingArea)}&NumberOfRooms={HttpUtility.UrlEncode(Filter.NumberOfRooms)}&NumberOfBaths={HttpUtility.UrlEncode(Filter.NumberOfBaths)}&FloorNo={HttpUtility.UrlEncode(Filter.FloorNo)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&RegionId={Filter.RegionId}&FurnishingLevelId={Filter.FurnishingLevelId}&BuildingFacadeId={Filter.BuildingFacadeId}&ServiceTypeId={Filter.ServiceTypeId}&MainAmenityId={Filter.MainAmenityId}&SecondaryAmenityId={Filter.SecondaryAmenityId}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/buildings/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&MainTitle={HttpUtility.UrlEncode(Filter.MainTitle)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Price={HttpUtility.UrlEncode(Filter.Price)}&BuildingArea={HttpUtility.UrlEncode(Filter.BuildingArea)}&NumberOfRooms={HttpUtility.UrlEncode(Filter.NumberOfRooms)}&NumberOfBaths={HttpUtility.UrlEncode(Filter.NumberOfBaths)}&FloorNo={HttpUtility.UrlEncode(Filter.FloorNo)}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&RegionId={Filter.RegionId}&FurnishingLevelId={Filter.FurnishingLevelId}&BuildingFacadeId={Filter.BuildingFacadeId}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}&MainAmenityId={Filter.MainAmenityId}&SecondaryAmenityId={Filter.SecondaryAmenityId}", forceLoad: true);
         }
 
         private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<BuildingWithNavigationPropertiesDto> e)
@@ -226,6 +230,7 @@ private IReadOnlyList<LookupDto<Guid>> MainAmenities { get; set; } = new List<Lo
 FurnishingLevelId = FurnishingLevelsCollection.Select(i=>i.Id).FirstOrDefault(),
 BuildingFacadeId = BuildingFacadesCollection.Select(i=>i.Id).FirstOrDefault(),
 ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
+UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
 
             };
 
@@ -244,6 +249,7 @@ ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
 FurnishingLevelId = FurnishingLevelsCollection.Select(i=>i.Id).FirstOrDefault(),
 BuildingFacadeId = BuildingFacadesCollection.Select(i=>i.Id).FirstOrDefault(),
 ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
+UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
 
             };
             await CreateBuildingModal.Hide();
@@ -377,6 +383,16 @@ ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
             Filter.FloorNo = floorNo;
             await SearchAsync();
         }
+        protected virtual async Task OnLatitudeChangedAsync(string? latitude)
+        {
+            Filter.Latitude = latitude;
+            await SearchAsync();
+        }
+        protected virtual async Task OnLongitudeChangedAsync(string? longitude)
+        {
+            Filter.Longitude = longitude;
+            await SearchAsync();
+        }
         protected virtual async Task OnViewCounterMinChangedAsync(int? viewCounterMin)
         {
             Filter.ViewCounterMin = viewCounterMin;
@@ -417,6 +433,11 @@ ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
             Filter.ServiceTypeId = serviceTypeId;
             await SearchAsync();
         }
+        protected virtual async Task OnUserProfileIdChangedAsync(Guid? userProfileId)
+        {
+            Filter.UserProfileId = userProfileId;
+            await SearchAsync();
+        }
         protected virtual async Task OnMainAmenityIdChangedAsync(Guid? mainAmenityId)
         {
             Filter.MainAmenityId = mainAmenityId;
@@ -447,6 +468,11 @@ ServiceTypeId = ServiceTypesCollection.Select(i=>i.Id).FirstOrDefault(),
         private async Task GetServiceTypeCollectionLookupAsync(string? newValue = null)
         {
             ServiceTypesCollection = (await BuildingsAppService.GetServiceTypeLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
+        }
+
+        private async Task GetUserProfileCollectionLookupAsync(string? newValue = null)
+        {
+            UserProfilesCollection = (await BuildingsAppService.GetUserProfileLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
         }
 
         private async Task GetMainAmenityLookupAsync(string? newValue = null)

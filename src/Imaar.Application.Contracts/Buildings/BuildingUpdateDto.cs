@@ -21,6 +21,8 @@ namespace Imaar.Buildings
         public string NumberOfBaths { get; set; } = null!;
         [Required]
         public string FloorNo { get; set; } = null!;
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
         public int ViewCounter { get; set; }
         public int OrderCounter { get; set; }
         public Guid RegionId { get; set; }
@@ -28,7 +30,6 @@ namespace Imaar.Buildings
         public Guid BuildingFacadeId { get; set; }
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
-
         public List<Guid> MainAmenityIds { get; set; }
         public List<Guid> SecondaryAmenityIds { get; set; }
 

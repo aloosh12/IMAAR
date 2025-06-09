@@ -1,3 +1,4 @@
+using Imaar.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -18,6 +19,8 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            string? latitude = null,
+            string? longitude = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -44,6 +47,8 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            string? latitude = null,
+            string? longitude = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -52,7 +57,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
-              Guid? userProfileId = null,
+            Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             string? sorting = null,
@@ -70,6 +75,8 @@ namespace Imaar.Buildings
                     string? numberOfRooms = null,
                     string? numberOfBaths = null,
                     string? floorNo = null,
+                    string? latitude = null,
+                    string? longitude = null,
                     int? viewCounterMin = null,
                     int? viewCounterMax = null,
                     int? orderCounterMin = null,
@@ -89,6 +96,8 @@ namespace Imaar.Buildings
             string? numberOfRooms = null,
             string? numberOfBaths = null,
             string? floorNo = null,
+            string? latitude = null,
+            string? longitude = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -97,7 +106,7 @@ namespace Imaar.Buildings
             Guid? furnishingLevelId = null,
             Guid? buildingFacadeId = null,
             Guid? serviceTypeId = null,
-              Guid? userProfileId = null,
+            Guid? userProfileId = null,
             Guid? mainAmenityId = null,
             Guid? secondaryAmenityId = null,
             CancellationToken cancellationToken = default);

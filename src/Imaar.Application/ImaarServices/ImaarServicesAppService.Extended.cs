@@ -148,15 +148,17 @@ namespace Imaar.ImaarServices
         }
 
         [AllowAnonymous]
-        public virtual async Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input)
+        public virtual async Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(GetShopListInput input)
         {
             // Create a list to store the combined results
             var combinedResults = new List<ImaarServiceShopListItemDto>();
 
+            GetImaarServicesInput getImaarServicesInput = new GetImaarServicesInput();
+
             // Search in ImaarService entities
             var imaarServices = await _imaarServiceRepository.GetListAsync(
-                 !string.IsNullOrEmpty(input.GeneralFilter) ? 
-                    s => s.Title.Contains(input.GeneralFilter) || s.Description.Contains(input.GeneralFilter) : 
+                 !string.IsNullOrEmpty(input.FilterText) ? 
+                    s => s.Title.Contains(input.FilterText) || s.Description.Contains(input.FilterText) : 
                     null
             );
 
@@ -171,15 +173,15 @@ namespace Imaar.ImaarServices
                     Title = service.Title,
                     Description = service.Description,
                     Price = service.Price.ToString(),
-                    MediaName = media?.File,
+                    MediaName = $"{MimeTypes.MimeTypeMap.GetAttachmentPath()}/MediaImages/{media?.File}",
                     SourceEntityType = SourceEntityType.Service
                 });
             }
 
             // Search in Building entities
             var buildings = await _buildingRepository.GetListAsync(
-                !string.IsNullOrEmpty(input.GeneralFilter) ? 
-                    b => b.MainTitle.Contains(input.GeneralFilter) || b.Description.Contains(input.GeneralFilter) : 
+                !string.IsNullOrEmpty(input.FilterText) ? 
+                    b => b.MainTitle.Contains(input.FilterText) || b.Description.Contains(input.FilterText) : 
                     null
             );
 
@@ -201,8 +203,8 @@ namespace Imaar.ImaarServices
 
             // Search in Vacancy entities
             var vacancies = await _vacancyRepository.GetListAsync(
-                 !string.IsNullOrEmpty(input.GeneralFilter) ? 
-                    v => v.Title.Contains(input.GeneralFilter) || v.Description.Contains(input.GeneralFilter) : 
+                 !string.IsNullOrEmpty(input.FilterText) ? 
+                    v => v.Title.Contains(input.FilterText) || v.Description.Contains(input.FilterText) : 
                     null
             );
 

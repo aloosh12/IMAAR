@@ -43,7 +43,7 @@ namespace Imaar.Pages
             _storiesAppService = storiesAppService;
             _imaarServicesAppService = imaarServicesAppService;
             _advertisementsAppService = advertisementsAppService;
-            _currentUser = CurrentUser;
+            _currentUser = currentUser;
         }
 
         public async Task<HomePageDto> GetAsync()
@@ -62,6 +62,7 @@ namespace Imaar.Pages
             };
             GetStoriesInput getStoriesInput = new GetStoriesInput()
             {
+                
                 SkipCount = 0,
                 MaxResultCount = 10
             };

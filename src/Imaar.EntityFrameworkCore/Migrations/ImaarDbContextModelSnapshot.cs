@@ -242,7 +242,14 @@ namespace Imaar.Migrations
                 b.Property<Guid?>("LastModifierId")
                     .HasColumnType("uniqueidentifier")
                     .HasColumnName("LastModifierId");
+                
+                b.Property<string>("Latitude")
+                     .HasColumnType("nvarchar(max)")
+                     .HasColumnName("Latitude");
 
+                b.Property<string>("Longitude")
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("Longitude");
                 b.Property<string>("MainTitle")
                     .IsRequired()
                     .HasColumnType("nvarchar(max)")

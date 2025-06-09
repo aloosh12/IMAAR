@@ -2,6 +2,7 @@ using Imaar.Regions;
 using Imaar.FurnishingLevels;
 using Imaar.BuildingFacades;
 using Imaar.ServiceTypes;
+using Imaar.UserProfiles;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -38,6 +39,12 @@ namespace Imaar.Buildings
         [NotNull]
         public virtual string FloorNo { get; set; }
 
+        [CanBeNull]
+        public virtual string? Latitude { get; set; }
+
+        [CanBeNull]
+        public virtual string? Longitude { get; set; }
+
         public virtual int ViewCounter { get; set; }
 
         public virtual int OrderCounter { get; set; }
@@ -46,7 +53,6 @@ namespace Imaar.Buildings
         public Guid BuildingFacadeId { get; set; }
         public Guid ServiceTypeId { get; set; }
         public Guid UserProfileId { get; set; }
-
         public ICollection<BuildingMainAmenity> MainAmenities { get; private set; }
         public ICollection<BuildingSecondaryAmenity> SecondaryAmenities { get; private set; }
 
@@ -54,7 +60,8 @@ namespace Imaar.Buildings
         {
 
         }
-        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter)
+
+        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null)
         {
 
             Id = id;
@@ -74,12 +81,13 @@ namespace Imaar.Buildings
             FloorNo = floorNo;
             ViewCounter = viewCounter;
             OrderCounter = orderCounter;
+            Latitude = latitude;
+            Longitude = longitude;
             RegionId = regionId;
             FurnishingLevelId = furnishingLevelId;
             BuildingFacadeId = buildingFacadeId;
             ServiceTypeId = serviceTypeId;
             UserProfileId = userProfileId;
-
             MainAmenities = new Collection<BuildingMainAmenity>();
             SecondaryAmenities = new Collection<BuildingSecondaryAmenity>();
         }

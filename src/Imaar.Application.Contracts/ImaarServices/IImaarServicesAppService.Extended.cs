@@ -12,7 +12,7 @@ namespace Imaar.ImaarServices
         
         Task<MobileResponseDto> GetImaarServiceWithDetailsAsync(Guid id);
         
-        Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input);
+        Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(GetShopListInput input);
         
         Task<MobileResponseDto> IncrementViewCounterAsync(Guid id);
         

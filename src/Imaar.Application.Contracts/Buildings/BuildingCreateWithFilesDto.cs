@@ -27,7 +27,9 @@ namespace Imaar.Buildings
         
         [Required]
         public string FloorNo { get; set; } = null!;
-        
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
+
         public Guid RegionId { get; set; }
         
         public Guid FurnishingLevelId { get; set; }

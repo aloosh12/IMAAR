@@ -45,7 +45,7 @@ namespace Imaar.Controllers.ImaarServices
         
         [HttpGet("shop-list")]
         [AllowAnonymous]
-        public virtual Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(ImaarServiceFilterDto input)
+        public virtual Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListAsync(GetShopListInput input)
         {
             return _imaarServicesAppService.GetShopListAsync(input);
         }
