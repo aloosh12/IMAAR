@@ -49,6 +49,12 @@ namespace Imaar.Controllers.ImaarServices
         {
             return _imaarServicesAppService.GetShopListAsync(input);
         }
+        [HttpGet("shop-list-v1")]
+        [AllowAnonymous]
+        public virtual Task<PagedResultDto<ImaarServiceShopListItemDto>> GetShopListV1Async(GetShopListV1Input input)
+        {
+            return _imaarServicesAppService.GetShopListV1Async(input);
+        }
 
         [HttpPost("update-medias")]
         [AllowAnonymous]
