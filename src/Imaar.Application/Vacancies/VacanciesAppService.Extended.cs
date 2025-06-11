@@ -126,6 +126,7 @@ namespace Imaar.Vacancies
                     Languages = vacancyDto.Languages,
                     DriveLicense = vacancyDto.DriveLicense,
                     Salary = vacancyDto.Salary,
+                    PhoneNumber = vacancyDto.PhoneNumber,
                     ViewCounter = vacancyDto.ViewCounter,
                     OrderCounter = vacancyDto.OrderCounter,
                     ServiceTypeId = vacancyDto.ServiceTypeId,

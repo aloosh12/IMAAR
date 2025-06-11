@@ -27,7 +27,7 @@ namespace Imaar.Controllers.BuildingEvaluations
         }
 
         [HttpGet]
-        public virtual Task<PagedResultDto<BuildingEvaluationDto>> GetListAsync(GetBuildingEvaluationsInput input)
+        public virtual Task<PagedResultDto<BuildingEvaluationWithNavigationPropertiesDto>> GetListAsync(GetBuildingEvaluationsInput input)
         {
             return _buildingEvaluationsAppService.GetListAsync(input);
         }
@@ -36,55 +36,55 @@ namespace Imaar.Controllers.BuildingEvaluations
         [Route("{id}")]
         public virtual Task<BuildingEvaluationDto> GetAsync(Guid id)
         {
-            return _BuildingEvaluationsAppService.GetAsync(id);
+            return _buildingEvaluationsAppService.GetAsync(id);
         }
 
         [HttpPost]
         public virtual Task<BuildingEvaluationDto> CreateAsync(BuildingEvaluationCreateDto input)
         {
-            return _BuildingEvaluationsAppService.CreateAsync(input);
+            return _buildingEvaluationsAppService.CreateAsync(input);
         }
 
         [HttpPut]
         [Route("{id}")]
         public virtual Task<BuildingEvaluationDto> UpdateAsync(Guid id, BuildingEvaluationUpdateDto input)
         {
-            return _BuildingEvaluationsAppService.UpdateAsync(id, input);
+            return _buildingEvaluationsAppService.UpdateAsync(id, input);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public virtual Task DeleteAsync(Guid id)
         {
-            return _BuildingEvaluationsAppService.DeleteAsync(id);
+            return _buildingEvaluationsAppService.DeleteAsync(id);
         }
 
         [HttpGet]
         [Route("as-excel-file")]
         public virtual Task<IRemoteStreamContent> GetListAsExcelFileAsync(BuildingEvaluationExcelDownloadDto input)
         {
-            return _BuildingEvaluationsAppService.GetListAsExcelFileAsync(input);
+            return _buildingEvaluationsAppService.GetListAsExcelFileAsync(input);
         }
 
         [HttpGet]
         [Route("download-token")]
         public virtual Task<Imaar.Shared.DownloadTokenResultDto> GetDownloadTokenAsync()
         {
-            return _BuildingEvaluationsAppService.GetDownloadTokenAsync();
+            return _buildingEvaluationsAppService.GetDownloadTokenAsync();
         }
 
         [HttpDelete]
         [Route("")]
         public virtual Task DeleteByIdsAsync(List<Guid> BuildingEvaluationIds)
         {
-            return _BuildingEvaluationsAppService.DeleteByIdsAsync(BuildingEvaluationIds);
+            return _buildingEvaluationsAppService.DeleteByIdsAsync(BuildingEvaluationIds);
         }
 
         [HttpDelete]
         [Route("all")]
         public virtual Task DeleteAllAsync(GetBuildingEvaluationsInput input)
         {
-            return _BuildingEvaluationsAppService.DeleteAllAsync(input);
+            return _buildingEvaluationsAppService.DeleteAllAsync(input);
         }
     }
 }
