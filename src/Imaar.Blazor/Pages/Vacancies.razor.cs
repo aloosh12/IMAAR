@@ -175,7 +175,7 @@ private IReadOnlyList<LookupDto<Guid>> VacancyAdditionalFeatures { get; set; } =
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/vacancies/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Location={HttpUtility.UrlEncode(Filter.Location)}&Number={HttpUtility.UrlEncode(Filter.Number)}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&DateOfPublishMin={Filter.DateOfPublishMin}&DateOfPublishMax={Filter.DateOfPublishMax}&ExpectedExperience={HttpUtility.UrlEncode(Filter.ExpectedExperience)}&EducationLevel={HttpUtility.UrlEncode(Filter.EducationLevel)}&WorkSchedule={HttpUtility.UrlEncode(Filter.WorkSchedule)}&EmploymentType={HttpUtility.UrlEncode(Filter.EmploymentType)}&BiologicalSex={Filter.BiologicalSex}&Languages={HttpUtility.UrlEncode(Filter.Languages)}&DriveLicense={HttpUtility.UrlEncode(Filter.DriveLicense)}&Salary={HttpUtility.UrlEncode(Filter.Salary)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}&VacancyAdditionalFeatureId={Filter.VacancyAdditionalFeatureId}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/vacancies/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&Description={HttpUtility.UrlEncode(Filter.Description)}&Location={HttpUtility.UrlEncode(Filter.Location)}&Number={HttpUtility.UrlEncode(Filter.Number)}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&DateOfPublishMin={Filter.DateOfPublishMin}&DateOfPublishMax={Filter.DateOfPublishMax}&ExpectedExperience={HttpUtility.UrlEncode(Filter.ExpectedExperience)}&EducationLevel={HttpUtility.UrlEncode(Filter.EducationLevel)}&WorkSchedule={HttpUtility.UrlEncode(Filter.WorkSchedule)}&EmploymentType={HttpUtility.UrlEncode(Filter.EmploymentType)}&BiologicalSex={Filter.BiologicalSex}&Languages={HttpUtility.UrlEncode(Filter.Languages)}&DriveLicense={HttpUtility.UrlEncode(Filter.DriveLicense)}&Salary={HttpUtility.UrlEncode(Filter.Salary)}&PhoneNumber={HttpUtility.UrlEncode(Filter.PhoneNumber)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}&VacancyAdditionalFeatureId={Filter.VacancyAdditionalFeatureId}", forceLoad: true);
         }
 
         private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<VacancyWithNavigationPropertiesDto> e)
@@ -389,6 +389,11 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
         protected virtual async Task OnSalaryChangedAsync(string? salary)
         {
             Filter.Salary = salary;
+            await SearchAsync();
+        }
+        protected virtual async Task OnPhoneNumberChangedAsync(string? phoneNumber)
+        {
+            Filter.PhoneNumber = phoneNumber;
             await SearchAsync();
         }
         protected virtual async Task OnViewCounterMinChangedAsync(int? viewCounterMin)

@@ -255,4 +255,20 @@ public static class ImaarPermissions
         public const string Create = Default + ".Create";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class BuildingEvaluations
+    {
+        public const string Default = GroupName + ".BuildingEvaluations";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
+
+    public static class VacancyEvaluations
+    {
+        public const string Default = GroupName + ".VacancyEvaluations";
+        public const string Edit = Default + ".Edit";
+        public const string Create = Default + ".Create";
+        public const string Delete = Default + ".Delete";
+    }
 }

@@ -23,6 +23,8 @@ namespace Imaar.Buildings
         public string FloorNo { get; set; } = null!;
         public string? Latitude { get; set; }
         public string? Longitude { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; } = null!;
         public int ViewCounter { get; set; }
         public int OrderCounter { get; set; }
         public Guid RegionId { get; set; }

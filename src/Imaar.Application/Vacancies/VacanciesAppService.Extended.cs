@@ -51,6 +51,7 @@ namespace Imaar.Vacancies
                 input.Number,
                 input.DateOfPublish,
                 input.BiologicalSex,
+                input.PhoneNumber,
                 input.Latitude,
                 input.Longitude,
                 input.ExpectedExperience,

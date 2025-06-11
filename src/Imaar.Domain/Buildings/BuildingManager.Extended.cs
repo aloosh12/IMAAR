@@ -61,7 +61,7 @@ namespace Imaar.Buildings
             List<Guid> mainAmenityIds,
             List<Guid> secondaryAmenityIds,
             List<IFormFile> files,
-
+            string phoneNumber,
             string latitude,
             string longitude)
         {
@@ -85,6 +85,7 @@ namespace Imaar.Buildings
                     numberOfRooms,
                     numberOfBaths,
                     floorNo,
+                    phoneNumber,
                     0,
                     0,
                     latitude,

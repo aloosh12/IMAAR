@@ -144,6 +144,12 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["PhoneNumber"]</FieldLabel>
+                        <TextEdit Text="@Filter.PhoneNumber" TextChanged="@OnPhoneNumberChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["MinViewCounter"]</FieldLabel>
                         <NumericEdit TValue="int?" 
              Value="@Filter.ViewCounterMin"
@@ -352,6 +358,11 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="ImaarServiceWithNavigationPropertiesDto"
+                      Field="ImaarService.PhoneNumber"
+                      Caption="@L["PhoneNumber"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="ImaarServiceWithNavigationPropertiesDto"
                       Field="ImaarService.ViewCounter"
                       Caption="@L["ViewCounter"]">
               </DataGridColumn>
@@ -483,6 +494,18 @@
                         <Field>
                             <FieldLabel>@L["Longitude"]</FieldLabel>
                             <TextEdit @bind-Text="@NewImaarService.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewImaarService.PhoneNumber"  >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -665,6 +688,18 @@
                         <Field>
                             <FieldLabel>@L["Longitude"]</FieldLabel>
                             <TextEdit @bind-Text="@EditingImaarService.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingImaarService.PhoneNumber"  >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>

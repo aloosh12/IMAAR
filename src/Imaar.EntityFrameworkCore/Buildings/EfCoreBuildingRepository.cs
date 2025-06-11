@@ -47,6 +47,7 @@ namespace Imaar.Buildings
             string? floorNo = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -62,7 +63,7 @@ namespace Imaar.Buildings
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
 
             var ids = query.Select(x => x.Building.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -101,6 +102,7 @@ namespace Imaar.Buildings
             string? floorNo = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -118,7 +120,7 @@ namespace Imaar.Buildings
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? BuildingConsts.GetDefaultSorting(true) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -161,6 +163,7 @@ namespace Imaar.Buildings
             string? floorNo = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -174,7 +177,7 @@ namespace Imaar.Buildings
             Guid? secondaryAmenityId = null)
         {
             return query
-                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Building.MainTitle!.Contains(filterText!) || e.Building.Description!.Contains(filterText!) || e.Building.Price!.Contains(filterText!) || e.Building.BuildingArea!.Contains(filterText!) || e.Building.NumberOfRooms!.Contains(filterText!) || e.Building.NumberOfBaths!.Contains(filterText!) || e.Building.FloorNo!.Contains(filterText!) || e.Building.Latitude!.Contains(filterText!) || e.Building.Longitude!.Contains(filterText!))
+                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Building.MainTitle!.Contains(filterText!) || e.Building.Description!.Contains(filterText!) || e.Building.Price!.Contains(filterText!) || e.Building.BuildingArea!.Contains(filterText!) || e.Building.NumberOfRooms!.Contains(filterText!) || e.Building.NumberOfBaths!.Contains(filterText!) || e.Building.FloorNo!.Contains(filterText!) || e.Building.Latitude!.Contains(filterText!) || e.Building.Longitude!.Contains(filterText!) || e.Building.PhoneNumber!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(mainTitle), e => e.Building.MainTitle.Contains(mainTitle))
                     .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.Building.Description.Contains(description))
                     .WhereIf(!string.IsNullOrWhiteSpace(price), e => e.Building.Price.Contains(price))
@@ -184,6 +187,7 @@ namespace Imaar.Buildings
                     .WhereIf(!string.IsNullOrWhiteSpace(floorNo), e => e.Building.FloorNo.Contains(floorNo))
                     .WhereIf(!string.IsNullOrWhiteSpace(latitude), e => e.Building.Latitude.Contains(latitude))
                     .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.Building.Longitude.Contains(longitude))
+                    .WhereIf(!string.IsNullOrWhiteSpace(phoneNumber), e => e.Building.PhoneNumber.Contains(phoneNumber))
                     .WhereIf(viewCounterMin.HasValue, e => e.Building.ViewCounter >= viewCounterMin!.Value)
                     .WhereIf(viewCounterMax.HasValue, e => e.Building.ViewCounter <= viewCounterMax!.Value)
                     .WhereIf(orderCounterMin.HasValue, e => e.Building.OrderCounter >= orderCounterMin!.Value)
@@ -208,6 +212,7 @@ namespace Imaar.Buildings
             string? floorNo = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -217,7 +222,7 @@ namespace Imaar.Buildings
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
+            var query = ApplyFilter((await GetQueryableAsync()), filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? BuildingConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -233,6 +238,7 @@ namespace Imaar.Buildings
             string? floorNo = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -247,7 +253,7 @@ namespace Imaar.Buildings
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
+            query = ApplyFilter(query, filterText, mainTitle, description, price, buildingArea, numberOfRooms, numberOfBaths, floorNo, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, regionId, furnishingLevelId, buildingFacadeId, serviceTypeId, userProfileId, mainAmenityId, secondaryAmenityId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -263,13 +269,14 @@ namespace Imaar.Buildings
             string? floorNo = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
             int? orderCounterMax = null)
         {
             return query
-                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.MainTitle!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.Price!.Contains(filterText!) || e.BuildingArea!.Contains(filterText!) || e.NumberOfRooms!.Contains(filterText!) || e.NumberOfBaths!.Contains(filterText!) || e.FloorNo!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!))
+                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.MainTitle!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.Price!.Contains(filterText!) || e.BuildingArea!.Contains(filterText!) || e.NumberOfRooms!.Contains(filterText!) || e.NumberOfBaths!.Contains(filterText!) || e.FloorNo!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!) || e.PhoneNumber!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(mainTitle), e => e.MainTitle.Contains(mainTitle))
                     .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.Description.Contains(description))
                     .WhereIf(!string.IsNullOrWhiteSpace(price), e => e.Price.Contains(price))
@@ -279,6 +286,7 @@ namespace Imaar.Buildings
                     .WhereIf(!string.IsNullOrWhiteSpace(floorNo), e => e.FloorNo.Contains(floorNo))
                     .WhereIf(!string.IsNullOrWhiteSpace(latitude), e => e.Latitude.Contains(latitude))
                     .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.Longitude.Contains(longitude))
+                    .WhereIf(!string.IsNullOrWhiteSpace(phoneNumber), e => e.PhoneNumber.Contains(phoneNumber))
                     .WhereIf(viewCounterMin.HasValue, e => e.ViewCounter >= viewCounterMin!.Value)
                     .WhereIf(viewCounterMax.HasValue, e => e.ViewCounter <= viewCounterMax!.Value)
                     .WhereIf(orderCounterMin.HasValue, e => e.OrderCounter >= orderCounterMin!.Value)

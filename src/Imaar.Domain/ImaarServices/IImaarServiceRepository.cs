@@ -1,3 +1,4 @@
+using Imaar.ImaarServices;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -21,6 +22,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -45,6 +47,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -69,6 +72,7 @@ namespace Imaar.ImaarServices
                     int? priceMax = null,
                     string? latitude = null,
                     string? longitude = null,
+                    string? phoneNumber = null,
                     int? viewCounterMin = null,
                     int? viewCounterMax = null,
                     int? orderCounterMin = null,
@@ -91,6 +95,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,

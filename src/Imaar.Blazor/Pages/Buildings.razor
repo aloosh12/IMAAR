@@ -128,6 +128,12 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["PhoneNumber"]</FieldLabel>
+                        <TextEdit Text="@Filter.PhoneNumber" TextChanged="@OnPhoneNumberChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["MinViewCounter"]</FieldLabel>
                         <NumericEdit TValue="int?" 
              Value="@Filter.ViewCounterMin"
@@ -451,6 +457,11 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
+                      Field="Building.PhoneNumber"
+                      Caption="@L["PhoneNumber"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingWithNavigationPropertiesDto"
                       Field="Building.ViewCounter"
                       Caption="@L["ViewCounter"]">
               </DataGridColumn>
@@ -616,6 +627,18 @@
                         <Field>
                             <FieldLabel>@L["Longitude"]</FieldLabel>
                             <TextEdit @bind-Text="@NewBuilding.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewBuilding.PhoneNumber"  >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -955,6 +978,18 @@
                         <Field>
                             <FieldLabel>@L["Longitude"]</FieldLabel>
                             <TextEdit @bind-Text="@EditingBuilding.Longitude"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingBuilding.PhoneNumber"  >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>

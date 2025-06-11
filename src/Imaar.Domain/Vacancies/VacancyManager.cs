@@ -1,14 +1,15 @@
+using Imaar.Vacancies;
 using Imaar.VacancyAdditionalFeatures;
 using Imaar.Vacancies;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Volo.Abp;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
-using Volo.Abp.Data;
 
 namespace Imaar.Vacancies
 {
@@ -26,7 +27,7 @@ namespace Imaar.Vacancies
 
         public virtual async Task<Vacancy> CreateAsync(
         List<Guid> vacancyAdditionalFeatureIds,
-        Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
+        Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, string phoneNumber, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
         {
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
             Check.NotNull(userProfileId, nameof(userProfileId));
@@ -35,10 +36,11 @@ namespace Imaar.Vacancies
             Check.NotNullOrWhiteSpace(location, nameof(location));
             Check.NotNullOrWhiteSpace(number, nameof(number));
             Check.NotNull(biologicalSex, nameof(biologicalSex));
+            Check.NotNullOrWhiteSpace(phoneNumber, nameof(phoneNumber));
 
             var vacancy = new Vacancy(
              GuidGenerator.Create(),
-             serviceTypeId, userProfileId, title, description, location, number, dateOfPublish, biologicalSex, viewCounter, orderCounter, latitude, longitude, expectedExperience, educationLevel, workSchedule, employmentType, languages, driveLicense, salary
+             serviceTypeId, userProfileId, title, description, location, number, dateOfPublish, biologicalSex, phoneNumber, viewCounter, orderCounter, latitude, longitude, expectedExperience, educationLevel, workSchedule, employmentType, languages, driveLicense, salary
              );
 
             await SetVacancyAdditionalFeaturesAsync(vacancy, vacancyAdditionalFeatureIds);
@@ -49,7 +51,7 @@ namespace Imaar.Vacancies
         public virtual async Task<Vacancy> UpdateAsync(
             Guid id,
             List<Guid> vacancyAdditionalFeatureIds,
-        Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null, [CanBeNull] string? concurrencyStamp = null
+        Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, string phoneNumber, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null, [CanBeNull] string? concurrencyStamp = null
         )
         {
             Check.NotNull(serviceTypeId, nameof(serviceTypeId));
@@ -59,6 +61,7 @@ namespace Imaar.Vacancies
             Check.NotNullOrWhiteSpace(location, nameof(location));
             Check.NotNullOrWhiteSpace(number, nameof(number));
             Check.NotNull(biologicalSex, nameof(biologicalSex));
+            Check.NotNullOrWhiteSpace(phoneNumber, nameof(phoneNumber));
 
             var queryable = await _vacancyRepository.WithDetailsAsync(x => x.VacancyAdditionalFeatures);
             var query = queryable.Where(x => x.Id == id);
@@ -73,6 +76,7 @@ namespace Imaar.Vacancies
             vacancy.Number = number;
             vacancy.DateOfPublish = dateOfPublish;
             vacancy.BiologicalSex = biologicalSex;
+            vacancy.PhoneNumber = phoneNumber;
             vacancy.ViewCounter = viewCounter;
             vacancy.OrderCounter = orderCounter;
             vacancy.Latitude = latitude;

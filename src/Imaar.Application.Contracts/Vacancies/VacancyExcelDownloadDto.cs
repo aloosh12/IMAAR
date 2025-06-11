@@ -26,6 +26,7 @@ namespace Imaar.Vacancies
         public string? Languages { get; set; }
         public string? DriveLicense { get; set; }
         public string? Salary { get; set; }
+        public string? PhoneNumber { get; set; }
         public int? ViewCounterMin { get; set; }
         public int? ViewCounterMax { get; set; }
         public int? OrderCounterMin { get; set; }

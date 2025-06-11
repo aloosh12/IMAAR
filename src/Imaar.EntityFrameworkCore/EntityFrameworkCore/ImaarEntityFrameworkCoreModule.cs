@@ -27,8 +27,10 @@ using Imaar.UserProfiles;
 using Imaar.UserSavedItems;
 using Imaar.UserWorksExhibitions;
 using Imaar.Vacancies;
-using Imaar.VerificationCodes;
 using Imaar.VacancyAdditionalFeatures;
+using Imaar.VerificationCodes;
+using Imaar.BuildingEvaluations;
+using Imaar.VacancyEvaluations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -114,6 +116,9 @@ public class ImaarEntityFrameworkCoreModule : AbpModule
             options.AddRepository<Advertisement, Advertisements.EfCoreAdvertisementRepository>();
             options.AddRepository<VacancyAdditionalFeature, VacancyAdditionalFeatures.EfCoreVacancyAdditionalFeatureRepository>();
 
+            options.AddRepository<BuildingEvaluation, BuildingEvaluations.EfCoreBuildingEvaluationRepository>();
+
+            options.AddRepository<VacancyEvaluation, VacancyEvaluations.EfCoreVacancyEvaluationRepository>();
 
 
         });

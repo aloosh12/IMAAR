@@ -2,7 +2,6 @@ using Imaar.Vacancies;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using Imaar.UserProfiles;
 
 namespace Imaar.Vacancies
 {
@@ -27,6 +26,8 @@ namespace Imaar.Vacancies
         public string? Languages { get; set; }
         public string? DriveLicense { get; set; }
         public string? Salary { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; } = null!;
         public int ViewCounter { get; set; } = 0;
         public int OrderCounter { get; set; } = 0;
         public Guid ServiceTypeId { get; set; }

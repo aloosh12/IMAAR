@@ -162,7 +162,7 @@ private IReadOnlyList<LookupDto<Guid>> UserProfilesCollection { get; set; } = ne
                 culture = "&culture=" + culture;
             }
             await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("Default");
-            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/imaar-services/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&Description={HttpUtility.UrlEncode(Filter.Description)}&ServiceLocation={HttpUtility.UrlEncode(Filter.ServiceLocation)}&ServiceNumber={HttpUtility.UrlEncode(Filter.ServiceNumber)}&DateOfPublishMin={Filter.DateOfPublishMin}&DateOfPublishMax={Filter.DateOfPublishMax}&PriceMin={Filter.PriceMin}&PriceMax={Filter.PriceMax}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}", forceLoad: true);
+            NavigationManager.NavigateTo($"{remoteService?.BaseUrl.EnsureEndsWith('/') ?? string.Empty}api/app/imaar-services/as-excel-file?DownloadToken={token}&FilterText={HttpUtility.UrlEncode(Filter.FilterText)}{culture}&Title={HttpUtility.UrlEncode(Filter.Title)}&Description={HttpUtility.UrlEncode(Filter.Description)}&ServiceLocation={HttpUtility.UrlEncode(Filter.ServiceLocation)}&ServiceNumber={HttpUtility.UrlEncode(Filter.ServiceNumber)}&DateOfPublishMin={Filter.DateOfPublishMin}&DateOfPublishMax={Filter.DateOfPublishMax}&PriceMin={Filter.PriceMin}&PriceMax={Filter.PriceMax}&Latitude={HttpUtility.UrlEncode(Filter.Latitude)}&Longitude={HttpUtility.UrlEncode(Filter.Longitude)}&PhoneNumber={HttpUtility.UrlEncode(Filter.PhoneNumber)}&ViewCounterMin={Filter.ViewCounterMin}&ViewCounterMax={Filter.ViewCounterMax}&OrderCounterMin={Filter.OrderCounterMin}&OrderCounterMax={Filter.OrderCounterMax}&ServiceTypeId={Filter.ServiceTypeId}&UserProfileId={Filter.UserProfileId}", forceLoad: true);
         }
 
         private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<ImaarServiceWithNavigationPropertiesDto> e)
@@ -334,6 +334,11 @@ UserProfileId = UserProfilesCollection.Select(i=>i.Id).FirstOrDefault(),
         protected virtual async Task OnLongitudeChangedAsync(string? longitude)
         {
             Filter.Longitude = longitude;
+            await SearchAsync();
+        }
+        protected virtual async Task OnPhoneNumberChangedAsync(string? phoneNumber)
+        {
+            Filter.PhoneNumber = phoneNumber;
             await SearchAsync();
         }
         protected virtual async Task OnViewCounterMinChangedAsync(int? viewCounterMin)

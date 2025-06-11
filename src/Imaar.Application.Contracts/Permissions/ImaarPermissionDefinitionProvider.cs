@@ -177,6 +177,17 @@ public class ImaarPermissionDefinitionProvider : PermissionDefinitionProvider
         vacancyAdditionalFeaturePermission.AddChild(ImaarPermissions.VacancyAdditionalFeatures.Create, L("Permission:Create"));
         vacancyAdditionalFeaturePermission.AddChild(ImaarPermissions.VacancyAdditionalFeatures.Edit, L("Permission:Edit"));
         vacancyAdditionalFeaturePermission.AddChild(ImaarPermissions.VacancyAdditionalFeatures.Delete, L("Permission:Delete"));
+
+
+        var buildingEvaluationPermission = myGroup.AddPermission(ImaarPermissions.BuildingEvaluations.Default, L("Permission:BuildingEvaluations"));
+        buildingEvaluationPermission.AddChild(ImaarPermissions.BuildingEvaluations.Create, L("Permission:Create"));
+        buildingEvaluationPermission.AddChild(ImaarPermissions.BuildingEvaluations.Edit, L("Permission:Edit"));
+        buildingEvaluationPermission.AddChild(ImaarPermissions.BuildingEvaluations.Delete, L("Permission:Delete"));
+
+        var vacancyEvaluationPermission = myGroup.AddPermission(ImaarPermissions.VacancyEvaluations.Default, L("Permission:VacancyEvaluations"));
+        vacancyEvaluationPermission.AddChild(ImaarPermissions.VacancyEvaluations.Create, L("Permission:Create"));
+        vacancyEvaluationPermission.AddChild(ImaarPermissions.VacancyEvaluations.Edit, L("Permission:Edit"));
+        vacancyEvaluationPermission.AddChild(ImaarPermissions.VacancyEvaluations.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

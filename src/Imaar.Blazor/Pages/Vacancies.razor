@@ -191,6 +191,12 @@
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
+                        <FieldLabel>@L["PhoneNumber"]</FieldLabel>
+                        <TextEdit Text="@Filter.PhoneNumber" TextChanged="@OnPhoneNumberChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
                         <FieldLabel>@L["MinViewCounter"]</FieldLabel>
                         <NumericEdit TValue="int?" 
              Value="@Filter.ViewCounterMin"
@@ -457,6 +463,11 @@
               </DataGridColumn>
 
               <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
+                      Field="Vacancy.PhoneNumber"
+                      Caption="@L["PhoneNumber"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyWithNavigationPropertiesDto"
                       Field="Vacancy.ViewCounter"
                       Caption="@L["ViewCounter"]">
               </DataGridColumn>
@@ -679,6 +690,18 @@
                         <Field>
                             <FieldLabel>@L["Salary"]</FieldLabel>
                             <TextEdit @bind-Text="@NewVacancy.Salary"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewVacancy.PhoneNumber"  >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -1003,6 +1026,18 @@
                         <Field>
                             <FieldLabel>@L["Salary"]</FieldLabel>
                             <TextEdit @bind-Text="@EditingVacancy.Salary"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingVacancy.PhoneNumber"  >
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>

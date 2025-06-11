@@ -71,6 +71,7 @@ namespace Imaar.Buildings
                 input.MainAmenityIds,
                 input.SecondaryAmenityIds,
                 input.Files,
+                input.PhoneNumber,
                 input.Latitude,
                 input.Longitude
             );

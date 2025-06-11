@@ -18,7 +18,8 @@ namespace Imaar.ImaarServices
         
         
         public int Price { get; set; }
-        
+        public string phoneNumber { get; set; } = null!;
+
         public string? Latitude { get; set; }
         
         public string? Longitude { get; set; }

@@ -1,0 +1,412 @@
+
+
+@page "/vacancy-evaluations"
+
+@attribute [Authorize(ImaarPermissions.VacancyEvaluations.Default)]
+@using Imaar.VacancyEvaluations
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IVacancyEvaluationsAppService VacancyEvaluationsAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["VacancyEvaluations"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="VacancyEvaluationSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="VacancyEvaluationSearchForm" Clicked="GetVacancyEvaluationsAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinRate"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.RateMin"
+             ValueChanged="@OnRateMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxRate"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.RateMax"
+             ValueChanged="@OnRateMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.UserProfileId"
+		SelectedValueChanged="@OnUserProfileIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Vacancy"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.VacancyId"
+		SelectedValueChanged="@OnVacancyIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in VacanciesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedVacancyEvaluations.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllVacancyEvaluationsSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedVacancyEvaluations.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedVacancyEvaluations.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedVacancyEvaluations.Count == PageSize || SelectedVacancyEvaluations.Count == VacancyEvaluationList.Count) && TotalCount > SelectedVacancyEvaluations.Count)
+                    {
+                        if (!AllVacancyEvaluationsSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedVacancyEvaluationsAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="VacancyEvaluationWithNavigationPropertiesDto"
+                  Data="VacancyEvaluationList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedVacancyEvaluations"
+                  RowSelectable="@((args) => CanDeleteVacancyEvaluation)"
+                  SelectedRowsChanged="SelectedVacancyEvaluationRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteVacancyEvaluation && VacancyEvaluationList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="VacancyEvaluationWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="VacancyEvaluationWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="VacancyEvaluationWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="VacancyEvaluationWithNavigationPropertiesDto"
+                                          Visible="@CanEditVacancyEvaluation"
+                                          Clicked="async () => await OpenEditVacancyEvaluationModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="VacancyEvaluationWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteVacancyEvaluation"
+                                          Clicked="() => DeleteVacancyEvaluationAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="VacancyEvaluationWithNavigationPropertiesDto"
+                      Field="VacancyEvaluation.Rate"
+                      Caption="@L["Rate"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyEvaluationWithNavigationPropertiesDto"
+                      Field="UserProfile.FirstName"
+                      Caption="@L["UserProfile"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="VacancyEvaluationWithNavigationPropertiesDto"
+                      Field="Vacancy.Title"
+                      Caption="@L["Vacancy"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateVacancyEvaluationModal" Closing="@CreateVacancyEvaluationModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateVacancyEvaluationForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewVacancyEvaluation"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateVacancyEvaluationModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewVacancyEvaluationValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewVacancyEvaluation"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Rate"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewVacancyEvaluation.Rate"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewVacancyEvaluation.UserProfileId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Vacancy"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewVacancyEvaluation.VacancyId">
+                            @foreach (var vacancy in VacanciesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(vacancy.Id)">
+                                    @(vacancy.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateVacancyEvaluationModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateVacancyEvaluationForm" Clicked="CreateVacancyEvaluationAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditVacancyEvaluationModal" Closing="@EditVacancyEvaluationModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditVacancyEvaluationForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditVacancyEvaluationModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingVacancyEvaluationValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingVacancyEvaluation"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Rate"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingVacancyEvaluation.Rate"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingVacancyEvaluation.UserProfileId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Vacancy"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingVacancyEvaluation.VacancyId">
+                            @foreach (var vacancy in VacanciesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(vacancy.Id)">
+                                    @(vacancy.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditVacancyEvaluationModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditVacancyEvaluationForm" Clicked="UpdateVacancyEvaluationAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+

@@ -278,6 +278,25 @@ icon: "fa fa-file-alt",
                 icon: "fa fa-file-alt",
                 requiredPermissionName: ImaarPermissions.VacancyAdditionalFeatures.Default)
         );
+
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.BuildingEvaluations,
+                l["Menu:BuildingEvaluations"],
+                url: "/building-evaluations",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.BuildingEvaluations.Default)
+        );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                ImaarMenus.VacancyEvaluations,
+                l["Menu:VacancyEvaluations"],
+                url: "/vacancy-evaluations",
+                icon: "fa fa-file-alt",
+                requiredPermissionName: ImaarPermissions.VacancyEvaluations.Default)
+        );
         return Task.CompletedTask;
     }
 }

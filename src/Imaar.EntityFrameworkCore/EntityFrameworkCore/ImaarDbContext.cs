@@ -1,6 +1,7 @@
 ﻿using Imaar.Advertisements;
 using Imaar.BuildingFacades;
 using Imaar.Buildings;
+using Imaar.Buildings;
 using Imaar.Categories;
 using Imaar.Cities;
 using Imaar.FurnishingLevels;
@@ -33,7 +34,11 @@ using Imaar.Vacancies;
 using Imaar.VacancyAdditionalFeatures;
 using Imaar.VerificationCodes;
 using Imaar.VerificationCodes;
+using Imaar.BuildingEvaluations;
 using Imaar.Buildings;
+using Imaar.ImaarServices;
+using Imaar.Vacancies;
+using Imaar.VacancyEvaluations;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -60,6 +65,8 @@ public class ImaarDbContext :
     IIdentityDbContext,
     ITenantManagementDbContext
 {
+    public DbSet<VacancyEvaluation> VacancyEvaluations { get; set; } = null!;
+    public DbSet<BuildingEvaluation> BuildingEvaluations { get; set; } = null!;
     public DbSet<VacancyAdditionalFeature> VacancyAdditionalFeatures { get; set; } = null!;
 
     public DbSet<Advertisement> Advertisements { get; set; } = null!;
@@ -204,6 +211,9 @@ public class ImaarDbContext :
                 b.Property(x => x.Price).HasColumnName(nameof(ImaarService.Price));
                 b.Property(x => x.Latitude).HasColumnName(nameof(ImaarService.Latitude));
                 b.Property(x => x.Longitude).HasColumnName(nameof(ImaarService.Longitude));
+                b.Property(x => x.PhoneNumber).HasColumnName(nameof(ImaarService.PhoneNumber)).IsRequired();
+                b.Property(x => x.ViewCounter).HasColumnName(nameof(ImaarService.ViewCounter));
+                b.Property(x => x.OrderCounter).HasColumnName(nameof(ImaarService.OrderCounter));
                 b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
                 b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
             });
@@ -652,7 +662,30 @@ if (builder.IsHostDatabase())
             });
 
         }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<BuildingEvaluation>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "BuildingEvaluations", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Rate).HasColumnName(nameof(BuildingEvaluation.Rate));
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.EvaluatorId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<Building>().WithMany().IsRequired().HasForeignKey(x => x.BuildingId).OnDelete(DeleteBehavior.NoAction);
+            });
 
+        }
+        if (builder.IsHostDatabase())
+        {
+            builder.Entity<VacancyEvaluation>(b =>
+            {
+                b.ToTable(ImaarConsts.DbTablePrefix + "VacancyEvaluations", ImaarConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.Property(x => x.Rate).HasColumnName(nameof(VacancyEvaluation.Rate));
+                b.HasOne<UserProfile>().WithMany().IsRequired().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.NoAction);
+                b.HasOne<Vacancy>().WithMany().IsRequired().HasForeignKey(x => x.VacancyId).OnDelete(DeleteBehavior.NoAction);
+            });
+
+        }
         if (builder.IsHostDatabase())
         {
             builder.Entity<Vacancy>(b =>
@@ -674,6 +707,7 @@ if (builder.IsHostDatabase())
                 b.Property(x => x.Languages).HasColumnName(nameof(Vacancy.Languages));
                 b.Property(x => x.DriveLicense).HasColumnName(nameof(Vacancy.DriveLicense));
                 b.Property(x => x.Salary).HasColumnName(nameof(Vacancy.Salary));
+                b.Property(x => x.PhoneNumber).HasColumnName(nameof(Vacancy.PhoneNumber)).IsRequired();
                 b.Property(x => x.ViewCounter).HasColumnName(nameof(Vacancy.ViewCounter));
                 b.Property(x => x.OrderCounter).HasColumnName(nameof(Vacancy.OrderCounter));
                 b.HasOne<ServiceType>().WithMany().IsRequired().HasForeignKey(x => x.ServiceTypeId).OnDelete(DeleteBehavior.NoAction);
@@ -714,6 +748,7 @@ if (builder.IsHostDatabase())
                 b.Property(x => x.FloorNo).HasColumnName(nameof(Building.FloorNo)).IsRequired();
                 b.Property(x => x.Latitude).HasColumnName(nameof(Building.Latitude));
                 b.Property(x => x.Longitude).HasColumnName(nameof(Building.Longitude));
+                b.Property(x => x.PhoneNumber).HasColumnName(nameof(Vacancy.PhoneNumber)).IsRequired();
                 b.Property(x => x.ViewCounter).HasColumnName(nameof(Building.ViewCounter));
                 b.Property(x => x.OrderCounter).HasColumnName(nameof(Building.OrderCounter));
                 b.HasOne<Region>().WithMany().IsRequired().HasForeignKey(x => x.RegionId).OnDelete(DeleteBehavior.NoAction);

@@ -1,15 +1,18 @@
-using Imaar.UserProfiles;
+using Imaar.ImaarServices;
 using Imaar.ServiceTypes;
+using Imaar.UserProfiles;
+using Imaar.EntityFrameworkCore;
+using Imaar.ServiceTypes;
+using Imaar.UserProfiles;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
-using Imaar.EntityFrameworkCore;
 
 namespace Imaar.ImaarServices
 {
@@ -33,6 +36,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -43,7 +47,7 @@ namespace Imaar.ImaarServices
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
 
             var ids = query.Select(x => x.ImaarService.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -74,6 +78,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -86,7 +91,7 @@ namespace Imaar.ImaarServices
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? ImaarServiceConsts.GetDefaultSorting(true) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -119,6 +124,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -127,7 +133,7 @@ namespace Imaar.ImaarServices
             Guid? userProfileId = null)
         {
             return query
-                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.ImaarService.Title!.Contains(filterText!) || e.ImaarService.Description!.Contains(filterText!) || e.ImaarService.ServiceLocation!.Contains(filterText!) || e.ImaarService.ServiceNumber!.Contains(filterText!) || e.ImaarService.Latitude!.Contains(filterText!) || e.ImaarService.Longitude!.Contains(filterText!))
+                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.ImaarService.Title!.Contains(filterText!) || e.ImaarService.Description!.Contains(filterText!) || e.ImaarService.ServiceLocation!.Contains(filterText!) || e.ImaarService.ServiceNumber!.Contains(filterText!) || e.ImaarService.Latitude!.Contains(filterText!) || e.ImaarService.Longitude!.Contains(filterText!) || e.ImaarService.PhoneNumber!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(title), e => e.ImaarService.Title.Contains(title))
                     .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.ImaarService.Description.Contains(description))
                     .WhereIf(!string.IsNullOrWhiteSpace(serviceLocation), e => e.ImaarService.ServiceLocation.Contains(serviceLocation))
@@ -138,6 +144,7 @@ namespace Imaar.ImaarServices
                     .WhereIf(priceMax.HasValue, e => e.ImaarService.Price <= priceMax!.Value)
                     .WhereIf(!string.IsNullOrWhiteSpace(latitude), e => e.ImaarService.Latitude.Contains(latitude))
                     .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.ImaarService.Longitude.Contains(longitude))
+                    .WhereIf(!string.IsNullOrWhiteSpace(phoneNumber), e => e.ImaarService.PhoneNumber.Contains(phoneNumber))
                     .WhereIf(viewCounterMin.HasValue, e => e.ImaarService.ViewCounter >= viewCounterMin!.Value)
                     .WhereIf(viewCounterMax.HasValue, e => e.ImaarService.ViewCounter <= viewCounterMax!.Value)
                     .WhereIf(orderCounterMin.HasValue, e => e.ImaarService.OrderCounter >= orderCounterMin!.Value)
@@ -158,6 +165,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -167,7 +175,7 @@ namespace Imaar.ImaarServices
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
+            var query = ApplyFilter((await GetQueryableAsync()), filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? ImaarServiceConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -184,6 +192,7 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -193,7 +202,7 @@ namespace Imaar.ImaarServices
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
+            query = ApplyFilter(query, filterText, title, description, serviceLocation, serviceNumber, dateOfPublishMin, dateOfPublishMax, priceMin, priceMax, latitude, longitude, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -210,13 +219,14 @@ namespace Imaar.ImaarServices
             int? priceMax = null,
             string? latitude = null,
             string? longitude = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
             int? orderCounterMax = null)
         {
             return query
-                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Title!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.ServiceLocation!.Contains(filterText!) || e.ServiceNumber!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!))
+                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Title!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.ServiceLocation!.Contains(filterText!) || e.ServiceNumber!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!) || e.PhoneNumber!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(title), e => e.Title.Contains(title))
                     .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.Description.Contains(description))
                     .WhereIf(!string.IsNullOrWhiteSpace(serviceLocation), e => e.ServiceLocation.Contains(serviceLocation))
@@ -227,6 +237,7 @@ namespace Imaar.ImaarServices
                     .WhereIf(priceMax.HasValue, e => e.Price <= priceMax!.Value)
                     .WhereIf(!string.IsNullOrWhiteSpace(latitude), e => e.Latitude.Contains(latitude))
                     .WhereIf(!string.IsNullOrWhiteSpace(longitude), e => e.Longitude.Contains(longitude))
+                    .WhereIf(!string.IsNullOrWhiteSpace(phoneNumber), e => e.PhoneNumber.Contains(phoneNumber))
                     .WhereIf(viewCounterMin.HasValue, e => e.ViewCounter >= viewCounterMin!.Value)
                     .WhereIf(viewCounterMax.HasValue, e => e.ViewCounter <= viewCounterMax!.Value)
                     .WhereIf(orderCounterMin.HasValue, e => e.OrderCounter >= orderCounterMin!.Value)

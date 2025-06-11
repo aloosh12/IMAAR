@@ -18,6 +18,7 @@ namespace Imaar.Buildings
         public string? FloorNo { get; set; }
         public string? Latitude { get; set; }
         public string? Longitude { get; set; }
+        public string? PhoneNumber { get; set; }
         public int? ViewCounterMin { get; set; }
         public int? ViewCounterMax { get; set; }
         public int? OrderCounterMin { get; set; }

@@ -9,6 +9,7 @@ namespace Imaar.ImaarServices
         public string ServiceNumber { get; set; } = null!;
         public DateOnly DateOfPublish { get; set; }
         public int Price { get; set; }
+        public string PhoneNumber { get; set; } = null!;
         public int ViewCounter { get; set; }
         public int OrderCounter { get; set; }
     }

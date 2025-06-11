@@ -46,6 +46,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -57,7 +58,7 @@ namespace Imaar.Vacancies
         {
             var query = await GetQueryForNavigationPropertiesAsync();
 
-            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
+            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
 
             var ids = query.Select(x => x.Vacancy.Id);
             await DeleteManyAsync(ids, cancellationToken: GetCancellationToken(cancellationToken));
@@ -97,6 +98,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -110,7 +112,7 @@ namespace Imaar.Vacancies
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
+            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? VacancyConsts.GetDefaultSorting(true) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -150,6 +152,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -159,7 +162,7 @@ namespace Imaar.Vacancies
             Guid? vacancyAdditionalFeatureId = null)
         {
             return query
-                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Vacancy.Title!.Contains(filterText!) || e.Vacancy.Description!.Contains(filterText!) || e.Vacancy.Location!.Contains(filterText!) || e.Vacancy.Number!.Contains(filterText!) || e.Vacancy.Latitude!.Contains(filterText!) || e.Vacancy.Longitude!.Contains(filterText!) || e.Vacancy.ExpectedExperience!.Contains(filterText!) || e.Vacancy.EducationLevel!.Contains(filterText!) || e.Vacancy.WorkSchedule!.Contains(filterText!) || e.Vacancy.EmploymentType!.Contains(filterText!) || e.Vacancy.Languages!.Contains(filterText!) || e.Vacancy.DriveLicense!.Contains(filterText!) || e.Vacancy.Salary!.Contains(filterText!))
+                .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Vacancy.Title!.Contains(filterText!) || e.Vacancy.Description!.Contains(filterText!) || e.Vacancy.Location!.Contains(filterText!) || e.Vacancy.Number!.Contains(filterText!) || e.Vacancy.Latitude!.Contains(filterText!) || e.Vacancy.Longitude!.Contains(filterText!) || e.Vacancy.ExpectedExperience!.Contains(filterText!) || e.Vacancy.EducationLevel!.Contains(filterText!) || e.Vacancy.WorkSchedule!.Contains(filterText!) || e.Vacancy.EmploymentType!.Contains(filterText!) || e.Vacancy.Languages!.Contains(filterText!) || e.Vacancy.DriveLicense!.Contains(filterText!) || e.Vacancy.Salary!.Contains(filterText!) || e.Vacancy.PhoneNumber!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(title), e => e.Vacancy.Title.Contains(title))
                     .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.Vacancy.Description.Contains(description))
                     .WhereIf(!string.IsNullOrWhiteSpace(location), e => e.Vacancy.Location.Contains(location))
@@ -176,6 +179,7 @@ namespace Imaar.Vacancies
                     .WhereIf(!string.IsNullOrWhiteSpace(languages), e => e.Vacancy.Languages.Contains(languages))
                     .WhereIf(!string.IsNullOrWhiteSpace(driveLicense), e => e.Vacancy.DriveLicense.Contains(driveLicense))
                     .WhereIf(!string.IsNullOrWhiteSpace(salary), e => e.Vacancy.Salary.Contains(salary))
+                    .WhereIf(!string.IsNullOrWhiteSpace(phoneNumber), e => e.Vacancy.PhoneNumber.Contains(phoneNumber))
                     .WhereIf(viewCounterMin.HasValue, e => e.Vacancy.ViewCounter >= viewCounterMin!.Value)
                     .WhereIf(viewCounterMax.HasValue, e => e.Vacancy.ViewCounter <= viewCounterMax!.Value)
                     .WhereIf(orderCounterMin.HasValue, e => e.Vacancy.OrderCounter >= orderCounterMin!.Value)
@@ -203,6 +207,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -212,7 +217,7 @@ namespace Imaar.Vacancies
             int skipCount = 0,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
+            var query = ApplyFilter((await GetQueryableAsync()), filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? VacancyConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
@@ -235,6 +240,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -245,7 +251,7 @@ namespace Imaar.Vacancies
             CancellationToken cancellationToken = default)
         {
             var query = await GetQueryForNavigationPropertiesAsync();
-            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
+            query = ApplyFilter(query, filterText, title, description, location, number, latitude, longitude, dateOfPublishMin, dateOfPublishMax, expectedExperience, educationLevel, workSchedule, employmentType, biologicalSex, languages, driveLicense, salary, phoneNumber, viewCounterMin, viewCounterMax, orderCounterMin, orderCounterMax, serviceTypeId, userProfileId, vacancyAdditionalFeatureId);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
@@ -268,13 +274,14 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
             int? orderCounterMax = null)
         {
             return query
-                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Title!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.Location!.Contains(filterText!) || e.Number!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!) || e.ExpectedExperience!.Contains(filterText!) || e.EducationLevel!.Contains(filterText!) || e.WorkSchedule!.Contains(filterText!) || e.EmploymentType!.Contains(filterText!) || e.Languages!.Contains(filterText!) || e.DriveLicense!.Contains(filterText!) || e.Salary!.Contains(filterText!))
+                    .WhereIf(!string.IsNullOrWhiteSpace(filterText), e => e.Title!.Contains(filterText!) || e.Description!.Contains(filterText!) || e.Location!.Contains(filterText!) || e.Number!.Contains(filterText!) || e.Latitude!.Contains(filterText!) || e.Longitude!.Contains(filterText!) || e.ExpectedExperience!.Contains(filterText!) || e.EducationLevel!.Contains(filterText!) || e.WorkSchedule!.Contains(filterText!) || e.EmploymentType!.Contains(filterText!) || e.Languages!.Contains(filterText!) || e.DriveLicense!.Contains(filterText!) || e.Salary!.Contains(filterText!) || e.PhoneNumber!.Contains(filterText!))
                     .WhereIf(!string.IsNullOrWhiteSpace(title), e => e.Title.Contains(title))
                     .WhereIf(!string.IsNullOrWhiteSpace(description), e => e.Description.Contains(description))
                     .WhereIf(!string.IsNullOrWhiteSpace(location), e => e.Location.Contains(location))
@@ -291,6 +298,7 @@ namespace Imaar.Vacancies
                     .WhereIf(!string.IsNullOrWhiteSpace(languages), e => e.Languages.Contains(languages))
                     .WhereIf(!string.IsNullOrWhiteSpace(driveLicense), e => e.DriveLicense.Contains(driveLicense))
                     .WhereIf(!string.IsNullOrWhiteSpace(salary), e => e.Salary.Contains(salary))
+                    .WhereIf(!string.IsNullOrWhiteSpace(phoneNumber), e => e.PhoneNumber.Contains(phoneNumber))
                     .WhereIf(viewCounterMin.HasValue, e => e.ViewCounter >= viewCounterMin!.Value)
                     .WhereIf(viewCounterMax.HasValue, e => e.ViewCounter <= viewCounterMax!.Value)
                     .WhereIf(orderCounterMin.HasValue, e => e.OrderCounter >= orderCounterMin!.Value)

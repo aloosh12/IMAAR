@@ -51,8 +51,8 @@ namespace Imaar.Vacancies
 
         public virtual async Task<PagedResultDto<VacancyWithNavigationPropertiesDto>> GetListAsync(GetVacanciesInput input)
         {
-            var totalCount = await _vacancyRepository.GetCountAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId);
-            var items = await _vacancyRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _vacancyRepository.GetCountAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId);
+            var items = await _vacancyRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<VacancyWithNavigationPropertiesDto>
             {
@@ -139,7 +139,7 @@ namespace Imaar.Vacancies
             }
 
             var vacancy = await _vacancyManager.CreateAsync(
-            input.VacancyAdditionalFeatureIds, input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.Location, input.Number, input.DateOfPublish, input.BiologicalSex, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.Languages, input.DriveLicense, input.Salary
+            input.VacancyAdditionalFeatureIds, input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.Location, input.Number, input.DateOfPublish, input.BiologicalSex, input.PhoneNumber, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.Languages, input.DriveLicense, input.Salary
             );
 
             return ObjectMapper.Map<Vacancy, VacancyDto>(vacancy);
@@ -159,7 +159,7 @@ namespace Imaar.Vacancies
 
             var vacancy = await _vacancyManager.UpdateAsync(
             id,
-            input.VacancyAdditionalFeatureIds, input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.Location, input.Number, input.DateOfPublish, input.BiologicalSex, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.Languages, input.DriveLicense, input.Salary, input.ConcurrencyStamp
+            input.VacancyAdditionalFeatureIds, input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.Location, input.Number, input.DateOfPublish, input.BiologicalSex, input.PhoneNumber, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.Languages, input.DriveLicense, input.Salary, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<Vacancy, VacancyDto>(vacancy);
@@ -174,7 +174,7 @@ namespace Imaar.Vacancies
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var vacancies = await _vacancyRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId);
+            var vacancies = await _vacancyRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId);
             var items = vacancies.Select(item => new
             {
                 Title = item.Vacancy.Title,
@@ -192,6 +192,7 @@ namespace Imaar.Vacancies
                 Languages = item.Vacancy.Languages,
                 DriveLicense = item.Vacancy.DriveLicense,
                 Salary = item.Vacancy.Salary,
+                PhoneNumber = item.Vacancy.PhoneNumber,
                 ViewCounter = item.Vacancy.ViewCounter,
                 OrderCounter = item.Vacancy.OrderCounter,
 
@@ -216,7 +217,7 @@ namespace Imaar.Vacancies
         [Authorize(ImaarPermissions.Vacancies.Delete)]
         public virtual async Task DeleteAllAsync(GetVacanciesInput input)
         {
-            await _vacancyRepository.DeleteAllAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId);
+            await _vacancyRepository.DeleteAllAsync(input.FilterText, input.Title, input.Description, input.Location, input.Number, input.Latitude, input.Longitude, input.DateOfPublishMin, input.DateOfPublishMax, input.ExpectedExperience, input.EducationLevel, input.WorkSchedule, input.EmploymentType, input.BiologicalSex, input.Languages, input.DriveLicense, input.Salary, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.VacancyAdditionalFeatureId);
         }
         public virtual async Task<Imaar.Shared.DownloadTokenResultDto> GetDownloadTokenAsync()
         {

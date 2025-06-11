@@ -109,6 +109,71 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppAdvertisements", (string)null);
             });
+            modelBuilder.Entity("Imaar.BuildingEvaluations.BuildingEvaluation", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("BuildingId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<Guid>("EvaluatorId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<int>("Rate")
+                    .HasColumnType("int")
+                    .HasColumnName("Rate");
+
+                b.HasKey("Id");
+
+                b.HasIndex("BuildingId");
+
+                b.HasIndex("EvaluatorId");
+
+                b.ToTable("AppBuildingEvaluations", (string)null);
+            });
 
             modelBuilder.Entity("Imaar.BuildingFacades.BuildingFacade", b =>
             {
@@ -282,6 +347,10 @@ namespace Imaar.Migrations
 
                 b.Property<Guid>("UserProfileId")
                      .HasColumnType("uniqueidentifier");
+                b.Property<string>("PhoneNumber")
+            .IsRequired()
+            .HasColumnType("nvarchar(max)")
+            .HasColumnName("PhoneNumber");
 
                 b.Property<int>("ViewCounter")
                      .HasColumnType("int")
@@ -707,6 +776,10 @@ namespace Imaar.Migrations
 
                 b.Property<Guid>("UserProfileId")
                     .HasColumnType("uniqueidentifier");
+                b.Property<string>("PhoneNumber")
+     .IsRequired()
+     .HasColumnType("nvarchar(max)")
+     .HasColumnName("PhoneNumber");
 
                 b.Property<int>("ViewCounter")
                     .HasColumnType("int")
@@ -1893,7 +1966,21 @@ namespace Imaar.Migrations
                 b.ToTable("AppUserFollows", (string)null);
             });
 
-      
+            modelBuilder.Entity("Imaar.BuildingEvaluations.BuildingEvaluation", b =>
+            {
+                b.HasOne("Imaar.Buildings.Building", null)
+                    .WithMany()
+                    .HasForeignKey("BuildingId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("EvaluatorId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
+
             modelBuilder.Entity("Imaar.Buildings.Building", b =>
             {
                 b.HasOne("Imaar.BuildingFacades.BuildingFacade", null)
@@ -2361,6 +2448,11 @@ namespace Imaar.Migrations
                 b.Property<string>("WorkSchedule")
                     .HasColumnType("nvarchar(max)")
                     .HasColumnName("WorkSchedule");
+                
+                b.Property<string>("PhoneNumber")
+                     .IsRequired()
+                     .HasColumnType("nvarchar(max)")
+                     .HasColumnName("PhoneNumber");
 
                 b.Property<int>("ViewCounter")
                     .HasColumnType("int")
@@ -2455,6 +2547,71 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppVacancyAdditionalFeatures", (string)null);
             });
+            modelBuilder.Entity("Imaar.VacancyEvaluations.VacancyEvaluation", b =>
+            {
+                b.Property<Guid>("Id")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .HasColumnType("nvarchar(40)")
+                    .HasColumnName("ConcurrencyStamp");
+
+                b.Property<DateTime>("CreationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("CreationTime");
+
+                b.Property<Guid?>("CreatorId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("CreatorId");
+
+                b.Property<Guid?>("DeleterId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("DeleterId");
+
+                b.Property<DateTime?>("DeletionTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("DeletionTime");
+
+                b.Property<string>("ExtraProperties")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("ExtraProperties");
+
+                b.Property<bool>("IsDeleted")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false)
+                    .HasColumnName("IsDeleted");
+
+                b.Property<DateTime?>("LastModificationTime")
+                    .HasColumnType("datetime2")
+                    .HasColumnName("LastModificationTime");
+
+                b.Property<Guid?>("LastModifierId")
+                    .HasColumnType("uniqueidentifier")
+                    .HasColumnName("LastModifierId");
+
+                b.Property<int>("Rate")
+                    .HasColumnType("int")
+                    .HasColumnName("Rate");
+
+                b.Property<Guid>("UserProfileId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.Property<Guid>("VacancyId")
+                    .HasColumnType("uniqueidentifier");
+
+                b.HasKey("Id");
+
+                b.HasIndex("UserProfileId");
+
+                b.HasIndex("VacancyId");
+
+                b.ToTable("AppVacancyEvaluations", (string)null);
+            });
 
             modelBuilder.Entity("Imaar.VerificationCodes.VerificationCode", b =>
             {
@@ -2520,6 +2677,22 @@ namespace Imaar.Migrations
 
                 b.ToTable("AppVerificationCodes", (string)null);
             });
+
+            modelBuilder.Entity("Imaar.VacancyEvaluations.VacancyEvaluation", b =>
+            {
+                b.HasOne("Imaar.UserProfiles.UserProfile", null)
+                    .WithMany()
+                    .HasForeignKey("UserProfileId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.HasOne("Imaar.Vacancies.Vacancy", null)
+                    .WithMany()
+                    .HasForeignKey("VacancyId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
+
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
                 {

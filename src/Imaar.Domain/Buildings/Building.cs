@@ -1,18 +1,18 @@
-using Imaar.Regions;
-using Imaar.FurnishingLevels;
+using Imaar.Buildings;
 using Imaar.BuildingFacades;
+using Imaar.FurnishingLevels;
+using Imaar.Regions;
 using Imaar.ServiceTypes;
 using Imaar.UserProfiles;
+using JetBrains.Annotations;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
-using JetBrains.Annotations;
-
-using Volo.Abp;
 
 namespace Imaar.Buildings
 {
@@ -45,6 +45,9 @@ namespace Imaar.Buildings
         [CanBeNull]
         public virtual string? Longitude { get; set; }
 
+        [NotNull]
+        public virtual string PhoneNumber { get; set; }
+
         public virtual int ViewCounter { get; set; }
 
         public virtual int OrderCounter { get; set; }
@@ -61,7 +64,7 @@ namespace Imaar.Buildings
 
         }
 
-        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null)
+        public BuildingBase(Guid id, Guid regionId, Guid furnishingLevelId, Guid buildingFacadeId, Guid serviceTypeId, Guid userProfileId, string mainTitle, string description, string price, string buildingArea, string numberOfRooms, string numberOfBaths, string floorNo, string phoneNumber, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null)
         {
 
             Id = id;
@@ -72,6 +75,7 @@ namespace Imaar.Buildings
             Check.NotNull(numberOfRooms, nameof(numberOfRooms));
             Check.NotNull(numberOfBaths, nameof(numberOfBaths));
             Check.NotNull(floorNo, nameof(floorNo));
+            Check.NotNull(phoneNumber, nameof(phoneNumber));
             MainTitle = mainTitle;
             Description = description;
             Price = price;
@@ -79,6 +83,7 @@ namespace Imaar.Buildings
             NumberOfRooms = numberOfRooms;
             NumberOfBaths = numberOfBaths;
             FloorNo = floorNo;
+            PhoneNumber = phoneNumber;
             ViewCounter = viewCounter;
             OrderCounter = orderCounter;
             Latitude = latitude;

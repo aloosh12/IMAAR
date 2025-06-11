@@ -1,0 +1,412 @@
+
+
+@page "/building-evaluations"
+
+@attribute [Authorize(ImaarPermissions.BuildingEvaluations.Default)]
+@using Imaar.BuildingEvaluations
+@using Imaar.Localization
+@using Imaar.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Imaar.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.Http.Client
+@inherits ImaarComponentBase
+@inject IBuildingEvaluationsAppService BuildingEvaluationsAppService
+
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<ImaarResource> LH
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["BuildingEvaluations"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Row>
+            <div class="col-md-8 col-lg-10">
+                <div class="mb-3">
+                    <Form id="BuildingEvaluationSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                        Autofocus="true"
+                                        Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="BuildingEvaluationSearchForm" Clicked="GetBuildingEvaluationsAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+                
+                   <div class="col-md-4 col-lg-2">
+            <div class="mb-3">
+               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
+                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+               </Button>
+            </div>
+       </div>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinRate"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.RateMin"
+             ValueChanged="@OnRateMinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxRate"]</FieldLabel>
+                        <NumericEdit TValue="int?" 
+             Value="@Filter.RateMax"
+             ValueChanged="@OnRateMaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.EvaluatorId"
+		SelectedValueChanged="@OnEvaluatorIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in UserProfilesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Building"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.BuildingId"
+		SelectedValueChanged="@OnBuildingIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in BuildingsCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+
+        </Row>
+
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>        
+        @if (SelectedBuildingEvaluations.Any())
+        {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                @if (AllBuildingEvaluationsSelected)
+                {
+                    <p class="lead mb-0">
+                        @L["AllItemsAreSelected", TotalCount]
+                    </p>
+                }
+                else
+                {
+                    <p class="lead mb-0">
+                        @if (SelectedBuildingEvaluations.Count > 1)
+                        {
+                            @L["NumberOfItemsOnThisPageAreSelected", SelectedBuildingEvaluations.Count]
+                        }
+                        else
+                        {
+                            @L["OneItemOnThisPageIsSelected"]
+                        }
+                    </p>
+                }
+                    
+                <div>
+                    @if ((SelectedBuildingEvaluations.Count == PageSize || SelectedBuildingEvaluations.Count == BuildingEvaluationList.Count) && TotalCount > SelectedBuildingEvaluations.Count)
+                    {
+                        if (!AllBuildingEvaluationsSelected)
+                        {
+                            <Button Clicked="SelectAllItems" Class="mx-1 btn-outline-secondary">@L["SelectAllItems", TotalCount]</Button>
+                        }
+                        else
+                        {
+                            <Button Clicked="ClearSelection" Class="mx-1 btn-outline-secondary">@L["ClearSelection"]</Button>
+                        }
+                    }
+                    
+                    <Button Color="Color.Danger" Class="mx-1" Size="Size.Medium" Clicked="DeleteSelectedBuildingEvaluationsAsync">
+                        <Icon Name="@IconName.Delete" /> @L["Delete"]
+                    </Button>
+                </div>
+            </div>
+            
+            <hr class="my-1 mx-0"/>
+        }
+        <DataGrid TItem="BuildingEvaluationWithNavigationPropertiesDto"
+                  Data="BuildingEvaluationList"
+                  
+                  SelectionMode="DataGridSelectionMode.Multiple"
+                  SelectedRows="SelectedBuildingEvaluations"
+                  RowSelectable="@((args) => CanDeleteBuildingEvaluation)"
+                  SelectedRowsChanged="SelectedBuildingEvaluationRowsChanged"
+                  
+                  
+                  
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <LoadingTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                       <RadarSpinner />
+                    </Column>
+                </Row>
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <Row Class="w-100 align-items-center" Style="height: 150px;">
+                    <Column>
+                        <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
+                    </Column>
+                </Row>
+            </EmptyTemplate>   
+            <DataGridColumns>
+                
+                @if (CanDeleteBuildingEvaluation && BuildingEvaluationList.Any())
+                {
+                    <DataGridMultiSelectColumn TItem="BuildingEvaluationWithNavigationPropertiesDto" DisplayOrder="-1" Width="30px"></DataGridMultiSelectColumn>
+                }
+                
+                <DataGridEntityActionsColumn TItem="BuildingEvaluationWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="BuildingEvaluationWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="BuildingEvaluationWithNavigationPropertiesDto"
+                                          Visible="@CanEditBuildingEvaluation"
+                                          Clicked="async () => await OpenEditBuildingEvaluationModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="BuildingEvaluationWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteBuildingEvaluation"
+                                          Clicked="() => DeleteBuildingEvaluationAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="BuildingEvaluationWithNavigationPropertiesDto"
+                      Field="BuildingEvaluation.Rate"
+                      Caption="@L["Rate"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingEvaluationWithNavigationPropertiesDto"
+                      Field="Evaluator.FirstName"
+                      Caption="@L["Evaluator"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="BuildingEvaluationWithNavigationPropertiesDto"
+                      Field="Building.MainTitle"
+                      Caption="@L["Building"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+            
+            
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateBuildingEvaluationModal" Closing="@CreateBuildingEvaluationModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateBuildingEvaluationForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewBuildingEvaluation"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateBuildingEvaluationModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewBuildingEvaluationValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewBuildingEvaluation"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Rate"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@NewBuildingEvaluation.Rate"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuildingEvaluation.EvaluatorId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Building"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewBuildingEvaluation.BuildingId">
+                            @foreach (var building in BuildingsCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(building.Id)">
+                                    @(building.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateBuildingEvaluationModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateBuildingEvaluationForm" Clicked="CreateBuildingEvaluationAsync"/>
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditBuildingEvaluationModal" Closing="@EditBuildingEvaluationModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditBuildingEvaluationForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditBuildingEvaluationModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingBuildingEvaluationValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingBuildingEvaluation"
+                            ValidateOnLoad="false">
+                    
+                    
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Rate"]</FieldLabel>
+                            <NumericPicker TValue="int" @bind-Value="@EditingBuildingEvaluation.Rate"  Decimals="0" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["UserProfile"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuildingEvaluation.EvaluatorId">
+                            @foreach (var userProfile in UserProfilesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(userProfile.Id)">
+                                    @(userProfile.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Building"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingBuildingEvaluation.BuildingId">
+                            @foreach (var building in BuildingsCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@(building.Id)">
+                                    @(building.DisplayName)
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditBuildingEvaluationModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditBuildingEvaluationForm" Clicked="UpdateBuildingEvaluationAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+

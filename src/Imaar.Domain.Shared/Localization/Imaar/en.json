@@ -292,6 +292,15 @@
     "Permission:VacancyAdditionalFeatures": "Vacancy Additional Features",
     "VacancyAdditionalFeatures": "Vacancy Additional Features",
     "NewVacancyAdditionalFeature": "New Vacancy Additional Feature",
-    "Menu:VacancyAdditionalFeatures": "Vacancy Additional Features"
+    "Menu:VacancyAdditionalFeatures": "Vacancy Additional Features",
+    "Building": "Building",
+    "Permission:BuildingEvaluations": "Building Evaluations",
+    "BuildingEvaluations": "Building Evaluations",
+    "NewBuildingEvaluation": "New Building Evaluation",
+    "Menu:BuildingEvaluations": "Building Evaluations",
+    "Permission:VacancyEvaluations": "Vacancy Evaluations",
+    "VacancyEvaluations": "Vacancy Evaluations",
+    "NewVacancyEvaluation": "New Vacancy Evaluation",
+    "Menu:VacancyEvaluations": "Vacancy Evaluations"
   }
 }

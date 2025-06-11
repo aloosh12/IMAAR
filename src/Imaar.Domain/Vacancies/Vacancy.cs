@@ -1,16 +1,16 @@
 using Imaar.Vacancies;
 using Imaar.ServiceTypes;
 using Imaar.UserProfiles;
+using Imaar.Vacancies;
+using JetBrains.Annotations;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
-using JetBrains.Annotations;
-
-using Volo.Abp;
 
 namespace Imaar.Vacancies
 {
@@ -59,6 +59,9 @@ namespace Imaar.Vacancies
         [CanBeNull]
         public virtual string? Salary { get; set; }
 
+        [NotNull]
+        public virtual string PhoneNumber { get; set; }
+
         public virtual int ViewCounter { get; set; }
 
         public virtual int OrderCounter { get; set; }
@@ -71,7 +74,7 @@ namespace Imaar.Vacancies
 
         }
 
-        public VacancyBase(Guid id, Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
+        public VacancyBase(Guid id, Guid serviceTypeId, Guid userProfileId, string title, string description, string location, string number, DateOnly dateOfPublish, BiologicalSex biologicalSex, string phoneNumber, int viewCounter, int orderCounter, string? latitude = null, string? longitude = null, string? expectedExperience = null, string? educationLevel = null, string? workSchedule = null, string? employmentType = null, string? languages = null, string? driveLicense = null, string? salary = null)
         {
 
             Id = id;
@@ -79,12 +82,14 @@ namespace Imaar.Vacancies
             Check.NotNull(description, nameof(description));
             Check.NotNull(location, nameof(location));
             Check.NotNull(number, nameof(number));
+            Check.NotNull(phoneNumber, nameof(phoneNumber));
             Title = title;
             Description = description;
             Location = location;
             Number = number;
             DateOfPublish = dateOfPublish;
             BiologicalSex = biologicalSex;
+            PhoneNumber = phoneNumber;
             ViewCounter = viewCounter;
             OrderCounter = orderCounter;
             Latitude = latitude;

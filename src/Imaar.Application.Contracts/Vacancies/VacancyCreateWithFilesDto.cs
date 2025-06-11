@@ -19,7 +19,9 @@ namespace Imaar.Vacancies
         
         [Required]
         public string Number { get; set; } = null!;
-        
+        [Required]
+        public string PhoneNumber { get; set; } = null!;
+
         public string? Latitude { get; set; }
         
         public string? Longitude { get; set; }

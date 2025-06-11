@@ -1,4 +1,5 @@
 using Imaar.Vacancies;
+using Imaar.Vacancies;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -28,6 +29,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -59,6 +61,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,
@@ -90,6 +93,7 @@ namespace Imaar.Vacancies
                     string? languages = null,
                     string? driveLicense = null,
                     string? salary = null,
+                    string? phoneNumber = null,
                     int? viewCounterMin = null,
                     int? viewCounterMax = null,
                     int? orderCounterMin = null,
@@ -118,6 +122,7 @@ namespace Imaar.Vacancies
             string? languages = null,
             string? driveLicense = null,
             string? salary = null,
+            string? phoneNumber = null,
             int? viewCounterMin = null,
             int? viewCounterMax = null,
             int? orderCounterMin = null,

@@ -48,8 +48,8 @@ namespace Imaar.ImaarServices
 
         public virtual async Task<PagedResultDto<ImaarServiceWithNavigationPropertiesDto>> GetListAsync(GetImaarServicesInput input)
         {
-            var totalCount = await _imaarServiceRepository.GetCountAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId);
-            var items = await _imaarServiceRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _imaarServiceRepository.GetCountAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId);
+            var items = await _imaarServiceRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<ImaarServiceWithNavigationPropertiesDto>
             {
@@ -120,7 +120,7 @@ namespace Imaar.ImaarServices
             }
 
             var imaarService = await _imaarServiceManager.CreateAsync(
-            input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublish, input.Price, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude
+            input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublish, input.Price, input.PhoneNumber, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude
             );
 
             return ObjectMapper.Map<ImaarService, ImaarServiceDto>(imaarService);
@@ -140,7 +140,7 @@ namespace Imaar.ImaarServices
 
             var imaarService = await _imaarServiceManager.UpdateAsync(
             id,
-            input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublish, input.Price, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude, input.ConcurrencyStamp
+            input.ServiceTypeId, input.UserProfileId, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublish, input.Price, input.PhoneNumber, input.ViewCounter, input.OrderCounter, input.Latitude, input.Longitude, input.ConcurrencyStamp
             );
 
             return ObjectMapper.Map<ImaarService, ImaarServiceDto>(imaarService);
@@ -155,7 +155,7 @@ namespace Imaar.ImaarServices
                 throw new AbpAuthorizationException("Invalid download token: " + input.DownloadToken);
             }
 
-            var imaarServices = await _imaarServiceRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId);
+            var imaarServices = await _imaarServiceRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId);
             var items = imaarServices.Select(item => new
             {
                 Title = item.ImaarService.Title,
@@ -166,6 +166,7 @@ namespace Imaar.ImaarServices
                 Price = item.ImaarService.Price,
                 Latitude = item.ImaarService.Latitude,
                 Longitude = item.ImaarService.Longitude,
+                PhoneNumber = item.ImaarService.PhoneNumber,
                 ViewCounter = item.ImaarService.ViewCounter,
                 OrderCounter = item.ImaarService.OrderCounter,
 
@@ -190,7 +191,7 @@ namespace Imaar.ImaarServices
         [Authorize(ImaarPermissions.ImaarServices.Delete)]
         public virtual async Task DeleteAllAsync(GetImaarServicesInput input)
         {
-            await _imaarServiceRepository.DeleteAllAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId);
+            await _imaarServiceRepository.DeleteAllAsync(input.FilterText, input.Title, input.Description, input.ServiceLocation, input.ServiceNumber, input.DateOfPublishMin, input.DateOfPublishMax, input.PriceMin, input.PriceMax, input.Latitude, input.Longitude, input.PhoneNumber, input.ViewCounterMin, input.ViewCounterMax, input.OrderCounterMin, input.OrderCounterMax, input.ServiceTypeId, input.UserProfileId);
         }
         public virtual async Task<Imaar.Shared.DownloadTokenResultDto> GetDownloadTokenAsync()
         {

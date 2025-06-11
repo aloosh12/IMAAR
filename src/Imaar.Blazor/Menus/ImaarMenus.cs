@@ -52,6 +52,9 @@ public class ImaarMenus
     public const string Advertisements = Prefix + ".Advertisements";
 
     public const string VacancyAdditionalFeatures = Prefix + ".VacancyAdditionalFeatures";
+    public const string BuildingEvaluations = Prefix + ".BuildingEvaluations";
+
+    public const string VacancyEvaluations = Prefix + ".VacancyEvaluations";
 
 
 }
