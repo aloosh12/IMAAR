@@ -166,6 +166,9 @@ public class ImaarApplicationAutoMapperProfile : Profile
         CreateMap<SecondaryAmenity, SecondaryAmenityDto>();
         CreateMap<SecondaryAmenity, SecondaryAmenityExcelDto>();
 
+        CreateMap<VacancyAdditionalFeature, VacancyAdditionalFeatureDto>();
+        CreateMap<VacancyAdditionalFeature, VacancyAdditionalFeatureExcelDto>();
+
         CreateMap<Building, BuildingDto>();
         CreateMap<Building, BuildingExcelDto>();
         CreateMap<BuildingWithNavigationProperties, BuildingWithNavigationPropertiesDto>();
