@@ -17,7 +17,8 @@ namespace Imaar.UserProfiles
         Task<MobileResponseDto> ChangePasswordAsync(PasswordChangeRequestDto input);
         
         Task<bool> CheckFollowStatusAsync(Guid id);
-        
+        Task<bool> CheckSavedItemStatusAsync(Guid id);
+
         Task<long> GetFollowCountAsync(Guid id);
         Task<bool> UnfollowUserAsync(Guid id);
     }

@@ -105,6 +105,11 @@ namespace Imaar.Controllers.UserProfiles
             return _userProfilesAppService.UnfollowUserAsync(id);
         }
 
+        [HttpGet("check-saved-item-status/{id}")]
+        public Task<bool> CheckSavedItemStatusAsync(Guid id)
+        {
+            return _userProfilesAppService.CheckSavedItemStatusAsync(id);
+        }
         //[AllowAnonymous]
         //[HttpPost("complete-registration")]
         //public virtual Task<MobileResponseDto> CompleteRegisterStep1Async(RegisterCreateDt0 input)
